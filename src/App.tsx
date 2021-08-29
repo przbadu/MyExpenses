@@ -18,7 +18,7 @@ const App = () => {
   const defaultSetup = async () => {
     const theme = await initialSetup();
     theme === 'dark' ? setTheme(darkTheme) : setTheme(lightTheme);
-    setLoading(true);
+    setLoading(false);
   };
 
   if (loading) return <SplashScreen />;
