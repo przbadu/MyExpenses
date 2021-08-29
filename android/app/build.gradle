@@ -131,7 +131,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.myexpense"
+        applicationId "com.przbadu.myexpense"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

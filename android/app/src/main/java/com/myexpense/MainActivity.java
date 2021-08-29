@@ -1,4 +1,4 @@
-package com.myexpense;
+package com.przbadu.myexpense;
 
 import com.facebook.react.ReactActivity;
 
