@@ -1,11 +1,9 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {shadow, Text} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {Home, Transactions, Saving, Settings} from '../screens';
-import TabBarIcon from '../components/TabBarIcon';
-import {createIconSet} from 'react-native-vector-icons';
+import {TabBarIcon} from '../components';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +13,7 @@ export const TabNavigation = () => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {...styles.navigator},
+        headerShown: false,
       }}>
       <Tab.Screen
         name="Home"
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
     right: 0,
     elevation: 4,
     height: 80,
-    borderTopEndRadius: 10,
-    borderTopLeftRadius: 10,
+    // borderTopEndRadius: 10,
+    // borderTopLeftRadius: 10,
   },
 });

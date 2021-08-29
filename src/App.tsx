@@ -1,36 +1,29 @@
 import React, {useState, useEffect} from 'react';
-import {Provider as PaperProvider, Button} from 'react-native-paper';
-import {NavigationContainer} from '@react-navigation/native';
+// global states
+import {ThemeProvider} from './store/context/themeContext';
 
 import {AppNavigator} from './navigation';
-import {lightTheme, darkTheme} from './constants';
 import {initialSetup} from './database/helpers';
 import {SplashScreen} from './screens';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
-  const [theme, setTheme] = useState(darkTheme);
 
   useEffect(() => {
     defaultSetup();
   }, []);
 
   const defaultSetup = async () => {
-    const theme = await initialSetup();
-    theme === 'dark' ? setTheme(darkTheme) : setTheme(lightTheme);
+    await initialSetup();
     setLoading(false);
   };
 
   if (loading) return <SplashScreen />;
 
-  console.log('theme', theme);
-
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={theme}>
-        <AppNavigator />
-      </NavigationContainer>
-    </PaperProvider>
+    <ThemeProvider>
+      <AppNavigator />
+    </ThemeProvider>
   );
 };
 
