@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Provider as PaperProvider} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const App = () => {
   return (
     <PaperProvider>
-      <View>
-        <Icon name="facebook" color="tomato" style={{width: 32, height: 32}} />
-        <Text>App View</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Icon name="home" color="tomato" style={{fontSize: 32}} />
+        <Text>Home Page Screen</Text>
       </View>
     </PaperProvider>
   );
