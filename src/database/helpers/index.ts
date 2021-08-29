@@ -1,3 +1,4 @@
+export * from './initial_setup_helper';
 export * from './localstorage_helper';
 
 export * from './account_helper';
