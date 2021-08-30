@@ -7,8 +7,8 @@ import {
   writer,
 } from '@nozbe/watermelondb/decorators';
 
-// payment mode types
-export interface PaymentModeProps {
+// wallet props
+export interface WalletProps {
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -17,12 +17,12 @@ export interface PaymentModeProps {
   balanceAmount?: number;
 }
 
-class PaymentMode extends Model {
-  static table = 'payment_modes';
+class Wallet extends Model {
+  static table = 'wallets';
 
   // associations
   static associations = {
-    transactions: {type: 'has_many', foreign_key: 'payment_mode_id'},
+    transactions: {type: 'has_many', foreign_key: 'wallet_id'},
   };
 
   // attributes
@@ -36,31 +36,31 @@ class PaymentMode extends Model {
   // relationships
   @children('transactions') transactions: any;
 
-  // quickly mark payment mode as archived
+  // quickly mark wallet as archived
   @writer async markAsArchived() {
-    await this.update(payment_mode => {
-      payment_mode.isArchived = true;
+    await this.update(wallet => {
+      wallet.isArchived = true;
     });
   }
 
-  // quickly mark payment_mode as de-archive / active
+  // quickly mark wallet as de-archive / active
   @writer async markAsActive() {
-    await this.update(payment_mode => {
-      payment_mode.isArchived = false;
+    await this.update(wallet => {
+      wallet.isArchived = false;
     });
   }
 
-  // quickly mark payment_mode as default
+  // quickly mark wallet as default
   @writer async markAsDefault() {
-    await this.update(payment_mode => {
-      payment_mode.isDefault = true;
+    await this.update(wallet => {
+      wallet.isDefault = true;
     });
   }
 
-  // delete all transactions for payment_mode
+  // delete all transactions for wallet
   async deleteAllTransactions() {
     await this.transactions.destroyAllPermanently();
   }
 }
 
-export {PaymentMode};
+export {Wallet};

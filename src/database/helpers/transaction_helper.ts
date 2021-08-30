@@ -9,7 +9,7 @@ export const saveTransaction = async ({
   amount,
   notes,
   categoryId,
-  accountId,
+  walletId,
   isPaid = true,
   transactionDateAt = new Date(),
   transactionType = TransactionTypeEnum.expense,
@@ -19,7 +19,7 @@ export const saveTransaction = async ({
       entry.amount = Number(amount);
       entry.notes = notes;
       entry.categoryId = categoryId;
-      entry.accountId = accountId;
+      entry.walletId = walletId;
       entry.isPaid = isPaid;
       entry.transactionDateAt = transactionDateAt;
       entry.transactionType = transactionType;

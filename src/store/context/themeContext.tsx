@@ -18,8 +18,6 @@ export const ThemeProvider = ({children}: any) => {
     const systemTheme = getSystemTheme();
     const appTheme = await getAppTheme();
 
-    console.log('app theme', appTheme);
-
     if (appTheme) {
       setTheme(appTheme);
     } else {
@@ -43,7 +41,6 @@ export const ThemeProvider = ({children}: any) => {
   const setAppTheme = async (dark: bool) => {
     const appTheme = dark ? 'dark' : 'light';
     await LocalStorage.set(APP_THEME, appTheme);
-    console.log(await LocalStorage.get(APP_THEME), 'app theme .............');
   };
 
   // ability for app to toggle theme

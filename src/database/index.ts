@@ -5,11 +5,11 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import schema from './schema';
 
 // models
-import {Account, Category, Transaction} from './models';
+import {Wallet, Category, Transaction} from './models';
 
 const adapter = new SQLiteAdapter({schema});
 
 export const database = new Database({
   adapter,
-  modelClasses: [Account, Category, Transaction],
+  modelClasses: [Wallet, Category, Transaction],
 });
