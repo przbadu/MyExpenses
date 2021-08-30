@@ -1,13 +1,16 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useTheme} from 'react-native-paper';
 
-import {Home, Transactions, Saving, Settings} from '../screens';
+import {Home, AddTransaction, Transactions, Saving, Settings} from '../screens';
 import {TabBarIcon} from '../components';
 
 const Tab = createBottomTabNavigator();
 
 export const TabNavigation = () => {
+  const {colors} = useTheme();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -30,6 +33,27 @@ export const TabNavigation = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <TabBarIcon label="Transactions" icon="history" focused={focused} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddTransaction"
+        component={AddTransaction}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <TabBarIcon
+              icon="plus"
+              focused={focused}
+              iconColor={colors.onSurface}
+              containerStyles={{
+                width: 62,
+                height: 62,
+                borderRadius: 64,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: colors.primary,
+              }}
+            />
           ),
         }}
       />

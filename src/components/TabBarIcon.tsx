@@ -5,22 +5,30 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface TabBarIconProps {
   icon: string;
-  label: string;
+  label?: string;
   focused: boolean;
+  containerStyles?: object;
+  iconColor?: string;
 }
 
-const TabBarIcon: React.FC<TabBarIconProps> = ({icon, label, focused}) => {
+const TabBarIcon: React.FC<TabBarIconProps> = ({
+  icon,
+  label,
+  focused,
+  containerStyles = {},
+  iconColor,
+}) => {
   const {colors} = useTheme();
+  const textColor = focused ? colors.primary : colors.disabled;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyles]}>
       <Icon
         name={icon}
         style={styles.icon}
-        color={focused ? colors.primary : colors.disabled}
+        color={iconColor ? iconColor : textColor}
       />
-      <Text style={{color: focused ? colors.primary : colors.disabled}}>
-        {label}
-      </Text>
+      {label && <Text style={{color: textColor}}>{label}</Text>}
     </View>
   );
 };

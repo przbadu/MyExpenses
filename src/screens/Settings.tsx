@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {Dispatch, SetStateAction, useContext, useState} from 'react';
 import {View} from 'react-native';
 import {Headline, Card, Switch} from 'react-native-paper';
 
@@ -6,7 +6,7 @@ import {AppSwitch} from '../components';
 import {ThemeContext} from '../store/context/themeContext';
 
 const Settings = () => {
-  const {theme, toggleTheme} = useContext(ThemeContext);
+  const {theme, toggleTheme} = useContext<any>(ThemeContext);
 
   return (
     <View style={{marginHorizontal: 10}}>

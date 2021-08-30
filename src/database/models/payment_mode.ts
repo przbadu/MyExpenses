@@ -7,8 +7,8 @@ import {
   writer,
 } from '@nozbe/watermelondb/decorators';
 
-// account types
-export interface AccountProps {
+// payment mode types
+export interface PaymentModeProps {
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -17,12 +17,12 @@ export interface AccountProps {
   balanceAmount?: number;
 }
 
-class Account extends Model {
-  static table = 'accounts';
+class PaymentMode extends Model {
+  static table = 'payment_modes';
 
   // associations
   static associations = {
-    transactions: {type: 'has_many', foreign_key: 'account_id'},
+    transactions: {type: 'has_many', foreign_key: 'payment_mode_id'},
   };
 
   // attributes
@@ -36,31 +36,31 @@ class Account extends Model {
   // relationships
   @children('transactions') transactions: any;
 
-  // quickly mark account as archived
+  // quickly mark payment mode as archived
   @writer async markAsArchived() {
-    await this.update(account => {
-      account.isArchived = true;
+    await this.update(payment_mode => {
+      payment_mode.isArchived = true;
     });
   }
 
-  // quickly mark account as de-archive / active
+  // quickly mark payment_mode as de-archive / active
   @writer async markAsActive() {
-    await this.update(account => {
-      account.isArchived = false;
+    await this.update(payment_mode => {
+      payment_mode.isArchived = false;
     });
   }
 
-  // quickly mark account as default
+  // quickly mark payment_mode as default
   @writer async markAsDefault() {
-    await this.update(account => {
-      account.isDefault = true;
+    await this.update(payment_mode => {
+      payment_mode.isDefault = true;
     });
   }
 
-  // delete all transactions for account
+  // delete all transactions for payment_mode
   async deleteAllTransactions() {
     await this.transactions.destroyAllPermanently();
   }
 }
 
-export {Account};
+export {PaymentMode};

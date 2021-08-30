@@ -1,6 +1,6 @@
 import {
   LocalStorage,
-  setupDefaultAccounts,
+  setupDefaultPaymentMode,
   setupDefaultCategories,
 } from './index';
 
@@ -12,7 +12,7 @@ export const initialSetup = async (): Promise<void> => {
 
   // generate default categories and accounts
   await setupDefaultCategories();
-  await setupDefaultAccounts();
+  await setupDefaultPaymentMode();
 
   // setup completed
   await LocalStorage.set(SETUP_COMPLETED, 'true');

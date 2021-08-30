@@ -21,7 +21,7 @@ export interface TransactionProps {
   transactionType?: TransactionTypeEnum;
   createdAt?: Date;
   updatedAt?: Date;
-  accountId?: string | number;
+  paymentModeId?: string | number;
   categoryId?: string | number;
 }
 
@@ -39,7 +39,7 @@ class Transaction extends Model {
   @readonly @date('updated_at') updatedAt: Date | any;
 
   // associations/relationships
-  @relation('account', 'account_id') account: any;
+  @relation('payment_mode', 'payment_mode_id') paymentMode: any;
   @relation('category', 'category_id') category: any;
 
   @writer async markAsUnpaid() {
