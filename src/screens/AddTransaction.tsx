@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Appbar, TextInput, Card, Button} from 'react-native-paper';
+import {Appbar, Card, Button, TextInput} from 'react-native-paper';
+
+import {SwitchButton, AppTextInput} from '../components';
 import {TransactionProps, TransactionTypeEnum} from '../database/models';
 
 const AddTransaction = () => {
@@ -14,6 +16,38 @@ const AddTransaction = () => {
     categoryId: null,
   });
 
+  const isIncome = () => form.transactionType == TransactionTypeEnum.income;
+  const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
+
+  function renderIncomeExpenseSwitch() {
+    return (
+      <View style={styles.incomeExpenseContainer}>
+        <SwitchButton
+          onPress={() =>
+            setForm({...form, transactionType: TransactionTypeEnum.expense})
+          }
+          label="Expense"
+          isActive={isExpense()}
+          icon={isExpense() ? 'minus' : undefined}
+          containerStyles={{borderWidth: 0, borderBottomWidth: 1}}
+        />
+        <SwitchButton
+          onPress={() =>
+            setForm({...form, transactionType: TransactionTypeEnum.income})
+          }
+          label="Income"
+          isActive={isIncome()}
+          icon={isIncome() ? 'plus' : undefined}
+          containerStyles={{
+            marginLeft: 10,
+            borderWidth: 0,
+            borderBottomWidth: 1,
+          }}
+        />
+      </View>
+    );
+  }
+
   return (
     <>
       <Appbar.Header>
@@ -21,16 +55,16 @@ const AddTransaction = () => {
       </Appbar.Header>
       <Card style={styles.container}>
         <Card.Content>
-          <TextInput
-            mode="outlined"
+          {renderIncomeExpenseSwitch()}
+          <AppTextInput
+            mode="flat"
             label="Amount"
             placeholder="0.00"
             keyboardType="number-pad"
             left={<TextInput.Icon name="currency-usd" />}
             style={styles.input}
           />
-          <TextInput
-            mode="outlined"
+          <AppTextInput
             label="Notes"
             placeholder="0.00"
             value={form.notes}
@@ -54,11 +88,14 @@ const AddTransaction = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginHorizontal: 10,
+    marginVertical: 20,
   },
   input: {
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  incomeExpenseContainer: {
+    flexDirection: 'row',
   },
 });
 
