@@ -44,7 +44,7 @@ export const TabNavigation = () => {
             <TabBarIcon
               icon="plus"
               focused={focused}
-              iconColor={colors.onSurface}
+              iconColor={colors.surface}
               containerStyles={{
                 width: 62,
                 height: 62,

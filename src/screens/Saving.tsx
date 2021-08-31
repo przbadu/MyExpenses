@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {Appbar, Card, Text} from 'react-native-paper';
 
 const Saving = () => {
   return (
-    <View>
-      <Text>Saving Screen</Text>
-    </View>
+    <>
+      <Appbar.Header>
+        <Appbar.Content title="SAVING" />
+      </Appbar.Header>
+
+      <Card style={{marginVertical: 10}}>
+        <Card.Content>
+          <Text>Saving Screen</Text>
+        </Card.Content>
+      </Card>
+    </>
   );
 };
 

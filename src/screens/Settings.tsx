@@ -1,6 +1,5 @@
-import React, {Dispatch, SetStateAction, useContext, useState} from 'react';
-import {View} from 'react-native';
-import {Headline, Card, Switch} from 'react-native-paper';
+import React, {useContext} from 'react';
+import {Appbar, Card, Switch} from 'react-native-paper';
 
 import {AppSwitch} from '../components';
 import {ThemeContext} from '../store/context/themeContext';
@@ -9,16 +8,19 @@ const Settings = () => {
   const {theme, toggleTheme} = useContext<any>(ThemeContext);
 
   return (
-    <View style={{marginHorizontal: 10}}>
-      <Headline style={{marginBottom: 20}}>Settings</Headline>
-      <Card>
+    <>
+      <Appbar.Header>
+        <Appbar.Content title="SETTING" />
+      </Appbar.Header>
+
+      <Card style={{marginVertical: 10}}>
         <Card.Content>
           <AppSwitch label="Dark Theme">
             <Switch value={theme.dark} onValueChange={toggleTheme} />
           </AppSwitch>
         </Card.Content>
       </Card>
-    </View>
+    </>
   );
 };
 

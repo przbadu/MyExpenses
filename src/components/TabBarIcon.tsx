@@ -19,7 +19,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({
   iconColor,
 }) => {
   const {colors} = useTheme();
-  const textColor = focused ? colors.primary : colors.disabled;
+  const textColor = focused ? colors.accent : colors.disabled;
 
   return (
     <View style={[styles.container, containerStyles]}>

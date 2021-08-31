@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {Card, Appbar, Text} from 'react-native-paper';
 
 const Transactions = () => {
   return (
-    <View>
-      <Text>Transactions Screen</Text>
-    </View>
+    <>
+      <Appbar.Header>
+        <Appbar.Content title="TRANSACTIONS" />
+      </Appbar.Header>
+
+      <Card style={{marginVertical: 10}}>
+        <Card.Content>
+          <Text>Transaction List</Text>
+        </Card.Content>
+      </Card>
+    </>
   );
 };
 

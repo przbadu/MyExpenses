@@ -21,8 +21,8 @@ export interface TransactionProps {
   transactionType?: TransactionTypeEnum;
   createdAt?: Date;
   updatedAt?: Date;
-  walletId?: string | number;
-  categoryId?: string | number;
+  walletId?: string | number | null;
+  categoryId?: string | number | null;
 }
 
 class Transaction extends Model {
