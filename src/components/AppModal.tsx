@@ -1,16 +1,137 @@
 import React from 'react';
-import {Modal, Text, GestureResponderEvent} from 'react-native';
+import {
+  Modal,
+  View,
+  Animated,
+  ScrollView,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
+  GestureResponderEvent,
+  TouchableOpacity,
+} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const winHeight = Dimensions.get('window').height;
+
+// modal header
+interface ModalHeader {
+  label: string;
+  onPress: (event: GestureResponderEvent) => void;
+}
+const ModalHeader: React.FC<ModalHeader> = ({label, onPress}) => {
+  const {colors} = useTheme();
+
+  return (
+    <View style={{...styles.headerContainer}}>
+      <Text style={styles.heading}>{label}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <Icon name="close" color={colors.text} style={{fontSize: 20}} />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 interface AppModalProps {
   onClose: () => void;
-  show: boolean;
+  visible: boolean;
+  heading: string;
+  content: () => React.ReactNode;
+  transparentAreaHeight?: number | undefined;
 }
-const AppModal: React.FC<AppModalProps> = ({onClose, show = false}) => {
+const AppModal: React.FC<AppModalProps> = ({
+  onClose,
+  visible = false,
+  heading,
+  content,
+  transparentAreaHeight = 680,
+}) => {
+  const {colors} = useTheme();
+  const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
+  const [showModal, setShowModal] = React.useState<boolean>(visible);
+
+  React.useEffect(() => {
+    if (showModal) {
+      Animated.timing(modalAnimatedValue, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(modalAnimatedValue, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => onClose());
+    }
+  }, [showModal]);
+
+  const modalY = modalAnimatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [winHeight, winHeight - transparentAreaHeight],
+  });
+
   return (
-    <Modal onRequestClose={onClose}>
-      <Text>AppModal</Text>
+    <Modal animationType="fade" transparent visible={visible}>
+      <View style={{flex: 1, backgroundColor: colors.disabled}}>
+        {/* Transparent Background */}
+        <TouchableWithoutFeedback onPress={() => setShowModal(false)}>
+          <View style={styles.transparentContainer} />
+        </TouchableWithoutFeedback>
+
+        {/* content */}
+        <Animated.View
+          style={{
+            ...styles.contentContainer,
+            top: modalY,
+            backgroundColor: colors.background,
+          }}>
+          {/* header */}
+          <ModalHeader label={heading} onPress={() => setShowModal(false)} />
+
+          {/* content */}
+          {/* TODO: Fix it */}
+          {content()}
+        </Animated.View>
+      </View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  transparentContainer: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    position: 'absolute',
+  },
+  contentContainer: {
+    position: 'absolute',
+    left: 0,
+    width: '100%',
+    height: '100%',
+    padding: 10,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  heading: {
+    fontWeight: 'bold',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+});
 
 export {AppModal};

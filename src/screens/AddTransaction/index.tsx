@@ -2,8 +2,14 @@ import React from 'react';
 import {View, StyleSheet, ScrollView} from 'react-native';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 
-import {SwitchButton, AppTextInput, AppSelect, AppModal} from '../components';
-import {TransactionProps, TransactionTypeEnum} from '../database/models';
+import {
+  SwitchButton,
+  AppTextInput,
+  AppSelect,
+  AppModal,
+} from '../../components';
+import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {CategoryList} from './CategoryList';
 
 const AddTransaction = () => {
   const [form, setForm] = React.useState<TransactionProps>({
@@ -15,10 +21,11 @@ const AddTransaction = () => {
     walletId: null,
     categoryId: null,
   });
-  const [categoryText, setCategoryText] = React.useState(null);
-  const [walletText, setWalletText] = React.useState(null);
-  const [showCategoryModal, setShowCategoryModal] = React.useState(true);
-  const [showWalletModal, setShowWalletModal] = React.useState(false);
+  const [categoryText, setCategoryText] = React.useState<string | null>(null);
+  const [walletText, setWalletText] = React.useState<string | null>(null);
+  const [showCategoryModal, setShowCategoryModal] =
+    React.useState<boolean>(false);
+  const [showWalletModal, setShowWalletModal] = React.useState<boolean>(false);
 
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
@@ -59,12 +66,16 @@ const AddTransaction = () => {
           placeholder="Select Category"
           value={categoryText}
           icon="format-list-bulleted"
-          onPress={() => {}}
+          onPress={() => setShowCategoryModal(true)}
         />
         {showCategoryModal && (
           <AppModal
-            show={showCategoryModal}
+            visible={showCategoryModal}
             onClose={() => setShowCategoryModal(false)}
+            heading="Select Category"
+            content={() => (
+              <CategoryList onSelect={item => console.log('selected')} />
+            )}
           />
         )}
       </>
