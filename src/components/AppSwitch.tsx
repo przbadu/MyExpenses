@@ -4,7 +4,7 @@ import {Text} from 'react-native-paper';
 
 interface AppSwitchProps {
   label: string;
-  children?: React.JSX;
+  children?: React.ReactNode;
 }
 
 const AppSwitch: React.FC<AppSwitchProps> = ({label, children}) => {

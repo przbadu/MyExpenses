@@ -64,8 +64,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 15,
     padding: 10,
+    paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopLeftRadius: 6,
+    borderTopEndRadius: 6,
   },
 });
 
