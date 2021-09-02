@@ -3,6 +3,7 @@ import {field, readonly, date, children} from '@nozbe/watermelondb/decorators';
 
 // category types
 export interface CategoryProps {
+  id?: number | string;
   createdAt?: Date;
   name: string;
 }

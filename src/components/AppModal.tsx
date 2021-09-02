@@ -3,15 +3,15 @@ import {
   Modal,
   View,
   Animated,
-  ScrollView,
   TouchableWithoutFeedback,
   StyleSheet,
   Dimensions,
   GestureResponderEvent,
   TouchableOpacity,
 } from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import {Text, useTheme, Portal, Modal as PaperModal} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {darkTheme, lightTheme} from '../constants';
 
 const winHeight = Dimensions.get('window').height;
 
@@ -37,14 +37,14 @@ interface AppModalProps {
   onClose: () => void;
   visible: boolean;
   heading: string;
-  content: () => React.ReactNode;
+  renderContent: () => React.ReactNode;
   transparentAreaHeight?: number | undefined;
 }
 const AppModal: React.FC<AppModalProps> = ({
   onClose,
   visible = false,
   heading,
-  content,
+  renderContent,
   transparentAreaHeight = 680,
 }) => {
   const {colors} = useTheme();
@@ -90,9 +90,8 @@ const AppModal: React.FC<AppModalProps> = ({
           {/* header */}
           <ModalHeader label={heading} onPress={() => setShowModal(false)} />
 
-          {/* content */}
-          {/* TODO: Fix it */}
-          {content()}
+          {/* body */}
+          {renderContent()}
         </Animated.View>
       </View>
     </Modal>
@@ -113,6 +112,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     padding: 10,
+    paddingBottom: 150,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
   },

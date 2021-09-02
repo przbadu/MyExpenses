@@ -1,56 +1,47 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  GestureResponderEvent,
-  FlatList,
-} from 'react-native';
-import {List, Text} from 'react-native-paper';
+import {View, TouchableOpacity, FlatList, Platform} from 'react-native';
+import {Text} from 'react-native-paper';
+import withObservables from '@nozbe/with-observables';
 
-const data = [
-  {id: 1, title: 'item'},
-  {id: 2, title: 'item'},
-  {id: 3, title: 'item'},
-  {id: 4, title: 'item'},
-  {id: 5, title: 'item'},
-  {id: 6, title: 'item'},
-  {id: 7, title: 'item'},
-  {id: 8, title: 'item'},
-  {id: 9, title: 'item'},
-  {id: 10, title: 'item'},
-  {id: 11, title: 'item'},
-  {id: 12, title: 'item'},
-  {id: 13, title: 'item'},
-  {id: 14, title: 'item'},
-  {id: 15, title: 'item'},
-  {id: 17, title: 'item'},
-  {id: 16, title: 'item'},
-];
-
-interface ItemProps {
-  item: {
-    id: number;
-    title: string;
-  };
-}
+import {CategoryProps} from '../../database/models';
+import {observeCategories} from '../../database/helpers';
+import {categoryColors} from '../../constants';
 
 interface CategoryListProps {
-  onSelect: (event: GestureResponderEvent) => void;
+  onSelect: (item: CategoryProps) => void;
+  categories: CategoryProps[];
 }
-const CategoryList: React.FC<CategoryListProps> = ({onSelect}) => {
-  const renderItem: React.FC<ItemProps> = ({item}) => (
-    <View>
-      <Text>{item.title}</Text>
-    </View>
+const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
+  const renderItem = ({item}: {item: CategoryProps}) => (
+    <TouchableOpacity
+      style={{flexDirection: 'row', alignItems: 'center'}}
+      onPress={() => onSelect(item)}>
+      <View
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 24,
+          backgroundColor:
+            categoryColors[Math.floor(Math.random() * categoryColors.length)],
+          marginRight: 10,
+        }}
+      />
+      <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
+    </TouchableOpacity>
   );
 
   return (
     <FlatList
-      data={data}
+      data={categories}
       renderItem={renderItem}
-      keyExtractor={item => item.id.toString()}
+      keyExtractor={(item: CategoryProps) => String(item.id)}
+      style={{paddingLeft: 20, paddingRight: 20}}
     />
   );
 };
 
-export {CategoryList};
+const enhance = withObservables([], () => ({
+  categories: observeCategories(),
+}));
+
+export default enhance(CategoryList);

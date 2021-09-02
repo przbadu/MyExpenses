@@ -14,6 +14,7 @@ export enum TransactionTypeEnum {
 }
 
 export interface TransactionProps {
+  id?: number | string;
   amount: number;
   notes: string;
   transactionDateAt?: Date;

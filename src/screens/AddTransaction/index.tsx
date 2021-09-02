@@ -8,8 +8,14 @@ import {
   AppSelect,
   AppModal,
 } from '../../components';
-import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {CategoryList} from './CategoryList';
+import {
+  CategoryProps,
+  TransactionProps,
+  TransactionTypeEnum,
+  WalletProps,
+} from '../../database/models';
+import CategoryList from './CategoryList';
+import WalletList from './WalletList';
 
 const AddTransaction = () => {
   const [form, setForm] = React.useState<TransactionProps>({
@@ -29,6 +35,18 @@ const AddTransaction = () => {
 
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
+
+  const selectCategory = (item: CategoryProps) => {
+    setCategoryText(item.name);
+    setForm({...form, categoryId: item.id});
+    setShowCategoryModal(false);
+  };
+
+  const selectWallet = (item: WalletProps) => {
+    setWalletText(item.name);
+    setForm({...form, walletId: item.id});
+    setShowWalletModal(false);
+  };
 
   function renderIncomeExpenseSwitch() {
     return (
@@ -73,9 +91,7 @@ const AddTransaction = () => {
             visible={showCategoryModal}
             onClose={() => setShowCategoryModal(false)}
             heading="Select Category"
-            content={() => (
-              <CategoryList onSelect={item => console.log('selected')} />
-            )}
+            renderContent={() => <CategoryList onSelect={selectCategory} />}
           />
         )}
       </>
@@ -83,14 +99,24 @@ const AddTransaction = () => {
   }
 
   function renderWallet() {
-    <>
-      <AppSelect
-        placeholder="Select Wallet  "
-        value={categoryText}
-        icon="format-list-bulleted"
-        onPress={() => {}}
-      />
-    </>;
+    return (
+      <>
+        <AppSelect
+          placeholder="Select Wallet"
+          value={walletText}
+          icon="bank"
+          onPress={() => setShowWalletModal(true)}
+        />
+        {showWalletModal && (
+          <AppModal
+            visible={showWalletModal}
+            onClose={() => setShowWalletModal(false)}
+            heading="Select Wallet"
+            renderContent={() => <WalletList onSelect={selectWallet} />}
+          />
+        )}
+      </>
+    );
   }
 
   return (

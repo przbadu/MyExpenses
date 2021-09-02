@@ -9,6 +9,7 @@ import {
 
 // wallet props
 export interface WalletProps {
+  id?: string | number;
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
