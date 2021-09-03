@@ -1,12 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import {View, StyleSheet, ScrollView, Platform} from 'react-native';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import dayjs from 'dayjs';
 
 import {
   SwitchButton,
   AppTextInput,
   AppSelect,
   AppModal,
+  AppCalendarPickerInput,
 } from '../../components';
 import {
   CategoryProps,
@@ -18,6 +21,7 @@ import CategoryList from './CategoryList';
 import WalletList from './WalletList';
 
 const AddTransaction = () => {
+  // prepare form state
   const [form, setForm] = React.useState<TransactionProps>({
     amount: 0.0,
     notes: '',
@@ -27,11 +31,21 @@ const AddTransaction = () => {
     walletId: null,
     categoryId: null,
   });
+
+  // Set category and wallet field text
   const [categoryText, setCategoryText] = React.useState<string | null>(null);
   const [walletText, setWalletText] = React.useState<string | null>(null);
+
+  // show/hide category/wallet modal
   const [showCategoryModal, setShowCategoryModal] =
     React.useState<boolean>(false);
   const [showWalletModal, setShowWalletModal] = React.useState<boolean>(false);
+
+  // Date time picker states
+  const [showCalendar, setShowCalendar] = React.useState<boolean>(false);
+  const [calendarMode, setCalendarMode] = React.useState<'date' | 'time'>(
+    'date',
+  );
 
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
@@ -46,6 +60,12 @@ const AddTransaction = () => {
     setWalletText(item.name);
     setForm({...form, walletId: item.id});
     setShowWalletModal(false);
+  };
+
+  const handleCalendarChange = (event: Event, date?: Date | any) => {
+    const currentDate = date || form.transactionDateAt;
+    setShowCalendar(Platform.OS == 'ios');
+    setForm({...form, transactionDateAt: currentDate});
   };
 
   function renderIncomeExpenseSwitch() {
@@ -119,6 +139,20 @@ const AddTransaction = () => {
     );
   }
 
+  function renderDateTimePicker() {
+    if (!showCalendar) return null;
+
+    return (
+      <DateTimePicker
+        value={form.transactionDateAt}
+        mode={calendarMode}
+        is24Hour
+        display="default"
+        onChange={handleCalendarChange}
+      />
+    );
+  }
+
   return (
     <>
       <Appbar.Header>
@@ -145,15 +179,16 @@ const AddTransaction = () => {
               left={<TextInput.Icon name="calendar-text" />}
               style={styles.input}
             />
-            <AppTextInput
-              label="Date"
-              value={form.transactionDateAt?.toString()}
-              left={<TextInput.Icon name="calendar" />}
-              style={styles.input}
+            <AppCalendarPickerInput
+              date={dayjs(form.transactionDateAt).format('DD MMM YYYY')}
+              time={dayjs(form.transactionDateAt).format('HH:mm')}
+              icon="calendar"
+              onChange={() => {}}
             />
 
             {renderCategory()}
             {renderWallet()}
+            {renderDateTimePicker()}
 
             <Button
               icon="database-plus"

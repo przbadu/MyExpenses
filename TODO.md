@@ -11,3 +11,7 @@
 **Navigation**
 
 - [ ] https://reactnavigation.org/docs/getting-started
+
+**Datetime picker**
+
+- [ ] https://www.npmjs.com/package/@react-native-community/datetimepicker
