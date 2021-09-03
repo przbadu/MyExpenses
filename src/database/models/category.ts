@@ -6,6 +6,7 @@ export interface CategoryProps {
   id?: number | string;
   createdAt?: Date;
   name: string;
+  color?: string;
 }
 
 class Category extends Model {
@@ -18,6 +19,7 @@ class Category extends Model {
 
   // attributes
   @field('name') name: string | any;
+  @field('color') color: String | any;
   @readonly @date('created_at') createdAt: Date | any;
   @readonly @date('updated_at') updatedAt: Date | any;
 

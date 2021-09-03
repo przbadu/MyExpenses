@@ -5,7 +5,7 @@ import withObservables from '@nozbe/with-observables';
 
 import {CategoryProps} from '../../database/models';
 import {observeCategories} from '../../database/helpers';
-import {categoryColors} from '../../constants';
+import {CircleColor} from '../../components';
 
 interface CategoryListProps {
   onSelect: (item: CategoryProps) => void;
@@ -16,16 +16,7 @@ const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
     <TouchableOpacity
       style={{flexDirection: 'row', alignItems: 'center'}}
       onPress={() => onSelect(item)}>
-      <View
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: 24,
-          backgroundColor:
-            categoryColors[Math.floor(Math.random() * categoryColors.length)],
-          marginRight: 10,
-        }}
-      />
+      <CircleColor color={item.color} />
       <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
     </TouchableOpacity>
   );

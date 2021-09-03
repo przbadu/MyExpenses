@@ -2,12 +2,13 @@ import {appSchema, tableSchema} from '@nozbe/watermelondb/Schema';
 import {Category, Transaction, Wallet} from './models';
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables: [
     tableSchema({
       name: Wallet.table,
       columns: [
         {name: 'name', type: 'string'},
+        {name: 'color', type: 'string'},
         {name: 'balance_amount', type: 'number'},
         {name: 'is_default', type: 'boolean'},
         {name: 'is_archived', type: 'boolean'},
@@ -19,6 +20,7 @@ export default appSchema({
       name: Category.table,
       columns: [
         {name: 'name', type: 'string'},
+        {name: 'color', type: 'string'},
         {name: 'created_at', type: 'number'},
         {name: 'updated_at', type: 'number'},
       ],
