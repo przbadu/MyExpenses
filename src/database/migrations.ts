@@ -2,7 +2,7 @@ import {
   addColumns,
   schemaMigrations,
 } from '@nozbe/watermelondb/Schema/migrations';
-import {Category, Wallet} from './models';
+import {Category, Transaction, Wallet} from './models';
 
 export default schemaMigrations({
   migrations: [
@@ -16,6 +16,15 @@ export default schemaMigrations({
         addColumns({
           table: Wallet.table,
           columns: [{name: 'color', type: 'string'}],
+        }),
+      ],
+    },
+    {
+      toVersion: 3,
+      steps: [
+        addColumns({
+          table: Transaction.table,
+          columns: [{name: 'time', type: 'string'}],
         }),
       ],
     },

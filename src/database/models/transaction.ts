@@ -17,7 +17,8 @@ export interface TransactionProps {
   id?: number | string;
   amount: number;
   notes: string;
-  transactionDateAt?: Date;
+  transactionAt?: Date;
+  time?: string;
   isPaid?: boolean;
   transactionType?: TransactionTypeEnum;
   createdAt?: Date;
@@ -31,7 +32,7 @@ class Transaction extends Model {
   static table = 'transactions';
 
   // attributes
-  @date('transaction_date_at') transactionDateAt: Date | any;
+  @date('transaction_at') transactionAt: Date | any;
   @field('notes') notes: String | any;
   @field('amount') amount: Number | any;
   @field('is_paid') isPaid: Boolean | any;

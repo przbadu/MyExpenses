@@ -9,18 +9,46 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text} from 'react-native-paper';
 
 interface AppCalendarPickerInputProps {
-  onChange: (event: GestureResponderEvent) => void;
+  onShowDatePicker: () => void;
+  onShowTimePicker: () => void;
   date?: string;
   time?: string;
   icon?: string;
 }
 const AppCalendarPickerInput: React.FC<AppCalendarPickerInputProps> = ({
-  onChange,
+  onShowDatePicker,
+  onShowTimePicker,
   icon,
   date,
   time,
 }) => {
   const {colors} = useTheme();
+
+  const renderDatePickerLabel = () => (
+    <View style={styles.dateTimeWrapper}>
+      <TouchableOpacity onPress={onShowDatePicker}>
+        <Text style={{fontSize: date ? 12 : 20, color: colors.placeholder}}>
+          Date
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onShowTimePicker}>
+        <Text style={{fontSize: date ? 12 : 20, color: colors.placeholder}}>
+          Time
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderDatePickerValue = () => (
+    <View style={styles.dateTimeWrapper}>
+      <TouchableOpacity onPress={onShowDatePicker}>
+        <Text style={{...styles.text, color: colors.text}}>{date}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onShowTimePicker}>
+        <Text style={{...styles.text, color: colors.text}}>{time}</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View
@@ -38,29 +66,9 @@ const AppCalendarPickerInput: React.FC<AppCalendarPickerInputProps> = ({
       )}
 
       <View style={styles.inputWrapper}>
-        <View style={styles.dateTimeWrapper}>
-          <TouchableOpacity>
-            <Text style={{fontSize: date ? 12 : 20, color: colors.placeholder}}>
-              Date
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={{fontSize: date ? 12 : 20, color: colors.placeholder}}>
-              Time
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {renderDatePickerLabel()}
 
-        {date && (
-          <View style={styles.dateTimeWrapper}>
-            <TouchableOpacity>
-              <Text style={{...styles.text, color: colors.text}}>{date}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={{...styles.text, color: colors.text}}>{time}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        {date && renderDatePickerValue()}
       </View>
     </View>
   );

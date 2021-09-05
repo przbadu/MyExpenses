@@ -20,6 +20,7 @@
     "randomcolor": "^0.6.2",
     "react": "17.0.1",
     "react-native": "0.64.2",
+    "react-native-modal-datetime-picker": "^11.0.0",
     "react-native-paper": "^4.9.2",
     "react-native-safe-area-context": "^3.3.0",
     "react-native-screens": "^3.6.0",

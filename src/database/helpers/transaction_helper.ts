@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {database} from '../index';
 import {Transaction, TransactionProps, TransactionTypeEnum} from '../models';
 
@@ -5,13 +6,15 @@ const transactions = database.collections.get(Transaction.table);
 
 export const observeTransactions = () => transactions.query().observe();
 
+const now = new Date();
 export const saveTransaction = async ({
   amount,
   notes,
   categoryId,
   walletId,
   isPaid = true,
-  transactionDateAt = new Date(),
+  transactionAt = now,
+  time = dayjs(now).format('HH:mm'),
   transactionType = TransactionTypeEnum.expense,
 }: TransactionProps) => {
   await database.write(async () => {
@@ -21,7 +24,8 @@ export const saveTransaction = async ({
       entry.categoryId = categoryId;
       entry.walletId = walletId;
       entry.isPaid = isPaid;
-      entry.transactionDateAt = transactionDateAt;
+      entry.transactionAt = transactionAt;
+      entry.time = time;
       entry.transactionType = transactionType;
     });
   });

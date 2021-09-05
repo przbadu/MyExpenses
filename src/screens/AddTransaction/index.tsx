@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView, Platform} from 'react-native';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
 
 import {
@@ -21,11 +21,15 @@ import CategoryList from './CategoryList';
 import WalletList from './WalletList';
 
 const AddTransaction = () => {
+  const now = new Date();
+  const dateFormat = 'DD MMM YYYY';
+
   // prepare form state
   const [form, setForm] = React.useState<TransactionProps>({
     amount: 0.0,
     notes: '',
-    transactionDateAt: new Date(),
+    transactionAt: now,
+    time: dayjs(now).format('HH:mm'),
     transactionType: TransactionTypeEnum.expense,
     isPaid: true,
     walletId: null,
@@ -62,10 +66,23 @@ const AddTransaction = () => {
     setShowWalletModal(false);
   };
 
-  const handleCalendarChange = (event: Event, date?: Date | any) => {
-    const currentDate = date || form.transactionDateAt;
-    setShowCalendar(Platform.OS == 'ios');
-    setForm({...form, transactionDateAt: currentDate});
+  const handleCalendarChange = (date: Date) => {
+    if (calendarMode == 'date') {
+      setForm({...form, transactionAt: date || form.transactionAt});
+    } else if (calendarMode == 'time') {
+      setForm({...form, time: dayjs(date).format('HH:mm')});
+    }
+    setShowCalendar(false);
+  };
+
+  const showDatePicker = () => {
+    setShowCalendar(true);
+    setCalendarMode('date');
+  };
+
+  const showTimePicker = () => {
+    setShowCalendar(true);
+    setCalendarMode('time');
   };
 
   function renderIncomeExpenseSwitch() {
@@ -139,17 +156,27 @@ const AddTransaction = () => {
     );
   }
 
-  function renderDateTimePicker() {
-    if (!showCalendar) return null;
-
+  console.log('date', form.transactionAt);
+  console.log('time', form.time);
+  function renderTransactionDateTime() {
     return (
-      <DateTimePicker
-        value={form.transactionDateAt}
-        mode={calendarMode}
-        is24Hour
-        display="default"
-        onChange={handleCalendarChange}
-      />
+      <>
+        {/* Date and time picker input */}
+        <AppCalendarPickerInput
+          date={dayjs(form.transactionAt).format(dateFormat)}
+          time={form.time}
+          icon="calendar"
+          onShowDatePicker={showDatePicker}
+          onShowTimePicker={showTimePicker}
+        />
+        <DateTimePicker
+          isVisible={showCalendar}
+          mode={calendarMode}
+          display="default"
+          onConfirm={handleCalendarChange}
+          onCancel={() => setShowCalendar(false)}
+        />
+      </>
     );
   }
 
@@ -179,16 +206,10 @@ const AddTransaction = () => {
               left={<TextInput.Icon name="calendar-text" />}
               style={styles.input}
             />
-            <AppCalendarPickerInput
-              date={dayjs(form.transactionDateAt).format('DD MMM YYYY')}
-              time={dayjs(form.transactionDateAt).format('HH:mm')}
-              icon="calendar"
-              onChange={() => {}}
-            />
 
+            {renderTransactionDateTime()}
             {renderCategory()}
             {renderWallet()}
-            {renderDateTimePicker()}
 
             <Button
               icon="database-plus"
