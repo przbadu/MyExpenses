@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView, Platform} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
@@ -19,6 +19,7 @@ import {
 } from '../../database/models';
 import CategoryList from './CategoryList';
 import WalletList from './WalletList';
+import {styles} from './styles';
 
 const AddTransaction = () => {
   const now = new Date();
@@ -59,7 +60,6 @@ const AddTransaction = () => {
     setForm({...form, categoryId: item.id});
     setShowCategoryModal(false);
   };
-
   const selectWallet = (item: WalletProps) => {
     setWalletText(item.name);
     setForm({...form, walletId: item.id});
@@ -84,7 +84,9 @@ const AddTransaction = () => {
     setShowCalendar(true);
     setCalendarMode('time');
   };
+  // END state and helper methods
 
+  // User Interface
   function renderIncomeExpenseSwitch() {
     return (
       <View style={styles.incomeExpenseContainer}>
@@ -98,9 +100,14 @@ const AddTransaction = () => {
           containerStyles={{borderWidth: 0, borderBottomWidth: 1}}
         />
         <SwitchButton
-          onPress={() =>
-            setForm({...form, transactionType: TransactionTypeEnum.income})
-          }
+          onPress={() => {
+            setForm({
+              ...form,
+              transactionType: TransactionTypeEnum.income,
+              categoryId: null,
+            });
+            setCategoryText(null);
+          }}
           label="Income"
           isActive={isIncome()}
           icon={isIncome() ? 'plus' : undefined}
@@ -156,8 +163,6 @@ const AddTransaction = () => {
     );
   }
 
-  console.log('date', form.transactionAt);
-  console.log('time', form.time);
   function renderTransactionDateTime() {
     return (
       <>
@@ -208,7 +213,7 @@ const AddTransaction = () => {
             />
 
             {renderTransactionDateTime()}
-            {renderCategory()}
+            {isExpense() && renderCategory()}
             {renderWallet()}
 
             <Button
@@ -224,18 +229,5 @@ const AddTransaction = () => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 10,
-    marginVertical: 20,
-  },
-  input: {
-    marginBottom: 15,
-  },
-  incomeExpenseContainer: {
-    flexDirection: 'row',
-  },
-});
 
 export {AddTransaction};
