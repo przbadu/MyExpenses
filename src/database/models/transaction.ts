@@ -33,6 +33,7 @@ class Transaction extends Model {
 
   // attributes
   @date('transaction_at') transactionAt: Date | any;
+  @field('time') time: string | any;
   @field('notes') notes: String | any;
   @field('amount') amount: Number | any;
   @field('is_paid') isPaid: Boolean | any;

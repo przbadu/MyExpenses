@@ -4,6 +4,7 @@ import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
 
+// components
 import {
   SwitchButton,
   AppTextInput,
@@ -11,31 +12,37 @@ import {
   AppModal,
   AppCalendarPickerInput,
 } from '../../components';
+import CategoryList from './CategoryList';
+import WalletList from './WalletList';
+
+// database
 import {
   CategoryProps,
   TransactionProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import CategoryList from './CategoryList';
-import WalletList from './WalletList';
+import {saveTransaction} from '../../database/helpers';
+
 import {styles} from './styles';
 
-const AddTransaction = () => {
-  const now = new Date();
-  const dateFormat = 'DD MMM YYYY';
-
+const now = new Date();
+const dateFormat = 'DD MMM YYYY';
+const initialFormState = {
+  amount: 0,
+  notes: '',
+  transactionAt: now,
+  time: dayjs(now).format('HH:mm'),
+  transactionType: TransactionTypeEnum.expense,
+  isPaid: true,
+  walletId: null,
+  categoryId: null,
+};
+const AddTransaction = ({navigation}) => {
   // prepare form state
-  const [form, setForm] = React.useState<TransactionProps>({
-    amount: 0.0,
-    notes: '',
-    transactionAt: now,
-    time: dayjs(now).format('HH:mm'),
-    transactionType: TransactionTypeEnum.expense,
-    isPaid: true,
-    walletId: null,
-    categoryId: null,
-  });
+  const [amountError, setAmountError] = React.useState<string | null>(null);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [form, setForm] = React.useState<TransactionProps>(initialFormState);
 
   // Set category and wallet field text
   const [categoryText, setCategoryText] = React.useState<string | null>(null);
@@ -54,6 +61,22 @@ const AddTransaction = () => {
 
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
+
+  const submitForm = () => {
+    setSubmitting(true);
+    // normal validations
+    if (form.amount === 0) {
+      setAmountError('Please enter amount');
+      setSubmitting(false);
+      return;
+    }
+
+    setAmountError(null);
+    saveTransaction({...form});
+    setForm({...form, ...initialFormState});
+    setSubmitting(false);
+    navigation.navigate('Transactions');
+  };
 
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
@@ -198,13 +221,19 @@ const AddTransaction = () => {
               mode="flat"
               label="Amount"
               placeholder="0.00"
+              value={String(form.amount)}
+              onChangeText={text => setForm({...form, amount: Number(text)})}
               keyboardType="number-pad"
+              selectTextOnFocus
               left={<TextInput.Icon name="currency-usd" />}
+              error={amountError !== null}
+              errorMessage={amountError}
               style={styles.input}
             />
             <AppTextInput
               label="Notes"
-              placeholder="0.00"
+              placeholder="Enter your notes"
+              maxLength={255}
               value={form.notes}
               onChangeText={text => setForm({...form, notes: text})}
               right={<TextInput.Affix text={`${form.notes.length}/255`} />}
@@ -219,9 +248,10 @@ const AddTransaction = () => {
             <Button
               icon="database-plus"
               mode="contained"
-              onPress={() => {}}
+              onPress={submitForm}
+              disabled={submitting}
               style={{marginTop: 20, marginBottom: 10, padding: 10}}>
-              SAVE
+              {submitting ? 'please wait...' : 'SAVE'}
             </Button>
           </Card.Content>
         </Card>

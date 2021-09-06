@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import {database} from '../index';
-import {Transaction, TransactionProps, TransactionTypeEnum} from '../models';
+import {
+  Transaction,
+  TransactionProps,
+  TransactionTypeEnum,
+  Wallet,
+} from '../models';
 
 const transactions = database.collections.get(Transaction.table);
 
@@ -21,8 +26,8 @@ export const saveTransaction = async ({
     await transactions.create(entry => {
       entry.amount = Number(amount);
       entry.notes = notes;
-      entry.categoryId = categoryId;
-      entry.walletId = walletId;
+      entry.category.id = categoryId;
+      entry.wallet.id = walletId;
       entry.isPaid = isPaid;
       entry.transactionAt = transactionAt;
       entry.time = time;
