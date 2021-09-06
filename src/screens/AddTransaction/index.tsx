@@ -223,7 +223,7 @@ const AddTransaction = ({navigation}) => {
               placeholder="0.00"
               value={String(form.amount)}
               onChangeText={text => setForm({...form, amount: Number(text)})}
-              keyboardType="number-pad"
+              keyboardType="decimal-pad"
               selectTextOnFocus
               left={<TextInput.Icon name="currency-usd" />}
               error={amountError !== null}
