@@ -58,7 +58,6 @@ const AppSelect: React.FC<AppSelectProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     marginTop: 5,
     marginBottom: 15,

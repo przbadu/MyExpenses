@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
-import {Appbar, Card, Switch} from 'react-native-paper';
+import {View, StyleSheet} from 'react-native';
+import {Text, Appbar, Card, Switch} from 'react-native-paper';
 
 import {AppModal, AppSelect, AppSwitch} from '../../components';
 import {
@@ -18,15 +18,13 @@ const Settings = () => {
   const {currency, updateCurrency} =
     useContext<CurrencyContextProps>(CurrencyContext);
 
-  console.log(currency, 'currency');
-
   // render currency dropdown
   const renderCurrencySelect = () => (
-    <>
+    <View style={{marginTop: 10}}>
       <AppSelect
         placeholder="Select currency"
         value={currency}
-        icon="currency"
+        icon="currency-usd"
         onPress={() => setShowCurrencyModal(true)}
       />
       {showCurrencyModal && (
@@ -36,12 +34,16 @@ const Settings = () => {
           heading="Select Currency"
           renderContent={() => (
             <CurrencyList
-              onSelect={async (item: any) => await updateCurrency(item.name)}
+              currency={currency}
+              onSelect={(item: any) => {
+                updateCurrency(item.isoCode);
+                setShowCurrencyModal(false);
+              }}
             />
           )}
         />
       )}
-    </>
+    </View>
   );
 
   return (
@@ -55,11 +57,9 @@ const Settings = () => {
           <AppSwitch label="Dark Theme">
             <Switch value={theme.dark} onValueChange={toggleTheme} />
           </AppSwitch>
-        </Card.Content>
-      </Card>
 
-      <Card style={styles.card}>
-        <Card.Content>{renderCurrencySelect()}</Card.Content>
+          {renderCurrencySelect()}
+        </Card.Content>
       </Card>
     </>
   );
