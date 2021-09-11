@@ -5,7 +5,16 @@ import {LocalStorage} from '../../database/helpers';
 import {lightTheme, darkTheme} from '../../constants';
 
 export const APP_THEME = 'APP_THEME';
-export const ThemeContext = React.createContext(darkTheme);
+
+export interface ThemeContentProps {
+  theme: typeof darkTheme;
+  toggleTheme: () => Promise<void>;
+}
+
+export const ThemeContext = React.createContext<ThemeContentProps>({
+  theme: darkTheme,
+  toggleTheme: async () => {},
+});
 
 export const ThemeProvider = ({children}: any) => {
   const [theme, setTheme] = React.useState(darkTheme);
@@ -38,7 +47,7 @@ export const ThemeProvider = ({children}: any) => {
     return appTheme === 'dark' ? darkTheme : lightTheme;
   };
 
-  const setAppTheme = async (dark: bool) => {
+  const setAppTheme = async (dark: boolean) => {
     const appTheme = dark ? 'dark' : 'light';
     await LocalStorage.set(APP_THEME, appTheme);
   };
