@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {Q} from '@nozbe/watermelondb';
 import {database} from '../index';
 import {
   Transaction,
@@ -9,7 +10,18 @@ import {
 
 const transactions = database.collections.get(Transaction.table);
 
+// observe all transactions
 export const observeTransactions = () => transactions.query().observe();
+
+export const observeCurrentYearTransactions = () =>
+  transactions.query(
+    Q.unsafeSqlQuery(
+      'SELECT *, strftime("%m", datetime(transaction_at/1000, "unixepoch")) as "month" FROM transactions' +
+        ' where strftime("%Y", datetime(transaction_at/1000, "unixepoch")) = ?' +
+        ' order by transaction_at DESC',
+      [new Date().getFullYear().toString()],
+    ),
+  );
 
 const now = new Date();
 export const saveTransaction = async ({
