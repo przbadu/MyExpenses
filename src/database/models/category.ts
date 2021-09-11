@@ -1,5 +1,8 @@
-import {Model} from '@nozbe/watermelondb';
-import {field, readonly, date, children} from '@nozbe/watermelondb/decorators';
+import Model from '@nozbe/watermelondb/Model';
+import field from '@nozbe/watermelondb/decorators/field';
+import readonly from '@nozbe/watermelondb/decorators/readonly';
+import date from '@nozbe/watermelondb/decorators/date';
+import children from '@nozbe/watermelondb/decorators/children';
 
 // category types
 export interface CategoryProps {

@@ -15,19 +15,25 @@ import {
 import {
   observeTransactions,
   observeCurrentYearTransactions,
-} from '../database/helpers';
-import {TransactionProps, TransactionTypeEnum} from '../database/models';
+} from '../../database/helpers';
+import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {numToCurrency} from '../../constants';
+import {styles} from './styles';
 
+// interface
 interface TransactionsProps {
   transactions: TransactionProps[];
   currentYearTransactions: TransactionProps[];
 }
+
+// Transaction component
 const _Transactions: React.FC<TransactionsProps> = ({
   transactions,
   currentYearTransactions,
 }) => {
   const {colors} = useTheme();
 
+  // calculate total income
   const totalIncome = transactions.reduce(
     (sum: number, trans: TransactionProps) =>
       trans.transactionType == TransactionTypeEnum.income
@@ -35,6 +41,7 @@ const _Transactions: React.FC<TransactionsProps> = ({
         : sum,
     0,
   );
+  // calculate total expense
   const totalExpense = transactions.reduce(
     (sum: number, trans: TransactionProps) =>
       trans.transactionType == TransactionTypeEnum.expense
@@ -42,8 +49,10 @@ const _Transactions: React.FC<TransactionsProps> = ({
         : sum,
     0,
   );
+  // calculate total balance
   const balance = totalIncome - totalExpense;
 
+  // prepare transactions for SectionList, grouped by month
   let transactionGroupedByMonth = currentYearTransactions.reduce(
     (groupedTransaction: any, transaction: TransactionProps): object => {
       const month = dayjs(transaction.transactionAt).format('MMMM');
@@ -57,9 +66,6 @@ const _Transactions: React.FC<TransactionsProps> = ({
   transactionGroupedByMonth = Object.keys(transactionGroupedByMonth).map(
     key => ({title: key, data: transactionGroupedByMonth[key]}),
   );
-
-  const numToCurrency = (amount: number) =>
-    currency(amount, {symbol: 'Rs.'}).format();
 
   const textColor = (transactionType: TransactionTypeEnum | undefined) => ({
     color: transactionType === TransactionTypeEnum.expense ? 'red' : 'green',
@@ -139,28 +145,6 @@ const _Transactions: React.FC<TransactionsProps> = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  textContainer: {
-    marginRight: 20,
-    flexShrink: 1,
-  },
-  amountContainer: {
-    paddingRight: 10,
-  },
-  datetime: {
-    fontSize: 12,
-  },
-  headline: {
-    marginTop: 20,
-    margin: 10,
-  },
-});
 
 const enhance = withObservables([], () => ({
   transactions: observeTransactions(),

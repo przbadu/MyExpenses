@@ -1,8 +1,8 @@
 import {appSchema, tableSchema} from '@nozbe/watermelondb/Schema';
-import {Category, Transaction, Wallet} from './models';
+import {Category, Setting, Transaction, Wallet} from './models';
 
 export default appSchema({
-  version: 3,
+  version: 4,
   tables: [
     tableSchema({
       name: Wallet.table,
@@ -38,6 +38,15 @@ export default appSchema({
         {name: 'updated_at', type: 'number'},
         {name: 'wallet_id', type: 'string', isIndexed: true},
         {name: 'category_id', type: 'string', isIndexed: true},
+      ],
+    }),
+    tableSchema({
+      name: Setting.table,
+      columns: [
+        {name: 'currency', type: 'string'},
+        {name: 'date_format', type: 'string'},
+        {name: 'time_format', type: 'string'},
+        {name: 'system_app_lock', type: 'boolean'},
       ],
     }),
   ],
