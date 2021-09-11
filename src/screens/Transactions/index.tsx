@@ -1,8 +1,7 @@
 import withObservables from '@nozbe/with-observables';
-import currency from 'currency.js';
 import dayjs from 'dayjs';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View, SectionList} from 'react-native';
+import {TouchableOpacity, View, SectionList} from 'react-native';
 import {
   useTheme,
   Card,
@@ -17,7 +16,8 @@ import {
   observeCurrentYearTransactions,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {numToCurrency} from '../../constants';
+import {numberToCurrency} from '../../constants';
+import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
 
 // interface
@@ -32,6 +32,7 @@ const _Transactions: React.FC<TransactionsProps> = ({
   currentYearTransactions,
 }) => {
   const {colors} = useTheme();
+  const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
   // calculate total income
   const totalIncome = transactions.reduce(
@@ -84,7 +85,7 @@ const _Transactions: React.FC<TransactionsProps> = ({
             </View>
             <View style={styles.amountContainer}>
               <Text style={textColor(item.transactionType)}>
-                {numToCurrency(item.amount)}
+                {numberToCurrency(item.amount, currency)}
               </Text>
             </View>
           </Card.Content>
@@ -113,10 +114,10 @@ const _Transactions: React.FC<TransactionsProps> = ({
           </View>
           <View>
             <Subheading style={textColor(TransactionTypeEnum.income)}>
-              {numToCurrency(totalIncome)}
+              {numberToCurrency(totalIncome, currency)}
             </Subheading>
             <Subheading style={textColor(TransactionTypeEnum.expense)}>
-              {numToCurrency(totalExpense)}
+              {numberToCurrency(totalExpense, currency)}
             </Subheading>
             <Subheading
               style={textColor(
@@ -124,7 +125,7 @@ const _Transactions: React.FC<TransactionsProps> = ({
                   ? TransactionTypeEnum.income
                   : TransactionTypeEnum.expense,
               )}>
-              {numToCurrency(balance)}
+              {numberToCurrency(balance, currency)}
             </Subheading>
           </View>
         </Card.Content>
