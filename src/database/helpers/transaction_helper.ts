@@ -17,9 +17,7 @@ export const observeCurrentYearTransactions = () =>
   transactions.query(
     Q.unsafeSqlQuery(
       'SELECT *, strftime("%m", datetime(transaction_at/1000, "unixepoch")) as "month" FROM transactions' +
-        ' where strftime("%Y", datetime(transaction_at/1000, "unixepoch")) = ?' +
         ' order by transaction_at DESC',
-      [new Date().getFullYear().toString()],
     ),
   );
 

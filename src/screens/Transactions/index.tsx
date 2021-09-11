@@ -11,10 +11,7 @@ import {
   Headline,
 } from 'react-native-paper';
 
-import {
-  observeTransactions,
-  observeCurrentYearTransactions,
-} from '../../database/helpers';
+import {observeCurrentYearTransactions} from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
@@ -23,14 +20,10 @@ import {styles} from './styles';
 // interface
 interface TransactionsProps {
   transactions: TransactionProps[];
-  currentYearTransactions: TransactionProps[];
 }
 
 // Transaction component
-const _Transactions: React.FC<TransactionsProps> = ({
-  transactions,
-  currentYearTransactions,
-}) => {
+const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
   const {colors} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
@@ -54,9 +47,9 @@ const _Transactions: React.FC<TransactionsProps> = ({
   const balance = totalIncome - totalExpense;
 
   // prepare transactions for SectionList, grouped by month
-  let transactionGroupedByMonth = currentYearTransactions.reduce(
+  let transactionGroupedByMonth = transactions.reduce(
     (groupedTransaction: any, transaction: TransactionProps): object => {
-      const month = dayjs(transaction.transactionAt).format('MMMM');
+      const month = dayjs(transaction.transactionAt).format('YYYY MMM');
       groupedTransaction[month] = groupedTransaction[month] || [];
       groupedTransaction[month] = [...groupedTransaction[month], transaction];
 
@@ -137,9 +130,9 @@ const _Transactions: React.FC<TransactionsProps> = ({
           renderItem={renderItem}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (
-            <Headline style={{marginBottom: 10, color: colors.primary}}>
+            <Subheading style={{marginBottom: 10, color: colors.primary}}>
               {title}
-            </Headline>
+            </Subheading>
           )}
         />
       </View>
@@ -148,8 +141,7 @@ const _Transactions: React.FC<TransactionsProps> = ({
 };
 
 const enhance = withObservables([], () => ({
-  transactions: observeTransactions(),
-  currentYearTransactions: observeCurrentYearTransactions(),
+  transactions: observeCurrentYearTransactions(),
 }));
 
 const Transactions = enhance(_Transactions);
