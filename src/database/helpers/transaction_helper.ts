@@ -13,6 +13,16 @@ const transactions = database.collections.get(Transaction.table);
 // observe all transactions
 export const observeTransactions = () => transactions.query().observe();
 
+export const transactionTypeSummary = () =>
+  transactions
+    .query(
+      Q.unsafeSqlQuery(
+        'select transaction_type, SUM(amount) as sum_amount from transactions' +
+          ' group by transaction_type',
+      ),
+    )
+    .unsafeFetchRaw();
+
 export const observeCurrentYearTransactions = () =>
   transactions.query(
     Q.unsafeSqlQuery(

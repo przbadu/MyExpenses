@@ -2,18 +2,14 @@ import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {TouchableOpacity, View, SectionList} from 'react-native';
-import {
-  useTheme,
-  Card,
-  Appbar,
-  Text,
-  Subheading,
-  Headline,
-} from 'react-native-paper';
+import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
 
-import {observeCurrentYearTransactions} from '../../database/helpers';
+import {
+  observeCurrentYearTransactions,
+  transactionTypeSummary,
+} from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {numberToCurrency} from '../../constants';
+import {COLORS, numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
 
@@ -24,27 +20,35 @@ interface TransactionsProps {
 
 // Transaction component
 const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
+  const [summary, setSummary] = React.useState<
+    [{sum_amount: number; transaction_type: TransactionTypeEnum}] | undefined
+  >();
+  const [balance, setBalance] = React.useState<number>(0);
+
   const {colors} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
-  // calculate total income
-  const totalIncome = transactions.reduce(
-    (sum: number, trans: TransactionProps) =>
-      trans.transactionType == TransactionTypeEnum.income
-        ? trans.amount + sum
-        : sum,
-    0,
-  );
-  // calculate total expense
-  const totalExpense = transactions.reduce(
-    (sum: number, trans: TransactionProps) =>
-      trans.transactionType == TransactionTypeEnum.expense
-        ? trans.amount + sum
-        : sum,
-    0,
-  );
-  // calculate total balance
-  const balance = totalIncome - totalExpense;
+  React.useEffect(() => {
+    fetchSummary();
+  }, []);
+
+  React.useEffect(() => {
+    if (summary) {
+      const result = summary.reduce(
+        (sum, s) =>
+          s.transaction_type == TransactionTypeEnum.income
+            ? sum + s.sum_amount
+            : sum - s.sum_amount,
+        0,
+      );
+      setBalance(result);
+    }
+  }, [summary]);
+
+  const fetchSummary = async () => {
+    const res = await transactionTypeSummary();
+    setSummary(res);
+  };
 
   // prepare transactions for SectionList, grouped by month
   let transactionGroupedByMonth = transactions.reduce(
@@ -62,7 +66,10 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
   );
 
   const textColor = (transactionType: TransactionTypeEnum | undefined) => ({
-    color: transactionType === TransactionTypeEnum.expense ? 'red' : 'green',
+    color:
+      transactionType === TransactionTypeEnum.expense
+        ? COLORS.red
+        : COLORS.green,
   });
 
   const renderItem = ({item}: {item: TransactionProps}) => {
@@ -101,17 +108,23 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
             alignItems: 'center',
           }}>
           <View>
-            <Subheading>Income</Subheading>
-            <Subheading>Expense</Subheading>
+            {summary &&
+              summary.map(s => (
+                <Subheading key={s.transaction_type}>
+                  {s.transaction_type}
+                </Subheading>
+              ))}
             <Subheading>Balance</Subheading>
           </View>
           <View>
-            <Subheading style={textColor(TransactionTypeEnum.income)}>
-              {numberToCurrency(totalIncome, currency)}
-            </Subheading>
-            <Subheading style={textColor(TransactionTypeEnum.expense)}>
-              {numberToCurrency(totalExpense, currency)}
-            </Subheading>
+            {summary &&
+              summary.map(s => (
+                <Subheading
+                  key={s.transaction_type}
+                  style={textColor(s.transaction_type)}>
+                  {numberToCurrency(s.sum_amount, currency)}
+                </Subheading>
+              ))}
             <Subheading
               style={textColor(
                 balance > 0

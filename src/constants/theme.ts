@@ -10,13 +10,23 @@ import {
 // READ MORE:
 // https://callstack.github.io/react-native-paper/theming.html
 
+export const COLORS = {
+  // primary: '#FF3378',
+  primary: '#FF6347',
+  secondary: '#FF2278',
+  red: '#d9534f',
+  green: '#5cb85c',
+  blue: '#28c2ff',
+};
+
 export const lightTheme = {
   ...PaperDefaultTheme,
   ...NavigationDefaultTheme,
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
-    primary: '#FF8B2D',
+    primary: COLORS.primary,
+    accent: COLORS.secondary,
     // accent: '#FFC597',
     // background: '',
     // surface: '',
@@ -35,7 +45,8 @@ export const darkTheme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
-    primary: '#FF8B2D',
+    primary: COLORS.primary,
+    accent: COLORS.secondary,
     // accent: '#FFC597',
     // background: '',
     // surface: '',
