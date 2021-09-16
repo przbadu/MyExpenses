@@ -1,9 +1,15 @@
 import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {TouchableOpacity, View, SectionList} from 'react-native';
-import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/core';
+import {TouchableOpacity, View, SectionList, ScrollView} from 'react-native';
+import {
+  useTheme,
+  Card,
+  Appbar,
+  Text,
+  Subheading,
+  IconButton,
+} from 'react-native-paper';
 
 import {
   observeCurrentYearTransactions,
@@ -13,20 +19,29 @@ import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {COLORS, numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
+import {AppCalendar} from '../../components';
+import {useNavigation} from '@react-navigation/core';
 
 // interface
-interface TransactionsProps {
+interface CalendarTransactionsProps {
   transactions: TransactionProps[];
 }
 
 // Transaction component
-const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
+const _format = 'YYYY-MM-DD';
+const _today = dayjs().format(_format);
+
+const _Transactions: React.FC<CalendarTransactionsProps> = ({transactions}) => {
   const [summary, setSummary] = React.useState<
     [{sum_amount: number; transaction_type: TransactionTypeEnum}] | undefined
   >();
   const [balance, setBalance] = React.useState<number>(0);
+  const [showCalendar, setShowCalendar] = React.useState(true);
+  const [markedDates, setMarkedDates] = React.useState<any>({
+    [_today]: {disabled: true, selected: true},
+  });
 
-  const {navigate} = useNavigation();
+  const navigation = useNavigation();
   const {colors} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
@@ -51,6 +66,19 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
     const res = await transactionTypeSummary();
     setSummary(res);
   };
+
+  const onDaySelect = (day: any) => {
+    let selected = true;
+    const _selectedDay = dayjs(day.dateString).format(_format);
+
+    if (markedDates[_selectedDay]) {
+      selected = !markedDates[_selectedDay].selected;
+    }
+
+    setMarkedDates({...markedDates, ...{[_selectedDay]: {selected}}});
+  };
+
+  console.log(markedDates);
 
   // prepare transactions for SectionList, grouped by month
   let transactionGroupedByMonth = transactions.reduce(
@@ -99,13 +127,21 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="TRANSACTIONS" color={COLORS.white} />
-        <Appbar.Action
-          icon="calendar"
+        <Appbar.BackAction
+          onPress={() => navigation.goBack()}
           color={COLORS.white}
-          onPress={() => navigate('CalendarTransactions')}
+        />
+        <Appbar.Content title="" />
+        <Appbar.Action
+          icon={showCalendar ? 'eye-off-outline' : 'eye-outline'}
+          color={COLORS.white}
+          onPress={() => setShowCalendar(!showCalendar)}
         />
       </Appbar.Header>
+
+      {showCalendar && (
+        <AppCalendar onDayPress={onDaySelect} markedDates={markedDates} />
+      )}
 
       <Card style={{margin: 10}}>
         <Card.Content
@@ -117,34 +153,34 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
           <View>
             {summary &&
               summary.map(s => (
-                <Subheading key={s.transaction_type}>
+                <Text key={s.transaction_type} style={{marginBottom: 5}}>
                   {s.transaction_type}
-                </Subheading>
+                </Text>
               ))}
-            <Subheading>Balance</Subheading>
+            <Text>Balance</Text>
           </View>
           <View>
             {summary &&
               summary.map(s => (
-                <Subheading
+                <Text
                   key={s.transaction_type}
-                  style={textColor(s.transaction_type)}>
+                  style={{...textColor(s.transaction_type), marginBottom: 5}}>
                   {numberToCurrency(s.sum_amount, currency)}
-                </Subheading>
+                </Text>
               ))}
-            <Subheading
+            <Text
               style={textColor(
                 balance > 0
                   ? TransactionTypeEnum.income
                   : TransactionTypeEnum.expense,
               )}>
               {numberToCurrency(balance, currency)}
-            </Subheading>
+            </Text>
           </View>
         </Card.Content>
       </Card>
 
-      <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
+      <View style={{flex: 1, marginHorizontal: 10}}>
         <SectionList
           sections={transactionGroupedByMonth}
           renderItem={renderItem}
@@ -164,6 +200,6 @@ const enhance = withObservables([], () => ({
   transactions: observeCurrentYearTransactions(),
 }));
 
-const Transactions = enhance(_Transactions);
+const CalendarTransactions = enhance(_Transactions);
 
-export {Transactions};
+export {CalendarTransactions};

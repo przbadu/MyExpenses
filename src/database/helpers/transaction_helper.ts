@@ -13,7 +13,8 @@ export const transactionTypeSummary = () =>
     .query(
       Q.unsafeSqlQuery(
         'select transaction_type, SUM(amount) as sum_amount from transactions' +
-          ' group by transaction_type',
+          ' group by transaction_type' +
+          ' order by transaction_type DESC',
       ),
     )
     .unsafeFetchRaw();

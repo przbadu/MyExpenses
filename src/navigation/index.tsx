@@ -7,6 +7,7 @@ import {TabNavigation} from './TabNavigation';
 const Stack = createNativeStackNavigator();
 
 import {ThemeContext} from '../store/context/themeContext';
+import {CalendarTransactions} from '../screens';
 
 export const AppNavigator = () => {
   const {theme} = React.useContext(ThemeContext);
@@ -19,6 +20,10 @@ export const AppNavigator = () => {
             initialRouteName="Dashboard"
             screenOptions={{headerShown: false}}>
             <Stack.Screen name="Dashboard" component={TabNavigation} />
+            <Stack.Screen
+              name="CalendarTransactions"
+              component={CalendarTransactions}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
