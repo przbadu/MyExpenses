@@ -13,46 +13,64 @@ interface AppSelectProps {
   placeholder: string;
   icon?: string;
   value?: string | null;
+  error?: string;
 }
 const AppSelect: React.FC<AppSelectProps> = ({
   onPress,
   icon,
   placeholder,
   value,
+  error,
 }) => {
   const {colors} = useTheme();
 
   return (
-    <TouchableOpacity
-      style={{
-        ...styles.container,
-        backgroundColor: colors.background,
-        borderColor: colors.disabled,
-      }}
-      onPress={onPress}>
-      {icon && (
-        <Icon
-          name={icon}
-          color={colors.text}
-          style={{fontSize: 24, marginRight: 10}}
-        />
-      )}
-      <View style={styles.inputWrapper}>
-        {value && (
-          <Text style={{...styles.placeholder, color: colors.placeholder}}>
-            {placeholder}
-          </Text>
+    <>
+      <TouchableOpacity
+        style={{
+          ...styles.container,
+          backgroundColor: colors.background,
+          borderColor: error?.length ? colors.error : colors.disabled,
+        }}
+        onPress={onPress}>
+        {icon && (
+          <Icon
+            name={icon}
+            color={colors.text}
+            style={{fontSize: 24, marginRight: 10}}
+          />
         )}
+        <View
+          style={{
+            ...styles.inputWrapper,
+          }}>
+          {value && (
+            <Text style={{...styles.placeholder, color: colors.placeholder}}>
+              {placeholder}
+            </Text>
+          )}
+          <Text
+            style={{
+              ...styles.text,
+              color: value ? colors.text : colors.placeholder,
+            }}>
+            {value ? value : placeholder}
+          </Text>
+        </View>
+        <Icon name="menu-down" color={colors.text} style={styles.icon} />
+      </TouchableOpacity>
+      {error?.trim().length && (
         <Text
           style={{
-            ...styles.text,
-            color: value ? colors.text : colors.placeholder,
+            color: colors.error,
+            marginTop: -10,
+            marginLeft: 10,
+            fontSize: 12,
           }}>
-          {value ? value : placeholder}
+          {error}
         </Text>
-      </View>
-      <Icon name="menu-down" color={colors.text} style={styles.icon} />
-    </TouchableOpacity>
+      )}
+    </>
   );
 };
 

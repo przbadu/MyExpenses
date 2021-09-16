@@ -14,37 +14,22 @@ import {
 } from '../../components';
 import CategoryList from './CategoryList';
 import WalletList from './WalletList';
+import {useForm} from './useForm';
 
 // database
 import {
   CategoryProps,
-  TransactionProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import {saveTransaction} from '../../database/helpers';
 
 import {styles} from './styles';
 
 const now = new Date();
 const dateFormat = 'DD MMM YYYY';
-const initialFormState = {
-  amount: 0,
-  notes: '',
-  transactionAt: now,
-  time: dayjs(now).format('HH:mm'),
-  transactionType: TransactionTypeEnum.expense,
-  isPaid: true,
-  walletId: null,
-  categoryId: null,
-};
-const AddTransaction = ({navigation}) => {
-  // prepare form state
-  const [amountError, setAmountError] = React.useState<string | null>(null);
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [form, setForm] = React.useState<TransactionProps>(initialFormState);
 
-  // Set category and wallet field text
+const AddTransaction = () => {
+  const {submitting, form, errors, handleFormChange, handleSubmit} = useForm();
   const [categoryText, setCategoryText] = React.useState<string | null>(null);
   const [walletText, setWalletText] = React.useState<string | null>(null);
 
@@ -62,38 +47,22 @@ const AddTransaction = ({navigation}) => {
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
 
-  const submitForm = () => {
-    setSubmitting(true);
-    // normal validations
-    if (form.amount === 0) {
-      setAmountError('Please enter amount');
-      setSubmitting(false);
-      return;
-    }
-
-    setAmountError(null);
-    saveTransaction({...form});
-    setForm({...form, ...initialFormState});
-    setSubmitting(false);
-    navigation.navigate('Transactions');
-  };
-
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
-    setForm({...form, categoryId: item.id});
+    handleFormChange({...form, categoryId: item.id});
     setShowCategoryModal(false);
   };
   const selectWallet = (item: WalletProps) => {
     setWalletText(item.name);
-    setForm({...form, walletId: item.id});
+    handleFormChange({...form, walletId: item.id});
     setShowWalletModal(false);
   };
 
   const handleCalendarChange = (date: Date) => {
     if (calendarMode == 'date') {
-      setForm({...form, transactionAt: date || form.transactionAt});
+      handleFormChange({...form, transactionAt: date || form.transactionAt});
     } else if (calendarMode == 'time') {
-      setForm({...form, time: dayjs(date).format('HH:mm')});
+      handleFormChange({...form, time: dayjs(date).format('HH:mm')});
     }
     setShowCalendar(false);
   };
@@ -115,7 +84,10 @@ const AddTransaction = ({navigation}) => {
       <View style={styles.incomeExpenseContainer}>
         <SwitchButton
           onPress={() =>
-            setForm({...form, transactionType: TransactionTypeEnum.expense})
+            handleFormChange({
+              ...form,
+              transactionType: TransactionTypeEnum.expense,
+            })
           }
           label="Expense"
           isActive={isExpense()}
@@ -124,10 +96,10 @@ const AddTransaction = ({navigation}) => {
         />
         <SwitchButton
           onPress={() => {
-            setForm({
+            handleFormChange({
               ...form,
               transactionType: TransactionTypeEnum.income,
-              categoryId: null,
+              categoryId: undefined,
             });
             setCategoryText(null);
           }}
@@ -152,6 +124,7 @@ const AddTransaction = ({navigation}) => {
           value={categoryText}
           icon="format-list-bulleted"
           onPress={() => setShowCategoryModal(true)}
+          error={errors.categoryId}
         />
         {showCategoryModal && (
           <AppModal
@@ -173,6 +146,7 @@ const AddTransaction = ({navigation}) => {
           value={walletText}
           icon="bank"
           onPress={() => setShowWalletModal(true)}
+          error={errors.walletId}
         />
         {showWalletModal && (
           <AppModal
@@ -223,14 +197,13 @@ const AddTransaction = ({navigation}) => {
               placeholder="0.00"
               value={String(form.amount)}
               onChangeText={text => {
-                console.log('text', text);
-                setForm({...form, amount: text});
+                handleFormChange({...form, amount: text});
               }}
               keyboardType="decimal-pad"
               selectTextOnFocus
               left={<TextInput.Icon name="currency-usd" />}
-              error={amountError !== null}
-              errorMessage={amountError}
+              error={errors.amount}
+              errorMessage={errors.amount}
               style={styles.input}
             />
             <AppTextInput
@@ -238,9 +211,11 @@ const AddTransaction = ({navigation}) => {
               placeholder="Enter your notes"
               maxLength={255}
               value={form.notes}
-              onChangeText={text => setForm({...form, notes: text})}
+              onChangeText={text => handleFormChange({...form, notes: text})}
               right={<TextInput.Affix text={`${form.notes.length}/255`} />}
               left={<TextInput.Icon name="calendar-text" />}
+              error={errors.notes}
+              errorMessage={errors.notes}
               style={styles.input}
             />
 
@@ -251,7 +226,7 @@ const AddTransaction = ({navigation}) => {
             <Button
               icon="database-plus"
               mode="contained"
-              onPress={submitForm}
+              onPress={handleSubmit}
               disabled={submitting}
               style={{marginTop: 20, marginBottom: 10, padding: 10}}>
               {submitting ? 'please wait...' : 'SAVE'}

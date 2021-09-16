@@ -13,7 +13,7 @@ export enum TransactionTypeEnum {
 
 export interface TransactionProps {
   id?: number | string;
-  amount: number;
+  amount: string | number;
   notes: string;
   transactionAt?: Date;
   time?: string;

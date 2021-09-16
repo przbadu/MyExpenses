@@ -1,12 +1,7 @@
 import dayjs from 'dayjs';
 import {Q} from '@nozbe/watermelondb';
 import {database} from '../index';
-import {
-  Transaction,
-  TransactionProps,
-  TransactionTypeEnum,
-  Wallet,
-} from '../models';
+import {Transaction, TransactionProps, TransactionTypeEnum} from '../models';
 
 const transactions = database.collections.get(Transaction.table);
 
