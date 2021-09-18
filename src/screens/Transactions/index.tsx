@@ -14,6 +14,7 @@ import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {COLORS, numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
+import {AppModal, AppSelect, TransactionAmountText} from '../../components';
 
 // Transaction component
 const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
@@ -30,6 +31,7 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
   const {navigate} = useNavigation();
   const {colors} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
+  const [showFilter, setShowFilter] = React.useState(false);
 
   React.useEffect(() => {
     fetchSummary();
@@ -83,13 +85,94 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     setGroupedTransactions(result);
   }
 
-  function textColor(transactionType: TransactionTypeEnum | undefined) {
-    return {
-      color:
-        transactionType === TransactionTypeEnum.expense
-          ? COLORS.red
-          : COLORS.green,
-    };
+  function renderHeader() {
+    return (
+      <Appbar.Header>
+        <Appbar.Content title="TRANSACTIONS" color={COLORS.white} />
+        <Appbar.Action
+          icon="calendar-blank-outline"
+          color={COLORS.white}
+          onPress={() => navigate('CalendarTransactions')}
+        />
+        <Appbar.Action
+          icon="filter"
+          color={COLORS.white}
+          onPress={() => setShowFilter(true)}
+        />
+      </Appbar.Header>
+    );
+  }
+
+  function renderSummary() {
+    return (
+      <Card style={{margin: 10}}>
+        <Card.Content
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View>
+            {summary &&
+              summary.map(s => (
+                <Text style={{marginBottom: 5}} key={s.transaction_type}>
+                  {s.transaction_type}
+                </Text>
+              ))}
+            <Text>Balance</Text>
+          </View>
+          <View>
+            {summary &&
+              summary.map(s => (
+                <TransactionAmountText
+                  amount={s.sum_amount}
+                  currency={currency}
+                  type={s.transaction_type}
+                  style={{marginBottom: 5}}
+                />
+              ))}
+            <TransactionAmountText
+              amount={balance}
+              currency={currency}
+              type={
+                balance > 0
+                  ? TransactionTypeEnum.income
+                  : TransactionTypeEnum.expense
+              }
+            />
+          </View>
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  function renderFilters() {
+    if (!showFilter) return null;
+    return (
+      <AppModal
+        onClose={() => {}}
+        heading="Filter Transactions"
+        visible={showFilter}
+        renderContent={() => <Text>Modal content goes here...</Text>}
+      />
+    );
+  }
+
+  function renderSectionList() {
+    return (
+      <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
+        <SectionList
+          sections={groupedTransactions}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => String(item.id) + String(index)}
+          renderSectionHeader={({section: {title}}) => (
+            <Subheading style={{marginBottom: 10, color: colors.primary}}>
+              {title}
+            </Subheading>
+          )}
+        />
+      </View>
+    );
   }
 
   function renderItem({item}: {item: TransactionProps}) {
@@ -104,9 +187,11 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
               </Text>
             </View>
             <View style={styles.amountContainer}>
-              <Text style={textColor(item.transactionType)}>
-                {numberToCurrency(item.amount, currency)}
-              </Text>
+              <TransactionAmountText
+                amount={item.amount}
+                currency={currency}
+                type={item.transactionType!}
+              />
             </View>
           </Card.Content>
         </Card>
@@ -114,77 +199,12 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     );
   }
 
-  function renderFilter() {
-    return <Text>Filter</Text>;
-  }
-
   return (
     <>
-      <Appbar.Header>
-        <Appbar.Content title="TRANSACTIONS" color={COLORS.white} />
-        <Appbar.Action
-          icon="calendar-blank-outline"
-          color={COLORS.white}
-          onPress={() => navigate('CalendarTransactions')}
-        />
-        <Appbar.Action
-          icon="filter"
-          color={COLORS.white}
-          onPress={() => {
-            filterTransactionBy();
-          }}
-        />
-      </Appbar.Header>
-
-      <Card style={{margin: 10}}>
-        <Card.Content
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            {summary &&
-              summary.map(s => (
-                <Subheading key={s.transaction_type}>
-                  {s.transaction_type}
-                </Subheading>
-              ))}
-            <Subheading>Balance</Subheading>
-          </View>
-          <View>
-            {summary &&
-              summary.map(s => (
-                <Subheading
-                  key={s.transaction_type}
-                  style={textColor(s.transaction_type)}>
-                  {numberToCurrency(s.sum_amount, currency)}
-                </Subheading>
-              ))}
-            <Subheading
-              style={textColor(
-                balance > 0
-                  ? TransactionTypeEnum.income
-                  : TransactionTypeEnum.expense,
-              )}>
-              {numberToCurrency(balance, currency)}
-            </Subheading>
-          </View>
-        </Card.Content>
-      </Card>
-
-      <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
-        <SectionList
-          sections={groupedTransactions}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => String(item.id) + String(index)}
-          renderSectionHeader={({section: {title}}) => (
-            <Subheading style={{marginBottom: 10, color: colors.primary}}>
-              {title}
-            </Subheading>
-          )}
-        />
-      </View>
+      {renderHeader()}
+      {renderSummary()}
+      {renderSectionList()}
+      {renderFilters()}
     </>
   );
 };

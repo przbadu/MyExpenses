@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, FlatList, Platform} from 'react-native';
+import {TouchableOpacity, FlatList, Platform} from 'react-native';
 import {Text} from 'react-native-paper';
 import withObservables from '@nozbe/with-observables';
 
