@@ -10,13 +10,11 @@ const now = new Date();
 const transactions = database.collections.get(Transaction.table);
 
 /**
- *
  * @returns return all Transactions and observe them for changes
  */
 export const observeTransactions = () => transactions.query().observe();
 
 /**
- *
  * @returns Return sum(amount) for income and expense type transactions
  */
 export const transactionTypeSummary = () =>
@@ -31,7 +29,6 @@ export const transactionTypeSummary = () =>
     .unsafeFetchRaw();
 
 /**
- *
  * @returns List of transactions for current year
  */
 export const observeCurrentYearTransactions = () =>
@@ -42,10 +39,21 @@ export const observeCurrentYearTransactions = () =>
     ),
   );
 
-export const observeCalendarDots = () =>
-  transactions
-    .query(Q.unsafeSqlQuery('SELECT transaction_at FROM transactions'))
-    .observe();
+/**
+ * @param date - must be in "%Y-%m" format, e.g: "2021-01"
+ * @returns
+ */
+export const transactionDaysForCurrentMonth = (date: string) => {
+  return transactions
+    .query(
+      Q.unsafeSqlQuery(
+        'SELECT transaction_at FROM transactions' +
+          ' WHERE strftime("%Y-%m", datetime(transaction_at/1000, "unixepoch")) = ?',
+        [date],
+      ),
+    )
+    .unsafeFetchRaw();
+};
 
 export type filterTransactionByProps = {
   categoryIds?: number[] | string[];

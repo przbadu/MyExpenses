@@ -1,25 +1,12 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {
-  TouchableOpacity,
-  View,
-  SectionList,
-  ScrollView,
-  FlatList,
-} from 'react-native';
-import {
-  useTheme,
-  Card,
-  Appbar,
-  Text,
-  Subheading,
-  IconButton,
-} from 'react-native-paper';
+import {TouchableOpacity, View, FlatList} from 'react-native';
+import {useTheme, Card, Text, Subheading, IconButton} from 'react-native-paper';
 
 import {
   filterByDailyTransactions,
-  observeCalendarDots,
-  transactionTypeSummary,
+  observeTransactions,
+  transactionDaysForCurrentMonth,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {calendarTheme, COLORS, numberToCurrency} from '../../constants';
@@ -33,12 +20,10 @@ import withObservables from '@nozbe/with-observables';
 const _format = 'YYYY-MM-DD';
 const _today = dayjs().format(_format);
 
-const _CalendarTransactions: React.FC<{transactionDates: string[]}> = ({
-  transactionDates,
-}) => {
+const CalendarTransactions = () => {
   const [transactions, setTransactions] = React.useState([]);
   const [markedDates, setMarkedDates] = React.useState<any>({
-    [_today]: {disabled: true, selected: true},
+    [_today]: {selected: true},
   });
 
   const navigation = useNavigation();
@@ -46,19 +31,37 @@ const _CalendarTransactions: React.FC<{transactionDates: string[]}> = ({
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
   React.useEffect(() => {
+    const _date = dayjs().format('YYYY-MM');
+    fetchCurrentMonthDots(_date);
     filterByDailyTransactions(_today);
   }, []);
 
-  console.log('transaction dates', transactionDates);
+  const fetchCurrentMonthDots = async (date: string) => {
+    const result = await transactionDaysForCurrentMonth(date);
+    let _dates: any = {};
+    result.forEach((day: {transaction_at: number}) => {
+      const _key = dayjs(day.transaction_at).format(_format);
+      _dates[_key] = {...markedDates[_key], marked: true};
+    });
+    setMarkedDates(_dates);
+  };
 
   const fetchFilteredTransactions = async (date: string) => {
-    const res = await filterByDailyTransactions(date);
-    setTransactions(res);
+    const result = await filterByDailyTransactions(date);
+    setTransactions(result);
   };
 
   const onDaySelect = (day: any) => {
+    // reset selected for all dates
+    let _dates: any = {};
     const _selectedDay = dayjs(day.dateString).format(_format);
-    setMarkedDates({[_selectedDay]: {selected: true}});
+
+    Object.keys(markedDates).forEach(key => {
+      _dates[key] = {...markedDates[key], selected: false};
+    });
+    _dates[_selectedDay] = {...markedDates[_selectedDay], selected: true};
+
+    setMarkedDates(_dates);
     fetchFilteredTransactions(_selectedDay);
   };
 
@@ -104,13 +107,22 @@ const _CalendarTransactions: React.FC<{transactionDates: string[]}> = ({
             onPress={() => navigation.goBack()}
           />
           <Subheading
-            style={{flex: 1, textAlign: 'center', fontWeight: 'bold'}}>
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              fontWeight: 'bold',
+              color: colors.accent,
+            }}>
             Daily Transactions
           </Subheading>
         </View>
 
         <Calendar
           onDayPress={onDaySelect}
+          onMonthChange={({dateString}: {dateString: string}) => {
+            const [year, month] = dateString.split('-');
+            fetchCurrentMonthDots(`${year}-${month}`);
+          }}
           markedDates={markedDates}
           theme={{
             ...calendarTheme(colors, dark),
@@ -128,11 +140,5 @@ const _CalendarTransactions: React.FC<{transactionDates: string[]}> = ({
     </>
   );
 };
-
-const enhance = withObservables([], () => ({
-  transactionDates: observeCalendarDots(),
-}));
-
-const CalendarTransactions = enhance(_CalendarTransactions);
 
 export {CalendarTransactions};
