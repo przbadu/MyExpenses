@@ -1,4 +1,3 @@
-export * from './AppCalendar';
 export * from './AppCalendarPickerInput';
 export * from './AppModal';
 export * from './AppSwitch';

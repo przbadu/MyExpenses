@@ -20,15 +20,18 @@ export const COLORS = {
   blue: '#28c2ff',
 };
 
-export const calendarTheme = {
-  backgroundColor: COLORS.white,
-  calendarBackground: COLORS.white,
-  textSectionTitleColor: '#b6c1cd',
-  textSectionTitleDisabledColor: '#d9e1e8',
-  selectedDayBackgroundColor: '#00adf5',
+export const calendarTheme = (
+  colors: ReactNativePaper.ThemeColors,
+  dark?: boolean,
+) => ({
+  calendarBackground: colors.surface,
+  backgroundColor: colors.background,
+  textSectionTitleColor: colors.primary,
+  textSectionTitleDisabledColor: colors.disabled,
+  selectedDayBackgroundColor: colors.accent,
+  dayTextColor: dark ? colors.disabled : colors.text,
   selectedDayTextColor: COLORS.white,
   todayTextColor: '#00adf5',
-  dayTextColor: '#2d4150',
   textDisabledColor: '#d9e1e8',
   dotColor: '#00adf5',
   selectedDotColor: COLORS.white,
@@ -42,10 +45,10 @@ export const calendarTheme = {
   textDayFontWeight: '300',
   textMonthFontWeight: 'bold',
   textDayHeaderFontWeight: '300',
-  textDayFontSize: 16,
-  textMonthFontSize: 16,
-  textDayHeaderFontSize: 16,
-};
+  textDayFontSize: 14,
+  textMonthFontSize: 12,
+  textDayHeaderFontSize: 12,
+});
 
 export const lightTheme = {
   ...PaperDefaultTheme,

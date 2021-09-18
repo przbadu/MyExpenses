@@ -77,7 +77,7 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
   const renderItem = ({item}: {item: TransactionProps}) => {
     return (
       <TouchableOpacity onPress={() => {}}>
-        <Card style={{marginBottom: 10}}>
+        <Card style={{marginBottom: 5, elevation: 0}}>
           <Card.Content style={styles.container}>
             <View style={styles.textContainer}>
               <Text numberOfLines={2}>{item.notes}</Text>
