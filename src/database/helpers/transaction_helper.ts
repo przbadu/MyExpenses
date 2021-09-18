@@ -15,20 +15,6 @@ const transactions = database.collections.get(Transaction.table);
 export const observeTransactions = () => transactions.query().observe();
 
 /**
- * @returns Return sum(amount) for income and expense type transactions
- */
-export const transactionTypeSummary = () =>
-  transactions
-    .query(
-      Q.unsafeSqlQuery(
-        'select transaction_type, SUM(amount) as sum_amount from transactions' +
-          ' group by transaction_type' +
-          ' order by transaction_type DESC',
-      ),
-    )
-    .unsafeFetchRaw();
-
-/**
  * @returns List of transactions for current year
  */
 export const observeCurrentYearTransactions = () =>
@@ -53,27 +39,6 @@ export const transactionDaysForCurrentMonth = (date: string) => {
       ),
     )
     .unsafeFetchRaw();
-};
-
-export type filterTransactionByProps = {
-  categoryIds?: number[] | string[];
-  walletIds?: number[] | string[];
-  startDate?: Date;
-  endDate?: Date;
-};
-/**
- *
- * @param filterBy  - combination of below params:
- * categoryIds - list of category ids
- * walletIds - List of wallet ids
- * startDate - Start date
- * endDate - end date
- * @returns Filter transactions for given filterBy criterias and return list of Transactions if any
- */
-export const filterTransactions = (
-  filterBy: filterTransactionByProps | null = null,
-) => {
-  return transactions.query().fetch();
 };
 
 /**

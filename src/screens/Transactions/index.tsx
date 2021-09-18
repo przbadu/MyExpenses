@@ -4,8 +4,9 @@ import React from 'react';
 import {TouchableOpacity, View, SectionList} from 'react-native';
 import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/core';
-
 import {
+  filterTransactionByProps,
+  filterTransactions,
   observeCurrentYearTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
@@ -14,17 +15,17 @@ import {COLORS, numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
 
-// interface
-interface TransactionsProps {
-  transactions: TransactionProps[];
-}
-
 // Transaction component
-const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
+const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
+  transactions,
+}) => {
   const [summary, setSummary] = React.useState<
     [{sum_amount: number; transaction_type: TransactionTypeEnum}] | undefined
   >();
   const [balance, setBalance] = React.useState<number>(0);
+  const [groupedTransactions, setGroupedTransactions] = React.useState<
+    TransactionProps[]
+  >([]);
 
   const {navigate} = useNavigation();
   const {colors} = useTheme();
@@ -32,6 +33,7 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
 
   React.useEffect(() => {
     fetchSummary();
+    transactionGroupedByMonth(transactions);
   }, []);
 
   React.useEffect(() => {
@@ -47,34 +49,50 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
     }
   }, [summary]);
 
-  const fetchSummary = async () => {
-    const res = await transactionTypeSummary();
+  const fetchSummary = async (
+    filterBy: filterTransactionByProps | null = null,
+  ) => {
+    const res = await transactionTypeSummary(filterBy);
     setSummary(res);
   };
 
+  const filterTransactionBy = async () => {
+    const filters = {
+      startDate: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
+      endDate: dayjs().format('YYYY-MM-DD'),
+    };
+    fetchSummary(filters);
+    const _transactions = await filterTransactions(filters);
+    transactionGroupedByMonth(_transactions);
+  };
+
   // prepare transactions for SectionList, grouped by month
-  let transactionGroupedByMonth = transactions.reduce(
-    (groupedTransaction: any, transaction: TransactionProps): object => {
-      const month = dayjs(transaction.transactionAt).format('YYYY MMM');
-      groupedTransaction[month] = groupedTransaction[month] || [];
-      groupedTransaction[month] = [...groupedTransaction[month], transaction];
+  function transactionGroupedByMonth(trans: TransactionProps[]) {
+    let result = trans.reduce(
+      (groupedTransaction: any, transaction: TransactionProps): object => {
+        const month = dayjs(transaction.transactionAt).format('YYYY MMM');
+        groupedTransaction[month] = groupedTransaction[month] || [];
+        groupedTransaction[month] = [...groupedTransaction[month], transaction];
 
-      return groupedTransaction;
-    },
-    Object.create(null),
-  );
-  transactionGroupedByMonth = Object.keys(transactionGroupedByMonth).map(
-    key => ({title: key, data: transactionGroupedByMonth[key]}),
-  );
+        return groupedTransaction;
+      },
+      Object.create(null),
+    );
 
-  const textColor = (transactionType: TransactionTypeEnum | undefined) => ({
-    color:
-      transactionType === TransactionTypeEnum.expense
-        ? COLORS.red
-        : COLORS.green,
-  });
+    result = Object.keys(result).map(key => ({title: key, data: result[key]}));
+    setGroupedTransactions(result);
+  }
 
-  const renderItem = ({item}: {item: TransactionProps}) => {
+  function textColor(transactionType: TransactionTypeEnum | undefined) {
+    return {
+      color:
+        transactionType === TransactionTypeEnum.expense
+          ? COLORS.red
+          : COLORS.green,
+    };
+  }
+
+  function renderItem({item}: {item: TransactionProps}) {
     return (
       <TouchableOpacity onPress={() => {}}>
         <Card style={{marginBottom: 5, elevation: 0}}>
@@ -94,16 +112,27 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
         </Card>
       </TouchableOpacity>
     );
-  };
+  }
+
+  function renderFilter() {
+    return <Text>Filter</Text>;
+  }
 
   return (
     <>
       <Appbar.Header>
         <Appbar.Content title="TRANSACTIONS" color={COLORS.white} />
         <Appbar.Action
-          icon="calendar"
+          icon="calendar-blank-outline"
           color={COLORS.white}
           onPress={() => navigate('CalendarTransactions')}
+        />
+        <Appbar.Action
+          icon="filter"
+          color={COLORS.white}
+          onPress={() => {
+            filterTransactionBy();
+          }}
         />
       </Appbar.Header>
 
@@ -146,7 +175,7 @@ const _Transactions: React.FC<TransactionsProps> = ({transactions}) => {
 
       <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
         <SectionList
-          sections={transactionGroupedByMonth}
+          sections={groupedTransactions}
           renderItem={renderItem}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (
