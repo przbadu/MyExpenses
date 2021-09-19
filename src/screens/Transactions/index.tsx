@@ -173,7 +173,9 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
           )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (
-            <Subheading style={{marginBottom: 10, color: colors.primary}}>
+            <Subheading
+              key={title}
+              style={{marginBottom: 10, color: colors.primary}}>
               {title}
             </Subheading>
           )}
