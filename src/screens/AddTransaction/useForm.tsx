@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 import {TransactionTypeEnum} from '../../database/models';
 import {saveTransaction} from '../../database/helpers';
+import {DefaultTimeFormat} from '../../constants';
 
 const now = new Date();
 
@@ -28,7 +29,7 @@ const initialFormState = {
   amount: 0,
   notes: '',
   transactionAt: now,
-  time: dayjs(now).format('HH:mm'),
+  time: dayjs(now).format(DefaultTimeFormat),
   transactionType: TransactionTypeEnum.expense,
   isPaid: true,
   walletId: undefined,

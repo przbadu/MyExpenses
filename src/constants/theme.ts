@@ -56,8 +56,8 @@ export const lightTheme = {
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
-    primary: COLORS.primary,
-    accent: COLORS.secondary,
+    // primary: COLORS.primary,
+    // accent: COLORS.secondary,
     // accent: '#FFC597',
     // background: '',
     // surface: '',

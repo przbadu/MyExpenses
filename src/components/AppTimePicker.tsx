@@ -4,7 +4,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import {TextInput} from 'react-native-paper';
 import {AppTextInput} from '.';
 
-const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
+const AppTimePicker = (props: React.ComponentProps<typeof TextInput>) => {
   const [open, setOpen] = React.useState(false);
   const {onConfirm} = props;
 
@@ -16,7 +16,7 @@ const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
         editable={false}
         left={
           <TextInput.Icon
-            name="calendar-blank-outline"
+            name="clock-time-three-outline"
             onPress={() => setOpen(true)}
           />
         }
@@ -24,9 +24,8 @@ const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
       />
       {open && (
         <DateTimePicker
-          date={props.date}
           isVisible={open}
-          mode="date"
+          mode="time"
           display="default"
           onConfirm={value => {
             setOpen(false);
@@ -39,4 +38,4 @@ const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
   );
 };
 
-export {AppDatePicker};
+export {AppTimePicker};

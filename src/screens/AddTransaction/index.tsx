@@ -1,26 +1,26 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
-import DateTimePicker from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
 
 import {
   SwitchButton,
   AppTextInput,
   AppSelect,
-  AppCalendarPickerInput,
+  AppDatePicker,
+  AppTimePicker,
+  SwitchButtonContent,
 } from '../../components';
 import CategoryList from './CategoryList';
 import WalletList from './WalletList';
 import {useForm} from './useForm';
 import {styles} from './styles';
-import {DefaultDateFormat} from '../../constants';
+import {DefaultDateFormat, DefaultTimeFormat} from '../../constants';
 import {
   CategoryProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import AppDatePicker from '../../components/AppDatePicker';
 
 const AddTransaction = () => {
   const {submitting, form, errors, handleFormChange, handleSubmit} = useForm();
@@ -46,63 +46,68 @@ const AddTransaction = () => {
     setShowWalletModal(false);
   };
 
-  const selectDate = (date: Date) => {
-    handleFormChange({...form, transactionAt: date || form.transactionAt});
-    // handleFormChange({...form, time: dayjs(date).format('HH:mm')});
-  };
-  console.log('at', form.transactionAt);
-  // END state and helper methods
+  function toggleTransactonType() {
+    let type = TransactionTypeEnum.income;
+    if (form.transactionType == TransactionTypeEnum.income)
+      type = TransactionTypeEnum.expense;
 
-  // User Interface
+    handleFormChange({...form, transactionType: type});
+  }
+
   function renderIncomeExpenseSwitch() {
     return (
-      <View style={styles.incomeExpenseContainer}>
-        <SwitchButton
-          onPress={() =>
-            handleFormChange({
-              ...form,
-              transactionType: TransactionTypeEnum.expense,
-            })
-          }
+      <SwitchButton
+        onPress={toggleTransactonType}
+        containerStyles={{marginBottom: 10}}>
+        <SwitchButtonContent
+          icon="cash-minus"
           label="Expense"
-          isActive={isExpense()}
-          icon={isExpense() ? 'minus' : undefined}
-          containerStyles={{borderWidth: 0, borderBottomWidth: 1}}
+          active={form.transactionType == TransactionTypeEnum.expense}
         />
-        <SwitchButton
-          onPress={() => {
-            handleFormChange({
-              ...form,
-              transactionType: TransactionTypeEnum.income,
-              categoryId: undefined,
-            });
-            setCategoryText(null);
-          }}
+        <SwitchButtonContent
+          icon="cash-plus"
           label="Income"
-          isActive={isIncome()}
-          icon={isIncome() ? 'plus' : undefined}
-          containerStyles={{
-            marginLeft: 10,
-            borderWidth: 0,
-            borderBottomWidth: 1,
-          }}
+          active={form.transactionType == TransactionTypeEnum.income}
         />
-      </View>
+      </SwitchButton>
     );
   }
 
   function renderTransactionDateTime() {
     return (
-      <>
-        {/* Date and time picker input */}
-        <AppDatePicker
-          label="Transaction Date"
-          showSoftInputOnFocus={false}
-          value={dayjs(form.transactionAt).format(DefaultDateFormat)}
-          date={form.transactionAt}
-          onConfirm={selectDate}
-        />
-      </>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        <View style={{flex: 1.8, marginRight: 5}}>
+          <AppDatePicker
+            label="Date"
+            showSoftInputOnFocus={false}
+            value={dayjs(form.transactionAt).format(DefaultDateFormat)}
+            date={form.transactionAt}
+            onConfirm={(date: Date) =>
+              handleFormChange({
+                ...form,
+                transactionAt: date || form.transactionAt,
+              })
+            }
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <AppTimePicker
+            label="Time"
+            showSoftInputOnFocus={false}
+            value={form.time}
+            onConfirm={(date: Date) =>
+              handleFormChange({
+                ...form,
+                time: dayjs(date).format(DefaultTimeFormat),
+              })
+            }
+          />
+        </View>
+      </View>
     );
   }
 

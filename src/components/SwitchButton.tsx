@@ -1,74 +1,49 @@
 import React from 'react';
 import {
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   GestureResponderEvent,
+  View,
   ViewStyle,
-  StyleProp,
 } from 'react-native';
-import {useTheme, Text} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from 'react-native-paper';
 
 interface SwitchButtonProps {
   onPress: (event: GestureResponderEvent) => void;
   label?: string;
   icon?: string;
-  isActive?: boolean;
-  uppercase?: boolean;
-  containerStyles?: StyleProp<ViewStyle> | {};
+  containerStyles?: ViewStyle;
 }
 
 const SwitchButton: React.FC<SwitchButtonProps> = ({
   onPress,
-  label,
-  icon,
-  isActive = false,
-  uppercase = true,
-  containerStyles = {},
+  containerStyles,
+  children,
 }) => {
   const {colors} = useTheme();
-  const textColor = isActive ? colors.primary : colors.disabled;
 
   return (
-    <TouchableOpacity
-      style={{
-        ...styles.container,
-        borderWidth: 1,
-        borderColor: textColor,
-        backgroundColor: colors.background,
-        ...containerStyles,
-      }}
-      onPress={onPress}>
-      <>
-        {icon && (
-          <Icon
-            name={icon}
-            color={textColor}
-            style={{marginRight: label ? 10 : 0, fontSize: 18}}
-          />
-        )}
-        {label && (
-          <Text style={{color: isActive ? colors.primary : colors.text}}>
-            {uppercase ? label.toUpperCase() : label}
-          </Text>
-        )}
-      </>
-    </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View
+        style={{
+          ...styles.container,
+          backgroundColor: colors.background,
+          borderColor: colors.disabled,
+          ...containerStyles,
+        }}>
+        {children}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    borderRadius: 30,
+    padding: 5,
     flexDirection: 'row',
-    marginTop: 5,
-    marginBottom: 15,
-    padding: 10,
-    paddingVertical: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopLeftRadius: 6,
-    borderTopEndRadius: 6,
+    borderWidth: 1,
   },
 });
 
