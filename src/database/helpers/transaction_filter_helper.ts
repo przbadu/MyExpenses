@@ -1,7 +1,8 @@
 import {Q} from '@nozbe/watermelondb';
+import dayjs from 'dayjs';
 import {database} from '../index';
 import {Transaction} from '../models';
-const now = new Date();
+const _format = 'YYYY-MM-DD';
 
 /**
  * Transaction filter props
@@ -9,8 +10,8 @@ const now = new Date();
 export interface filterTransactionByProps {
   categoryIds?: number[] | string[];
   walletIds?: number[] | string[];
-  startDate?: string;
-  endDate?: string;
+  startDate?: Date;
+  endDate?: Date;
 }
 
 /**
@@ -28,10 +29,13 @@ function prepareStartEndDateQuery(
   filterBy: filterTransactionByProps,
 ) {
   if (filterBy?.startDate && filterBy?.endDate) {
+    const startDate = dayjs(filterBy.startDate).format(_format);
+    const endDate = dayjs(filterBy.endDate).format(_format);
+
     let query = q.includes('WHERE') ? ' AND ' : ' WHERE ';
     query +=
       'strftime("%Y-%m-%d", datetime(transaction_at/1000, "unixepoch")) BETWEEN ? and ?';
-    const args = [filterBy.startDate, filterBy.endDate];
+    const args = [startDate, endDate];
 
     return {query, args};
   } else {

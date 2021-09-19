@@ -62,14 +62,10 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     setSummary(res);
   };
 
-  // TODO: Fix functionality with filters
-  const filterTransactionBy = async () => {
-    const filters = {
-      startDate: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
-      endDate: dayjs().format('YYYY-MM-DD'),
-    };
-    fetchSummary(filters);
-    const _transactions = await filterTransactions(filters);
+  const filterTransactionBy = async (filterBy: filterTransactionByProps) => {
+    setShowFilter(false);
+    fetchSummary(filterBy);
+    const _transactions = await filterTransactions(filterBy);
     transactionGroupedByMonth(_transactions);
   };
 
@@ -158,7 +154,9 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
         onClose={() => setShowFilter(false)}
         heading="Filter Transactions"
         visible={showFilter}
-        renderContent={() => <TransactionFilters />}
+        renderContent={() => (
+          <TransactionFilters onFilter={filterTransactionBy} />
+        )}
       />
     );
   }

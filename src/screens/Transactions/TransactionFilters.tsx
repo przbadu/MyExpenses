@@ -1,44 +1,57 @@
-import {useTheme} from '@react-navigation/native';
 import dayjs from 'dayjs';
 import React from 'react';
-import DateTimePicker from 'react-native-modal-datetime-picker';
-import {TextInput} from 'react-native-paper';
-import AppDatePicker from '../../components/AppDatePicker';
+import {View} from 'react-native';
+import {Button} from 'react-native-paper';
+import {AppDatePicker} from '../../components';
 import {DefaultDateFormat} from '../../constants';
+import {useForm} from './useFilterForm';
 
-const TransactionFilters = () => {
-  const [startDate, setStartDate] = React.useState(
-    dayjs().format(DefaultDateFormat),
-  );
-  const [showCalendar, setShowCalendar] = React.useState(false);
-
-  const handleCalendarChange = (value: Date) => {
-    setStartDate(dayjs(value).format(DefaultDateFormat));
-    setShowCalendar(false);
-  };
+const TransactionFilters: React.FC<{onFilter: Function}> = ({onFilter}) => {
+  const {form, submitting, handleFormChange, setSubmitting} = useForm();
 
   return (
     <>
-      <AppDatePicker
-        label="Start Date"
-        left={
-          <TextInput.Icon
-            name="calendar"
-            onPress={() => setShowCalendar(true)}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        {/* Filter by start and end dates */}
+        <View style={{flex: 1, marginRight: 5}}>
+          <AppDatePicker
+            label="Start Date"
+            showSoftInputOnFocus={false}
+            value={dayjs(form.startDate).format(DefaultDateFormat)}
+            date={form.startDate}
+            onConfirm={(date: Date) =>
+              handleFormChange({...form, startDate: date})
+            }
           />
-        }
-        showSoftInputOnFocus={false}
-        underlineColor="transparent"
-        value={startDate}
-        onPress={() => setShowCalendar(true)}
-      />
-      <DateTimePicker
-        isVisible={showCalendar}
-        mode="date"
-        display="default"
-        onConfirm={handleCalendarChange}
-        onCancel={() => setShowCalendar(false)}
-      />
+        </View>
+        <View style={{flex: 1}}>
+          <AppDatePicker
+            label="End Date"
+            showSoftInputOnFocus={false}
+            value={dayjs(form.endDate).format(DefaultDateFormat)}
+            date={form.endDate}
+            onConfirm={(date: Date) =>
+              handleFormChange({...form, endDate: date})
+            }
+          />
+        </View>
+      </View>
+
+      <Button
+        mode="contained"
+        style={{marginTop: 20}}
+        disabled={submitting}
+        onPress={() => {
+          setSubmitting(true);
+          onFilter(form);
+          setSubmitting(false);
+        }}>
+        {submitting ? 'Please Wait...' : 'Apply Filter'}
+      </Button>
     </>
   );
 };
