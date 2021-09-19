@@ -1,5 +1,7 @@
 import currency from 'currency.js';
 
+export const DefaultDateFormat = 'DD MMM YYYY';
+
 export * from './theme';
 export * from './currencies';
 

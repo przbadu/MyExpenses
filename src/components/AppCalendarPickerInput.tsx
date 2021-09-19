@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  GestureResponderEvent,
-} from 'react-native';
+import {TouchableOpacity, View, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text} from 'react-native-paper';
 
 interface AppCalendarPickerInputProps {
-  onShowDatePicker: () => void;
-  onShowTimePicker: () => void;
+  onShowDatePicker?: () => void;
+  onShowTimePicker?: () => void;
   date?: string;
   time?: string;
   icon?: string;
@@ -76,7 +71,6 @@ const AppCalendarPickerInput: React.FC<AppCalendarPickerInputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     marginTop: 5,
     marginBottom: 15,

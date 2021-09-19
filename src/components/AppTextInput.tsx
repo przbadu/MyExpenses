@@ -6,13 +6,10 @@ const AppTextInput = (props: React.ComponentProps<typeof TextInput>) => {
 
   return (
     <>
-      <TextInput outlineColor={colors.disabled} {...props} />
+      <TextInput outlineColor={colors.disabled} mode="outlined" {...props} />
       {props.error && (
-        <HelperText
-          type="error"
-          visible={props.error}
-          style={{marginTop: -15, marginBottom: 10}}>
-          {props.errorMessage}
+        <HelperText type="error" visible={props.error}>
+          {props.error}
         </HelperText>
       )}
     </>

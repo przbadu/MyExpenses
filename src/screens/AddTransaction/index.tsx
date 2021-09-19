@@ -4,29 +4,22 @@ import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import dayjs from 'dayjs';
 
-// components
 import {
   SwitchButton,
   AppTextInput,
   AppSelect,
-  AppModal,
   AppCalendarPickerInput,
 } from '../../components';
 import CategoryList from './CategoryList';
 import WalletList from './WalletList';
 import {useForm} from './useForm';
-
-// database
+import {styles} from './styles';
+import {DefaultDateFormat} from '../../constants';
 import {
   CategoryProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-
-import {styles} from './styles';
-
-const now = new Date();
-const dateFormat = 'DD MMM YYYY';
 
 const AddTransaction = () => {
   const {submitting, form, errors, handleFormChange, handleSubmit} = useForm();
@@ -116,56 +109,12 @@ const AddTransaction = () => {
     );
   }
 
-  function renderCategory() {
-    return (
-      <>
-        <AppSelect
-          placeholder="Select Category"
-          value={categoryText}
-          icon="format-list-bulleted"
-          onPress={() => setShowCategoryModal(true)}
-          error={errors.categoryId}
-        />
-        {showCategoryModal && (
-          <AppModal
-            visible={showCategoryModal}
-            onClose={() => setShowCategoryModal(false)}
-            heading="Select Category"
-            renderContent={() => <CategoryList onSelect={selectCategory} />}
-          />
-        )}
-      </>
-    );
-  }
-
-  function renderWallet() {
-    return (
-      <>
-        <AppSelect
-          placeholder="Select Wallet"
-          value={walletText}
-          icon="bank"
-          onPress={() => setShowWalletModal(true)}
-          error={errors.walletId}
-        />
-        {showWalletModal && (
-          <AppModal
-            visible={showWalletModal}
-            onClose={() => setShowWalletModal(false)}
-            heading="Select Wallet"
-            renderContent={() => <WalletList onSelect={selectWallet} />}
-          />
-        )}
-      </>
-    );
-  }
-
   function renderTransactionDateTime() {
     return (
       <>
         {/* Date and time picker input */}
         <AppCalendarPickerInput
-          date={dayjs(form.transactionAt).format(dateFormat)}
+          date={dayjs(form.transactionAt).format(DefaultDateFormat)}
           time={form.time}
           icon="calendar"
           onShowDatePicker={showDatePicker}
@@ -192,7 +141,6 @@ const AddTransaction = () => {
           <Card.Content>
             {renderIncomeExpenseSwitch()}
             <AppTextInput
-              mode="flat"
               label="Amount"
               placeholder="0.00"
               value={String(form.amount)}
@@ -203,8 +151,6 @@ const AddTransaction = () => {
               selectTextOnFocus
               left={<TextInput.Icon name="currency-usd" />}
               error={errors.amount}
-              errorMessage={errors.amount}
-              style={styles.input}
             />
             <AppTextInput
               label="Notes"
@@ -215,13 +161,32 @@ const AddTransaction = () => {
               right={<TextInput.Affix text={`${form.notes.length}/255`} />}
               left={<TextInput.Icon name="calendar-text" />}
               error={errors.notes}
-              errorMessage={errors.notes}
-              style={styles.input}
             />
 
             {renderTransactionDateTime()}
-            {isExpense() && renderCategory()}
-            {renderWallet()}
+            {isExpense() && (
+              <AppSelect
+                placeholder="Select Category"
+                value={categoryText!}
+                error={errors.categoryId}
+                left={<TextInput.Icon name="format-list-bulleted" />}
+                open={showCategoryModal}
+                onOpen={() => setShowCategoryModal(true)}
+                onClose={() => setShowCategoryModal(false)}
+                renderContent={() => <CategoryList onSelect={selectCategory} />}
+              />
+            )}
+
+            <AppSelect
+              placeholder="Select Wallet"
+              value={walletText!}
+              error={errors.walletId}
+              open={showWalletModal}
+              onOpen={() => setShowWalletModal(true)}
+              onClose={() => setShowWalletModal(false)}
+              left={<TextInput.Icon name="bank" />}
+              renderContent={() => <WalletList onSelect={selectWallet} />}
+            />
 
             <Button
               icon="database-plus"
