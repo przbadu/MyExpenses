@@ -20,6 +20,7 @@ import {
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
+import AppDatePicker from '../../components/AppDatePicker';
 
 const AddTransaction = () => {
   const {submitting, form, errors, handleFormChange, handleSubmit} = useForm();
@@ -30,12 +31,6 @@ const AddTransaction = () => {
   const [showCategoryModal, setShowCategoryModal] =
     React.useState<boolean>(false);
   const [showWalletModal, setShowWalletModal] = React.useState<boolean>(false);
-
-  // Date time picker states
-  const [showCalendar, setShowCalendar] = React.useState<boolean>(false);
-  const [calendarMode, setCalendarMode] = React.useState<'date' | 'time'>(
-    'date',
-  );
 
   const isIncome = () => form.transactionType == TransactionTypeEnum.income;
   const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
@@ -51,24 +46,11 @@ const AddTransaction = () => {
     setShowWalletModal(false);
   };
 
-  const handleCalendarChange = (date: Date) => {
-    if (calendarMode == 'date') {
-      handleFormChange({...form, transactionAt: date || form.transactionAt});
-    } else if (calendarMode == 'time') {
-      handleFormChange({...form, time: dayjs(date).format('HH:mm')});
-    }
-    setShowCalendar(false);
+  const selectDate = (date: Date) => {
+    handleFormChange({...form, transactionAt: date || form.transactionAt});
+    // handleFormChange({...form, time: dayjs(date).format('HH:mm')});
   };
-
-  const showDatePicker = () => {
-    setShowCalendar(true);
-    setCalendarMode('date');
-  };
-
-  const showTimePicker = () => {
-    setShowCalendar(true);
-    setCalendarMode('time');
-  };
+  console.log('at', form.transactionAt);
   // END state and helper methods
 
   // User Interface
@@ -113,19 +95,12 @@ const AddTransaction = () => {
     return (
       <>
         {/* Date and time picker input */}
-        <AppCalendarPickerInput
-          date={dayjs(form.transactionAt).format(DefaultDateFormat)}
-          time={form.time}
-          icon="calendar"
-          onShowDatePicker={showDatePicker}
-          onShowTimePicker={showTimePicker}
-        />
-        <DateTimePicker
-          isVisible={showCalendar}
-          mode={calendarMode}
-          display="default"
-          onConfirm={handleCalendarChange}
-          onCancel={() => setShowCalendar(false)}
+        <AppDatePicker
+          label="Transaction Date"
+          showSoftInputOnFocus={false}
+          value={dayjs(form.transactionAt).format(DefaultDateFormat)}
+          date={form.transactionAt}
+          onConfirm={selectDate}
         />
       </>
     );
