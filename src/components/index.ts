@@ -7,3 +7,4 @@ export * from './CircleColor';
 export * from './SwitchButton';
 export * from './TabBarIcon';
 export * from './TransactionAmountText';
+export * from './TransactionRow';

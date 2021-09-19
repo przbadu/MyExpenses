@@ -1,7 +1,7 @@
 import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {TouchableOpacity, View, SectionList} from 'react-native';
+import {View, SectionList} from 'react-native';
 import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/core';
 import {
@@ -11,10 +11,14 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {COLORS, numberToCurrency} from '../../constants';
+import {COLORS} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
-import {styles} from './styles';
-import {AppModal, AppSelect, TransactionAmountText} from '../../components';
+import {
+  AppModal,
+  TransactionAmountText,
+  TransactionRow,
+} from '../../components';
+import TransactionFilters from './TransactionFilters';
 
 // Transaction component
 const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
@@ -58,6 +62,7 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     setSummary(res);
   };
 
+  // TODO: Fix functionality with filters
   const filterTransactionBy = async () => {
     const filters = {
       startDate: dayjs().subtract(1, 'month').format('YYYY-MM-DD'),
@@ -150,10 +155,10 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     if (!showFilter) return null;
     return (
       <AppModal
-        onClose={() => {}}
+        onClose={() => setShowFilter(false)}
         heading="Filter Transactions"
         visible={showFilter}
-        renderContent={() => <Text>Modal content goes here...</Text>}
+        renderContent={() => <TransactionFilters />}
       />
     );
   }
@@ -163,7 +168,9 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
       <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
         <SectionList
           sections={groupedTransactions}
-          renderItem={renderItem}
+          renderItem={({item}: {item: TransactionProps}) => (
+            <TransactionRow item={item} key={item.id} />
+          )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (
             <Subheading style={{marginBottom: 10, color: colors.primary}}>
@@ -172,30 +179,6 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
           )}
         />
       </View>
-    );
-  }
-
-  function renderItem({item}: {item: TransactionProps}) {
-    return (
-      <TouchableOpacity onPress={() => {}}>
-        <Card style={{marginBottom: 5, elevation: 0}}>
-          <Card.Content style={styles.container}>
-            <View style={styles.textContainer}>
-              <Text numberOfLines={2}>{item.notes}</Text>
-              <Text style={{...styles.datetime, color: colors.disabled}}>
-                {dayjs(item.transactionAt).format('DD')} {item.time}
-              </Text>
-            </View>
-            <View style={styles.amountContainer}>
-              <TransactionAmountText
-                amount={item.amount}
-                currency={currency}
-                type={item.transactionType!}
-              />
-            </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
     );
   }
 
