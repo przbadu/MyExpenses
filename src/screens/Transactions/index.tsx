@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {View, SectionList} from 'react-native';
 import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/core';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -21,9 +20,10 @@ import {
 import TransactionFilters from './TransactionFilters';
 
 // Transaction component
-const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
-  transactions,
-}) => {
+const _Transactions: React.FC<{
+  transactions: TransactionProps[];
+  navigation: any;
+}> = ({transactions, navigation}) => {
   const [summary, setSummary] = React.useState<
     [{sum_amount: number; transaction_type: TransactionTypeEnum}] | undefined
   >();
@@ -32,7 +32,7 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
     TransactionProps[]
   >([]);
 
-  const {navigate} = useNavigation();
+  const {navigate} = navigation;
   const {colors} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const [showFilter, setShowFilter] = React.useState(false);
@@ -167,12 +167,12 @@ const _Transactions: React.FC<{transactions: TransactionProps[]}> = ({
         <SectionList
           sections={groupedTransactions}
           renderItem={({item}: {item: TransactionProps}) => (
-            <TransactionRow item={item} key={item.id} />
+            <TransactionRow item={item} key={`transaction-row-${item.id}`} />
           )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (
             <Subheading
-              key={title}
+              key={`year-${title}`}
               style={{marginBottom: 10, color: colors.primary}}>
               {title}
             </Subheading>

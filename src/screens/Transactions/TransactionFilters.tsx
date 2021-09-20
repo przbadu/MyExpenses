@@ -1,20 +1,32 @@
+import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {AppDatePicker} from '../../components';
+import {AppDatePicker, AppMultiSelect} from '../../components';
 import {DefaultDateFormat} from '../../constants';
+import {observeCategories, observeWallets} from '../../database/helpers';
+import {CategoryProps, WalletProps} from '../../database/models';
 import {useForm} from './useFilterForm';
 
-const TransactionFilters: React.FC<{onFilter: Function}> = ({onFilter}) => {
+const _TransactionFilters: React.FC<{
+  onFilter: Function;
+  categories: CategoryProps[];
+  wallets: WalletProps[];
+}> = ({onFilter, categories, wallets}) => {
   const {form, submitting, handleFormChange, setSubmitting} = useForm();
 
+  function prepareData(data: CategoryProps[] | WalletProps[]) {
+    return data.map(item => ({id: item.id, name: item.name}));
+  }
+
   return (
-    <>
+    <ScrollView>
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+          marginBottom: 10,
         }}>
         {/* Filter by start and end dates */}
         <View style={{flex: 1, marginRight: 5}}>
@@ -41,6 +53,17 @@ const TransactionFilters: React.FC<{onFilter: Function}> = ({onFilter}) => {
         </View>
       </View>
 
+      <AppMultiSelect
+        label="Wallets"
+        options={prepareData(categories)}
+        style={{marginBottom: 10}}
+      />
+      <AppMultiSelect
+        label="Categories"
+        options={prepareData(wallets)}
+        style={{marginBottom: 10}}
+      />
+
       <Button
         mode="contained"
         style={{marginTop: 20}}
@@ -52,8 +75,15 @@ const TransactionFilters: React.FC<{onFilter: Function}> = ({onFilter}) => {
         }}>
         {submitting ? 'Please Wait...' : 'Apply Filter'}
       </Button>
-    </>
+    </ScrollView>
   );
 };
+
+const enhance = withObservables([], () => ({
+  categories: observeCategories(),
+  wallets: observeWallets(),
+}));
+
+const TransactionFilters = enhance(_TransactionFilters);
 
 export default TransactionFilters;

@@ -12,7 +12,6 @@ import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {calendarTheme, COLORS, numberToCurrency} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {styles} from './styles';
-import {useNavigation} from '@react-navigation/core';
 import {Calendar} from 'react-native-calendars';
 import withObservables from '@nozbe/with-observables';
 
@@ -20,13 +19,12 @@ import withObservables from '@nozbe/with-observables';
 const _format = 'YYYY-MM-DD';
 const _today = dayjs().format(_format);
 
-const CalendarTransactions = () => {
+const CalendarTransactions = ({navigation}) => {
   const [transactions, setTransactions] = React.useState([]);
   const [markedDates, setMarkedDates] = React.useState<any>({
     [_today]: {selected: true},
   });
 
-  const navigation = useNavigation();
   const {colors, dark} = useTheme();
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 

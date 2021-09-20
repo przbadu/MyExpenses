@@ -27,5 +27,9 @@ export const useForm = () => {
     setForm(formData);
   };
 
-  return {form, submitting, handleFormChange, setSubmitting};
+  function resetFilter() {
+    setForm({...form, ...initialFormState});
+  }
+
+  return {form, submitting, handleFormChange, setSubmitting, resetFilter};
 };

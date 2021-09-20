@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {Card, useTheme} from 'react-native-paper';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Card, useTheme, Text} from 'react-native-paper';
 import {TransactionAmountText} from '.';
 import {TransactionProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';

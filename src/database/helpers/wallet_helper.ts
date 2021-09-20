@@ -6,6 +6,7 @@ import {Wallet, WalletProps} from '../models';
 const wallets = database.collections.get(Wallet.table);
 
 export const observeWallets = () => wallets.query().observe();
+
 // Create new wallet
 export const saveWallet = async ({
   name,
