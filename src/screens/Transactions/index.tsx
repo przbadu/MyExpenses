@@ -2,7 +2,15 @@ import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, SectionList} from 'react-native';
-import {useTheme, Card, Appbar, Text, Subheading} from 'react-native-paper';
+import {
+  useTheme,
+  Card,
+  Appbar,
+  Text,
+  Subheading,
+  Headline,
+  Button,
+} from 'react-native-paper';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -24,9 +32,8 @@ const _Transactions: React.FC<{
   transactions: TransactionProps[];
   navigation: any;
 }> = ({transactions, navigation}) => {
-  const [summary, setSummary] = React.useState<
-    [{sum_amount: number; transaction_type: TransactionTypeEnum}] | undefined
-  >();
+  const [summary, setSummary] =
+    React.useState<{income: number; expense: number; balance: number}>();
   const [balance, setBalance] = React.useState<number>(0);
   const [groupedTransactions, setGroupedTransactions] = React.useState<
     TransactionProps[]
@@ -42,24 +49,28 @@ const _Transactions: React.FC<{
     transactionGroupedByMonth(transactions);
   }, []);
 
-  React.useEffect(() => {
-    if (summary) {
-      const result = summary.reduce(
-        (sum, s) =>
-          s.transaction_type == TransactionTypeEnum.income
-            ? sum + s.sum_amount
-            : sum - s.sum_amount,
-        0,
-      );
-      setBalance(result);
-    }
-  }, [summary]);
-
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
   ) => {
-    const res = await transactionTypeSummary(filterBy);
-    setSummary(res);
+    const res: {transaction_type: TransactionTypeEnum; sum_amount: number}[] =
+      await transactionTypeSummary(filterBy);
+    const _income = res.filter(
+      s => s.transaction_type === TransactionTypeEnum.income,
+    );
+    const _expense = res.filter(
+      s => s.transaction_type === TransactionTypeEnum.expense,
+    );
+
+    console.log('income', _income);
+
+    const income = _income && _income.length > 0 ? _income[0].sum_amount : 0;
+    const expense =
+      _expense && _expense.length > 0 ? _expense[0].sum_amount : 0;
+    setSummary({
+      income,
+      expense,
+      balance: income + expense,
+    });
   };
 
   const filterTransactionBy = async (filterBy: filterTransactionByProps) => {
@@ -115,29 +126,25 @@ const _Transactions: React.FC<{
             alignItems: 'center',
           }}>
           <View>
-            {summary &&
-              summary.map(s => (
-                <Text
-                  style={{marginBottom: 5}}
-                  key={`summary-${s.transaction_type}`}>
-                  {s.transaction_type}
-                </Text>
-              ))}
+            <Text>Income</Text>
+            <Text>Expense</Text>
             <Text>Balance</Text>
           </View>
           <View>
-            {summary &&
-              summary.map(s => (
-                <TransactionAmountText
-                  key={`summary-value-${s.transaction_type}`}
-                  amount={s.sum_amount}
-                  currency={currency}
-                  type={s.transaction_type}
-                  style={{marginBottom: 5}}
-                />
-              ))}
             <TransactionAmountText
-              amount={balance}
+              amount={summary?.income || 0}
+              currency={currency}
+              type={TransactionTypeEnum.income}
+              style={{marginBottom: 5}}
+            />
+            <TransactionAmountText
+              amount={summary?.expense || 0}
+              currency={currency}
+              type={TransactionTypeEnum.expense}
+              style={{marginBottom: 5}}
+            />
+            <TransactionAmountText
+              amount={summary?.balance || 0}
               currency={currency}
               type={
                 balance > 0
@@ -185,6 +192,23 @@ const _Transactions: React.FC<{
       </View>
     );
   }
+
+  if (groupedTransactions.length <= 0)
+    return (
+      <>
+        {renderHeader()}
+        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <Headline>No Data Found</Headline>
+          <Button
+            mode="outlined"
+            icon="filter"
+            onPress={() => setShowFilter(true)}>
+            Update Filter
+          </Button>
+        </View>
+        {renderFilters()}
+      </>
+    );
 
   return (
     <>
