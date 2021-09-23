@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Card, useTheme, Text} from 'react-native-paper';
+import {Card, useTheme, Text, Avatar} from 'react-native-paper';
 import {TransactionAmountText} from '.';
-import {TransactionProps} from '../database/models';
+import {CategoryProps, TransactionProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
 const TransactionRow = ({item}: {item: TransactionProps}) => {
@@ -14,11 +14,19 @@ const TransactionRow = ({item}: {item: TransactionProps}) => {
     <TouchableOpacity onPress={() => {}}>
       <Card style={{marginBottom: 5, elevation: 0}}>
         <Card.Content style={styles.container}>
-          <View style={styles.textContainer}>
-            <Text numberOfLines={2}>{item.notes}</Text>
-            <Text style={{...styles.datetime, color: colors.disabled}}>
-              {dayjs(item.transactionAt).format('DD')} {item.time}
-            </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {/* <Avatar.Text
+              label={dayjs(item.transactionAt).format('DD')}
+              size={24}
+              // Make sure this background will not conflict with foreground color
+              style={{marginRight: 5, backgroundColor: item.category.color}}
+            /> */}
+            <View style={styles.textContainer}>
+              <Text numberOfLines={2}>{item.notes}</Text>
+              <Text style={{...styles.datetime, color: colors.disabled}}>
+                {dayjs(item.transactionAt).format('MMM DD')}, {item.time}
+              </Text>
+            </View>
           </View>
           <View style={styles.amountContainer}>
             <TransactionAmountText

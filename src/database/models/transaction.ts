@@ -4,6 +4,7 @@ import readonly from '@nozbe/watermelondb/decorators/readonly';
 import date from '@nozbe/watermelondb/decorators/date';
 import relation from '@nozbe/watermelondb/decorators/relation';
 import {writer} from '@nozbe/watermelondb/decorators/action';
+import {CategoryProps, WalletProps} from '.';
 
 // category enum, we only support income and expense type category for now
 export enum TransactionTypeEnum {
@@ -23,6 +24,8 @@ export interface TransactionProps {
   updatedAt?: Date;
   walletId?: string | number | null;
   categoryId?: string | number | null;
+  wallet: WalletProps;
+  category: CategoryProps;
 }
 
 class Transaction extends Model {

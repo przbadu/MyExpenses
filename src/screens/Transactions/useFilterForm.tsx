@@ -16,7 +16,6 @@ export const useForm = () => {
 
   React.useEffect(() => {
     let endDate = form.endDate;
-    console.log(dayjs(form.startDate).isAfter(dayjs(endDate)));
     if (dayjs(form.startDate).isAfter(dayjs(endDate))) {
       endDate = form.startDate;
     }

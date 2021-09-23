@@ -43,29 +43,28 @@ function prepareStartEndDateQuery(
   }
 }
 
-function prepareCategoryQuery(q: string, filterBy: filterTransactionByProps) {
-  if (filterBy?.categoryIds) {
+function inQuery(q: string, columnName: string, ids: string[] | number[]) {
+  if (ids?.length) {
     let query = q.includes('WHERE') ? ' AND ' : ' WHERE ';
-    query += 'category_id IN (?)';
-    const args = [filterBy.categoryIds];
+    let args: any[] = [];
+
+    // prepare first id
+    const firstId = ids[0];
+    query += `${columnName} = ?`;
+    args.push(firstId);
+    ids.map(id => {
+      if (id !== firstId) {
+        query += ` OR ${columnName} = ?`;
+        args.push(id);
+      }
+    });
     return {query, args};
   } else {
     return {query: '', args: []};
   }
 }
 
-function prepareWalletQuery(q: string, filterBy: filterTransactionByProps) {
-  if (filterBy?.walletIds) {
-    let query = q.includes('WHERE') ? ' AND ' : ' WHERE ';
-    query += 'wallet_id IN (?)';
-    const args = [filterBy.walletIds];
-    return {query, args};
-  } else {
-    return {query: '', args: []};
-  }
-}
-
-function applyFilter(q: string, filterBy: filterTransactionByProps) {
+function applyFilter(filterBy: filterTransactionByProps) {
   let query = '';
   let args: any = [];
 
@@ -75,12 +74,12 @@ function applyFilter(q: string, filterBy: filterTransactionByProps) {
   args = [...args, ...dateFilter.args];
 
   // filter by category ids
-  const categoryFilter = prepareCategoryQuery(query, filterBy!);
+  const categoryFilter = inQuery(query, 'category_id', filterBy?.categoryIds!);
   query += categoryFilter.query;
   args = [...args, ...categoryFilter.args];
 
   // filter by wallet ids
-  const walletFilter = prepareWalletQuery(query, filterBy!);
+  const walletFilter = inQuery(query, 'wallet_id', filterBy?.walletIds!);
   query += walletFilter.query;
   args = [...args, ...walletFilter.args];
 
@@ -98,14 +97,14 @@ export function transactionTypeSummary(
     'select transaction_type, SUM(amount) as sum_amount from transactions';
 
   // filter by start and end dates
-  const filter = applyFilter(query, filterBy!);
+  const filter = applyFilter(filterBy!);
   query += filter.query;
   args = [...args, ...filter.args];
 
   query += ' group by transaction_type';
   query += ' order by transaction_type DESC';
 
-  console.log('query', query);
+  console.log(new Date().toString(), 'summary', 'query', query);
   console.log('args', args);
 
   return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();
@@ -132,13 +131,13 @@ export function filterTransactions(
     'strftime("%m", datetime(transaction_at/1000, "unixepoch"))';
   let query = `SELECT *, ${convertedColumns} ${monthColumn} as "month" FROM transactions`;
 
-  const filter = applyFilter(query, filterBy!);
+  const filter = applyFilter(filterBy!);
   query += filter.query;
   args = [...args, ...filter.args];
 
   query += ' order by transaction_at DESC';
 
-  console.log('query', query);
+  console.log(new Date().toString(), 'transactions', 'query', query);
   console.log('args', args);
 
   return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();

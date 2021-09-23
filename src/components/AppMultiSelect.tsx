@@ -8,7 +8,7 @@ interface itemProps {
 }
 
 const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
-  const {options} = props;
+  const {options, onSelected} = props;
 
   const [labelText, setLabelText] = React.useState<string | undefined>('');
   const [placeholder, setPlaceholder] = React.useState<string | undefined>();
@@ -18,7 +18,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   const [value, setValue] = React.useState<string>('');
   const [selected, setSelected] = React.useState<itemProps[]>([]);
   const [data, setData] = React.useState<itemProps[]>([]);
-  const [selectAll, setSelectAll] = React.useState(true);
+  const [selectAll, setSelectAll] = React.useState(false);
 
   // Initial page load
   React.useEffect(() => {
@@ -64,6 +64,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   function onClose() {
     setOpen(false);
     setKeyword('');
+    onSelected(selected);
   }
 
   function onFocus() {
@@ -114,7 +115,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
           />
           {data.map((item: itemProps) => (
             <Checkbox.Item
-              key={`${props.placeholder}-item-${item.id}`}
+              key={`${props.label}-item-${item.id}`}
               label={item.name}
               status={checkedStatus(item)}
               onPress={() => handleItemSelection(item)}

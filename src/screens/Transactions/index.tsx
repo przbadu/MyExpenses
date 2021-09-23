@@ -63,9 +63,10 @@ const _Transactions: React.FC<{
   };
 
   const filterTransactionBy = async (filterBy: filterTransactionByProps) => {
+    const filter = filterBy;
     setShowFilter(false);
-    fetchSummary(filterBy);
-    const _transactions = await filterTransactions(filterBy);
+    await fetchSummary(filterBy);
+    const _transactions = await filterTransactions(filter);
     transactionGroupedByMonth(_transactions);
   };
 
@@ -116,7 +117,9 @@ const _Transactions: React.FC<{
           <View>
             {summary &&
               summary.map(s => (
-                <Text style={{marginBottom: 5}} key={s.transaction_type}>
+                <Text
+                  style={{marginBottom: 5}}
+                  key={`summary-${s.transaction_type}`}>
                   {s.transaction_type}
                 </Text>
               ))}
@@ -126,6 +129,7 @@ const _Transactions: React.FC<{
             {summary &&
               summary.map(s => (
                 <TransactionAmountText
+                  key={`summary-value-${s.transaction_type}`}
                   amount={s.sum_amount}
                   currency={currency}
                   type={s.transaction_type}

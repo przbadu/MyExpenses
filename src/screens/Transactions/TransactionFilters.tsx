@@ -20,8 +20,16 @@ const _TransactionFilters: React.FC<{
     return data.map(item => ({id: item.id, name: item.name}));
   }
 
+  function handleWalletSelection(items: {id: number; name: string}[]) {
+    handleFormChange({...form, walletIds: items.map(i => i.id)});
+  }
+
+  function handleCategorySelection(items: {id: number; name: string}[]) {
+    handleFormChange({...form, categoryIds: items.map(i => i.id)});
+  }
+
   return (
-    <ScrollView>
+    <ScrollView keyboardShouldPersistTaps="handled">
       <View
         style={{
           flexDirection: 'row',
@@ -55,13 +63,16 @@ const _TransactionFilters: React.FC<{
 
       <AppMultiSelect
         label="Wallets"
-        options={prepareData(categories)}
-        style={{marginBottom: 10}}
-      />
-      <AppMultiSelect
-        label="Categories"
         options={prepareData(wallets)}
         style={{marginBottom: 10}}
+        onSelected={handleWalletSelection}
+      />
+
+      <AppMultiSelect
+        label="Categories"
+        options={prepareData(categories)}
+        style={{marginBottom: 10}}
+        onSelected={handleCategorySelection}
       />
 
       <Button
