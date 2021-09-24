@@ -1,12 +1,19 @@
+import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Card, useTheme, Text, Avatar} from 'react-native-paper';
+import {Card, useTheme, Text} from 'react-native-paper';
 import {TransactionAmountText} from '.';
 import {CategoryProps, TransactionProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
-const TransactionRow = ({item}: {item: TransactionProps}) => {
+const _TransactionRow = ({
+  transaction,
+  category,
+}: {
+  transaction: TransactionProps;
+  category: CategoryProps;
+}) => {
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const {colors} = useTheme();
 
@@ -16,24 +23,28 @@ const TransactionRow = ({item}: {item: TransactionProps}) => {
         <Card.Content style={styles.container}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {/* <Avatar.Text
-              label={dayjs(item.transactionAt).format('DD')}
+              label={dayjs(transaction.transactionAt).format('DD')}
               size={24}
               // Make sure this background will not conflict with foreground color
-              style={{marginRight: 5, backgroundColor: item.category.color}}
+              style={{marginRight: 5, backgroundColor: transaction.category.color}}
             /> */}
             <View style={styles.textContainer}>
-              <Text numberOfLines={2}>{item.notes}</Text>
-              <Text style={{...styles.datetime, color: colors.disabled}}>
-                {dayjs(item.transactionAt).format('MMM DD')}, {item.time}
+              <Text numberOfLines={2}>{transaction.notes}</Text>
+              <Text numberOfLines={2} style={{color: colors.accent}}>
+                {category.name}
               </Text>
             </View>
           </View>
           <View style={styles.amountContainer}>
             <TransactionAmountText
-              amount={item.amount}
+              amount={transaction.amount}
               currency={currency}
-              type={item.transactionType!}
+              type={transaction.transactionType!}
             />
+            <Text style={{...styles.datetime, color: colors.disabled}}>
+              {dayjs(transaction.transactionAt).format('MMM DD')},{' '}
+              {transaction.time}
+            </Text>
           </View>
         </Card.Content>
       </Card>
@@ -59,4 +70,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const enhance = withObservables(['transaction'], ({transaction}) => ({
+  transaction,
+  category: transaction.category,
+}));
+const TransactionRow = enhance(_TransactionRow);
 export {TransactionRow};

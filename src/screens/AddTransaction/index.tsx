@@ -116,7 +116,7 @@ const AddTransaction = () => {
       <Appbar.Header>
         <Appbar.Content title="ADD TRANSACTION" />
       </Appbar.Header>
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Card style={styles.container}>
           <Card.Content>
             {renderIncomeExpenseSwitch()}

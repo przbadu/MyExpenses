@@ -1,7 +1,12 @@
 import dayjs from 'dayjs';
 import {Q} from '@nozbe/watermelondb';
 import {database} from '../index';
-import {Transaction, TransactionProps, TransactionTypeEnum} from '../models';
+import {
+  Category,
+  Transaction,
+  TransactionProps,
+  TransactionTypeEnum,
+} from '../models';
 const now = new Date();
 
 /**
@@ -61,6 +66,12 @@ export const filterByDailyTransactions = (date: string) => {
     .fetch();
 };
 
+export const uncategorizedId = () =>
+  database.collections
+    .get(Category.table)
+    .query(Q.where('name', 'Uncategorized'))
+    .fetchIds();
+
 /**
  * Create new transaction in database
  * @param amount - transaction amount
@@ -82,6 +93,9 @@ export const saveTransaction = async ({
   time = dayjs(now).format('HH:mm'),
   transactionType = TransactionTypeEnum.expense,
 }: TransactionProps) => {
+  if (!categoryId) {
+    categoryId = (await uncategorizedId())[0];
+  }
   await database.write(async () => {
     await transactions.create(entry => {
       entry.amount = Number(amount);

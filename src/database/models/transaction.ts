@@ -4,7 +4,7 @@ import readonly from '@nozbe/watermelondb/decorators/readonly';
 import date from '@nozbe/watermelondb/decorators/date';
 import relation from '@nozbe/watermelondb/decorators/relation';
 import {writer} from '@nozbe/watermelondb/decorators/action';
-import {CategoryProps, WalletProps} from '.';
+import {Category, CategoryProps, Wallet, WalletProps} from '.';
 
 // category enum, we only support income and expense type category for now
 export enum TransactionTypeEnum {
@@ -32,6 +32,12 @@ class Transaction extends Model {
   // table name
   static table = 'transactions';
 
+  // associations
+  static associations = {
+    categories: {type: 'belongs_to', key: 'category_id'},
+    wallets: {type: 'belongs_to', key: 'wallet_id'},
+  };
+
   // attributes
   @date('transaction_at') transactionAt: Date | any;
   @field('time') time: string | any;
@@ -43,8 +49,8 @@ class Transaction extends Model {
   @readonly @date('updated_at') updatedAt: Date | any;
 
   // associations/relationships
-  @relation('wallet', 'wallet_id') wallet: any;
-  @relation('category', 'category_id') category: any;
+  @relation('wallets', 'wallet_id') wallet: any;
+  @relation('categories', 'category_id') category: any;
 
   @writer async markAsUnpaid() {
     await this.update(transaction => [(transaction.isPaid = false)]);

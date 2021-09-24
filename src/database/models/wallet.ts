@@ -22,7 +22,7 @@ class Wallet extends Model {
 
   // associations
   static associations = {
-    transactions: {type: 'has_many', foreign_key: 'wallet_id'},
+    transactions: {type: 'has_many', foreignkey: 'wallet_id'},
   };
 
   // attributes

@@ -178,7 +178,10 @@ const _Transactions: React.FC<{
         <SectionList
           sections={groupedTransactions}
           renderItem={({item}: {item: TransactionProps}) => (
-            <TransactionRow item={item} key={`transaction-row-${item.id}`} />
+            <TransactionRow
+              transaction={item}
+              key={`transaction-row-${item.id}`}
+            />
           )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
           renderSectionHeader={({section: {title}}) => (

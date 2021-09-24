@@ -22,4 +22,6 @@ export const setupDefaultCategories = async () => {
   await saveCategory({name: 'Medical', color: randomColor()});
   await saveCategory({name: 'Travel', color: randomColor()});
   await saveCategory({name: 'Shopping', color: randomColor()});
+  await saveCategory({name: 'Others', color: randomColor()});
+  await saveCategory({name: 'Uncategorized', color: randomColor()});
 };

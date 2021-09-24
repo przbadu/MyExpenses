@@ -17,7 +17,7 @@ class Category extends Model {
 
   // has_many associations
   static associations = {
-    transactions: {type: 'has_many', foreign_key: 'category_id'},
+    transactions: {type: 'has_many', foreignkey: 'category_id'},
   };
 
   // attributes
