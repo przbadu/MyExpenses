@@ -4,6 +4,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Card, useTheme, Text, Avatar} from 'react-native-paper';
 import {TransactionAmountText} from '.';
+import {COLORS} from '../constants';
 import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
@@ -17,7 +18,7 @@ const _TransactionRow = ({
   wallet: WalletProps;
 }) => {
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
-  const {colors} = useTheme();
+  const {colors, fonts} = useTheme();
 
   return (
     <TouchableOpacity onPress={() => {}}>
@@ -38,9 +39,17 @@ const _TransactionRow = ({
               }}
             />
             <View style={styles.textContainer}>
-              <Text numberOfLines={2}>{transaction.notes}</Text>
-              <Text numberOfLines={2} style={{color: colors.accent}}>
+              <Text
+                numberOfLines={2}
+                style={{
+                  color: colors.accent,
+                  ...fonts.medium,
+                  letterSpacing: 1,
+                }}>
                 {category.name}
+              </Text>
+              <Text numberOfLines={2} style={{...fonts.light}}>
+                {transaction.notes}
               </Text>
             </View>
           </View>
@@ -50,7 +59,8 @@ const _TransactionRow = ({
               currency={currency}
               type={transaction.transactionType!}
             />
-            <Text style={{...styles.datetime, color: colors.disabled}}>
+            <Text
+              style={{...fonts.light, fontSize: 12, color: colors.disabled}}>
               {dayjs(transaction.transactionAt).format('MMM DD')},{' '}
               {transaction.time}
             </Text>
@@ -73,9 +83,6 @@ const styles = StyleSheet.create({
   },
   amountContainer: {
     paddingRight: 10,
-  },
-  datetime: {
-    fontSize: 12,
   },
 });
 

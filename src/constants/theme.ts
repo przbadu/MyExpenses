@@ -12,7 +12,7 @@ import {
 
 export const COLORS = {
   white: '#FFFFFF',
-  // primary: '#FF3378',
+  pink: '#FF3378',
   primary: '#FF2278',
   secondary: '#FF6347',
   red: '#d9534f',
