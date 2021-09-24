@@ -1,19 +1,16 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {TouchableOpacity, View, FlatList} from 'react-native';
-import {useTheme, Card, Text, Subheading, IconButton} from 'react-native-paper';
+import {View, FlatList} from 'react-native';
+import {useTheme, Subheading, IconButton} from 'react-native-paper';
 
 import {
   filterByDailyTransactions,
-  observeTransactions,
   transactionDaysForCurrentMonth,
 } from '../../database/helpers';
-import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {calendarTheme, COLORS, numberToCurrency} from '../../constants';
-import {CurrencyContext, CurrencyContextProps} from '../../store/context';
-import {styles} from './styles';
+import {TransactionProps} from '../../database/models';
+import {calendarTheme} from '../../constants';
 import {Calendar} from 'react-native-calendars';
-import withObservables from '@nozbe/with-observables';
+import {TransactionRow} from '../../components';
 
 // Transaction component
 const _format = 'YYYY-MM-DD';
@@ -26,7 +23,6 @@ const CalendarTransactions = ({navigation}) => {
   });
 
   const {colors, dark} = useTheme();
-  const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
 
   React.useEffect(() => {
     const _date = dayjs().format('YYYY-MM');
@@ -61,35 +57,6 @@ const CalendarTransactions = ({navigation}) => {
 
     setMarkedDates(_dates);
     fetchFilteredTransactions(_selectedDay);
-  };
-
-  const textColor = (transactionType: TransactionTypeEnum | undefined) => ({
-    color:
-      transactionType === TransactionTypeEnum.expense
-        ? COLORS.red
-        : COLORS.green,
-  });
-
-  const renderItem = ({item}: {item: TransactionProps}) => {
-    return (
-      <TouchableOpacity onPress={() => {}}>
-        <Card style={{marginBottom: 5, elevation: 0}}>
-          <Card.Content style={styles.container}>
-            <View style={styles.textContainer}>
-              <Text numberOfLines={2}>{item.notes}</Text>
-              <Text style={{...styles.datetime, color: colors.disabled}}>
-                {dayjs(item.transactionAt).format('MMM DD')} {item.time}
-              </Text>
-            </View>
-            <View style={styles.amountContainer}>
-              <Text style={textColor(item.transactionType)}>
-                {numberToCurrency(item.amount, currency)}
-              </Text>
-            </View>
-          </Card.Content>
-        </Card>
-      </TouchableOpacity>
-    );
   };
 
   return (
@@ -131,7 +98,12 @@ const CalendarTransactions = ({navigation}) => {
       <View style={{flex: 1, marginHorizontal: 10, marginTop: 15}}>
         <FlatList
           data={transactions}
-          renderItem={renderItem}
+          renderItem={({item}: {item: TransactionProps}) => (
+            <TransactionRow
+              transaction={item}
+              key={`transaction-row-${item.id}`}
+            />
+          )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
         />
       </View>

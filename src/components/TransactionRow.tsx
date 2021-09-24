@@ -2,17 +2,19 @@ import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Card, useTheme, Text} from 'react-native-paper';
+import {Card, useTheme, Text, Avatar} from 'react-native-paper';
 import {TransactionAmountText} from '.';
-import {CategoryProps, TransactionProps} from '../database/models';
+import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
 const _TransactionRow = ({
   transaction,
   category,
+  wallet,
 }: {
   transaction: TransactionProps;
   category: CategoryProps;
+  wallet: WalletProps;
 }) => {
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const {colors} = useTheme();
@@ -23,11 +25,18 @@ const _TransactionRow = ({
         <Card.Content style={styles.container}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {/* <Avatar.Text
-              label={dayjs(transaction.transactionAt).format('DD')}
-              size={24}
-              // Make sure this background will not conflict with foreground color
-              style={{marginRight: 5, backgroundColor: transaction.category.color}}
+              label=""
+              size={16}
+              style={{marginRight: 5, backgroundColor: category.color}}
             /> */}
+            <View
+              style={{
+                marginRight: 10,
+                width: 2,
+                backgroundColor: category.color,
+                height: 24,
+              }}
+            />
             <View style={styles.textContainer}>
               <Text numberOfLines={2}>{transaction.notes}</Text>
               <Text numberOfLines={2} style={{color: colors.accent}}>
@@ -73,6 +82,7 @@ const styles = StyleSheet.create({
 const enhance = withObservables(['transaction'], ({transaction}) => ({
   transaction,
   category: transaction.category,
+  wallet: transaction.wallet,
 }));
 const TransactionRow = enhance(_TransactionRow);
 export {TransactionRow};
