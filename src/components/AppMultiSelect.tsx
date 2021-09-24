@@ -1,5 +1,7 @@
 import React from 'react';
+import {View} from 'react-native';
 import {Button, Checkbox, TextInput} from 'react-native-paper';
+import {AppChip} from './AppChip';
 import {AppTextInput} from './index';
 
 interface itemProps {
@@ -51,7 +53,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
 
   function checkedStatus(item: itemProps) {
     const ids = selected.map(i => i.id);
-    return ids.includes(item.id) ? 'checked' : 'unchecked';
+    return ids.includes(item.id);
   }
 
   function handleItemSelection(item: itemProps) {
@@ -115,19 +117,26 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
 
       {open && (
         <>
-          <Checkbox.Item
-            label="All"
+          {/* <Checkbox.Item
+            label="Select All"
             status={selectAll ? 'checked' : 'unchecked'}
             onPress={() => setSelectAll(!selectAll)}
-          />
-          {data.map((item: itemProps) => (
-            <Checkbox.Item
-              key={`${props.label}-item-${item.id}`}
-              label={item.name}
-              status={checkedStatus(item)}
-              onPress={() => handleItemSelection(item)}
-            />
-          ))}
+          /> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
+            {data.map((item: itemProps) => (
+              <AppChip
+                key={`${props.label}-item-${item.id}`}
+                selected={checkedStatus(item)}
+                style={{margin: 5}}
+                onPress={() => handleItemSelection(item)}>
+                {item.name}
+              </AppChip>
+            ))}
+          </View>
 
           <Button onPress={onClose}>Done</Button>
         </>
