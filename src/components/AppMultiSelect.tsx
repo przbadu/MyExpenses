@@ -8,9 +8,8 @@ interface itemProps {
 }
 
 const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
-  const {options, onSelected} = props;
+  const {options, onSelected, selectedValues} = props;
 
-  const [labelText, setLabelText] = React.useState<string | undefined>('');
   const [placeholder, setPlaceholder] = React.useState<string | undefined>();
 
   const [open, setOpen] = React.useState(false);
@@ -23,7 +22,15 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   // Initial page load
   React.useEffect(() => {
     setData(options);
-    setLabelText(props.label);
+
+    console.log('ssss', selectedValues);
+
+    if (selectedValues) {
+      const _selected = options.filter((o: {id: string}) =>
+        selectedValues.includes(o.id),
+      );
+      setSelected(_selected);
+    }
   }, []);
 
   // Filter list of result, if keyword present

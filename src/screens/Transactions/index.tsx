@@ -61,8 +61,6 @@ const _Transactions: React.FC<{
       s => s.transaction_type === TransactionTypeEnum.expense,
     );
 
-    console.log('income', _income);
-
     const income = _income && _income.length > 0 ? _income[0].sum_amount : 0;
     const expense =
       _expense && _expense.length > 0 ? _expense[0].sum_amount : 0;
@@ -201,7 +199,7 @@ const _Transactions: React.FC<{
       <>
         {renderHeader()}
         <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-          <Headline>No Data Found</Headline>
+          <Headline style={{marginBottom: 10}}>No Data Found</Headline>
           <Button
             mode="outlined"
             icon="filter"

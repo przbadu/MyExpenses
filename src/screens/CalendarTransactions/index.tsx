@@ -30,8 +30,8 @@ const CalendarTransactions = ({navigation}) => {
 
   React.useEffect(() => {
     const _date = dayjs().format('YYYY-MM');
+    fetchFilteredTransactions(_today);
     fetchCurrentMonthDots(_date);
-    filterByDailyTransactions(_today);
   }, []);
 
   const fetchCurrentMonthDots = async (date: string) => {

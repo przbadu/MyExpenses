@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {filterTransactionByProps} from '../../database/helpers';
 
 const initialFormState = {
-  startDate: new Date(dayjs().subtract(1, 'month').toDate()),
+  startDate: new Date(dayjs().startOf('month').toDate()),
   endDate: new Date(),
   walletIds: undefined,
   categoryIds: undefined,

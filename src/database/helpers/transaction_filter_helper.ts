@@ -131,7 +131,6 @@ export function filterTransactions(
   if (filterBy?.startDate && filterBy.endDate) {
     const startTime = +dayjs(filterBy.startDate).startOf('month');
     const endTime = +dayjs(filterBy.endDate);
-
     useQuery.push(
       Q.and(
         Q.where('transaction_at', Q.gte(startTime)),
@@ -150,12 +149,9 @@ export function filterTransactions(
   // filter by wallet ids
   if (filterBy?.walletIds) {
     let walletIdsQuery: any = [];
-    filterBy.walletIds.map(id =>
-      walletIdsQuery.push(Q.where('category_id', id)),
-    );
+    filterBy.walletIds.map(id => walletIdsQuery.push(Q.where('wallet_id', id)));
     useQuery.push(Q.or(...walletIdsQuery));
   }
 
-  console.log('filter', filterBy);
   return transactions.query(...useQuery).fetch();
 }

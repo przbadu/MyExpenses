@@ -14,7 +14,8 @@ const _TransactionFilters: React.FC<{
   categories: CategoryProps[];
   wallets: WalletProps[];
 }> = ({onFilter, categories, wallets}) => {
-  const {form, submitting, handleFormChange, setSubmitting} = useForm();
+  const {form, submitting, handleFormChange, setSubmitting, resetFilter} =
+    useForm();
 
   function prepareData(data: CategoryProps[] | WalletProps[]) {
     return data.map(item => ({id: item.id, name: item.name}));
@@ -27,6 +28,8 @@ const _TransactionFilters: React.FC<{
   function handleCategorySelection(items: {id: number; name: string}[]) {
     handleFormChange({...form, categoryIds: items.map(i => i.id)});
   }
+
+  console.log('form', form);
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
@@ -66,6 +69,7 @@ const _TransactionFilters: React.FC<{
         options={prepareData(wallets)}
         style={{marginBottom: 10}}
         onSelected={handleWalletSelection}
+        selectedValues={form.walletIds}
       />
 
       <AppMultiSelect
@@ -73,6 +77,7 @@ const _TransactionFilters: React.FC<{
         options={prepareData(categories)}
         style={{marginBottom: 10}}
         onSelected={handleCategorySelection}
+        selectedValues={form.categoryIds}
       />
 
       <Button
