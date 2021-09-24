@@ -10,6 +10,7 @@ import {
   Subheading,
   Headline,
   Button,
+  Menu,
 } from 'react-native-paper';
 import {
   filterTransactionByProps,
@@ -24,6 +25,7 @@ import {
   AppModal,
   TransactionAmountText,
   TransactionRow,
+  AppChip,
 } from '../../components';
 import TransactionFilters from './TransactionFilters';
 
@@ -34,10 +36,13 @@ const _Transactions: React.FC<{
 }> = ({transactions, navigation}) => {
   const [summary, setSummary] =
     React.useState<{income: number; expense: number; balance: number}>();
-  const [balance, setBalance] = React.useState<number>(0);
   const [groupedTransactions, setGroupedTransactions] = React.useState<
     TransactionProps[]
   >([]);
+  const [selectedFilterChip, setSelectedFilterChip] = React.useState<
+    '7days' | '1month' | '6months' | undefined
+  >();
+  const [showMoreMenu, setShowMoreMenu] = React.useState(false);
 
   const {navigate} = navigation;
   const {colors} = useTheme();
@@ -79,8 +84,30 @@ const _Transactions: React.FC<{
     transactionGroupedByMonth(_transactions);
   };
 
+  const periodicTransactionFilter = async (
+    filter: '7days' | '1month' | '6months',
+  ) => {
+    const endDate: Date = new Date();
+    let startDate;
+
+    if (filter === '7days') {
+      setSelectedFilterChip('7days');
+      startDate = new Date(+dayjs().subtract(7, 'days').startOf('day'));
+    } else if (filter === '1month') {
+      setSelectedFilterChip('1month');
+      startDate = new Date(+dayjs().subtract(1, 'month').startOf('day'));
+    } else if (filter === '6months') {
+      setSelectedFilterChip('6months');
+      startDate = new Date(+dayjs().subtract(6, 'months').startOf('day'));
+    }
+
+    await fetchSummary({startDate, endDate});
+    const _transactions = await filterTransactions({startDate, endDate});
+    transactionGroupedByMonth(_transactions);
+  };
+
   // prepare transactions for SectionList, grouped by month
-  function transactionGroupedByMonth(trans: TransactionProps[]) {
+  function transactionGroupedByMonth(trans: TransactionProps[] | any) {
     let result = trans.reduce(
       (groupedTransaction: any, transaction: TransactionProps): object => {
         const month = dayjs(transaction.transactionAt).format('YYYY MMM');
@@ -105,11 +132,24 @@ const _Transactions: React.FC<{
           color={COLORS.white}
           onPress={() => navigate('CalendarTransactions')}
         />
-        <Appbar.Action
-          icon="filter"
-          color={COLORS.white}
-          onPress={() => setShowFilter(true)}
-        />
+
+        <Menu
+          visible={showMoreMenu}
+          onDismiss={() => setShowMoreMenu(false)}
+          anchor={
+            <Appbar.Action
+              icon="dots-vertical"
+              onPress={() => setShowMoreMenu(true)}
+              color={COLORS.white}
+            />
+          }
+          style={{marginTop: 30}}>
+          <Menu.Item
+            onPress={() => alert('coming soon')}
+            icon="file-delimited-outline"
+            title="Download CSV"
+          />
+        </Menu>
       </Appbar.Header>
     );
   }
@@ -145,7 +185,7 @@ const _Transactions: React.FC<{
               amount={summary?.balance || 0}
               currency={currency}
               type={
-                balance > 0
+                summary?.balance! > 0
                   ? TransactionTypeEnum.income
                   : TransactionTypeEnum.expense
               }
@@ -194,6 +234,42 @@ const _Transactions: React.FC<{
     );
   }
 
+  function renderFilterHeader() {
+    return (
+      <View
+        style={{
+          marginTop: 20,
+          marginBottom: 10,
+          marginHorizontal: 10,
+          flexDirection: 'row',
+        }}>
+        <AppChip
+          selected={selectedFilterChip === '7days'}
+          onPress={() => periodicTransactionFilter('7days')}>
+          7 Days
+        </AppChip>
+        <AppChip
+          selected={selectedFilterChip === '1month'}
+          onPress={() => periodicTransactionFilter('1month')}>
+          1 Month
+        </AppChip>
+        <AppChip
+          selected={selectedFilterChip === '6months'}
+          onPress={() => periodicTransactionFilter('6months')}>
+          6 Months
+        </AppChip>
+        <AppChip
+          icon="filter"
+          onPress={() => {
+            setSelectedFilterChip(undefined);
+            setShowFilter(true);
+          }}>
+          Filter
+        </AppChip>
+      </View>
+    );
+  }
+
   if (groupedTransactions.length <= 0)
     return (
       <>
@@ -214,6 +290,7 @@ const _Transactions: React.FC<{
   return (
     <>
       {renderHeader()}
+      {renderFilterHeader()}
       {renderSummary()}
       {renderSectionList()}
       {renderFilters()}

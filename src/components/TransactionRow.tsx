@@ -4,7 +4,6 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Card, useTheme, Text, Avatar} from 'react-native-paper';
 import {TransactionAmountText} from '.';
-import {COLORS} from '../constants';
 import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
@@ -25,11 +24,6 @@ const _TransactionRow = ({
       <Card style={{marginBottom: 5, elevation: 0}}>
         <Card.Content style={styles.container}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {/* <Avatar.Text
-              label=""
-              size={16}
-              style={{marginRight: 5, backgroundColor: category.color}}
-            /> */}
             <View
               style={{
                 marginRight: 10,

@@ -1,3 +1,4 @@
+export * from './AppChip';
 export * from './AppModal';
 export * from './AppSwitch';
 export * from './AppSelect';
