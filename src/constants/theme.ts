@@ -7,48 +7,29 @@ import {
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 
-// READ MORE:
-// https://callstack.github.io/react-native-paper/theming.html
-
 export const COLORS = {
   white: '#FFFFFF',
   pink: '#FF3378',
-  primary: '#FF2278',
-  secondary: '#FF6347',
-  red: '#d9534f',
+  // primary: '#FF2278',
+  primary: '#3C27BE',
+  // secondary: '#FF6347',
+  secondary: '#8C7BBC',
   green: '#5cb85c',
   blue: '#28c2ff',
 };
 
-export const calendarTheme = (
-  colors: ReactNativePaper.ThemeColors,
-  dark?: boolean,
-) => ({
-  calendarBackground: colors.surface,
-  backgroundColor: colors.background,
-  textSectionTitleColor: colors.primary,
-  textSectionTitleDisabledColor: colors.disabled,
-  selectedDayBackgroundColor: colors.primary,
-  dayTextColor: dark ? colors.disabled : colors.text,
-  selectedDayTextColor: COLORS.white,
-  todayTextColor: colors.primary,
-  textDisabledColor: '#d9e1e8',
-  dotColor: colors.primary,
-  selectedDotColor: COLORS.white,
-  arrowColor: colors.primary,
-  disabledArrowColor: '#d9e1e8',
-  monthTextColor: colors.primary,
-  indicatorColor: colors.primary,
-  // textDayFontFamily: 'monospace',
-  // textMonthFontFamily: 'monospace',
-  // textDayHeaderFontFamily: 'monospace',
-  textDayFontWeight: '300',
-  textMonthFontWeight: 'bold',
-  textDayHeaderFontWeight: '300',
-  textDayFontSize: 14,
-  textMonthFontSize: 12,
-  textDayHeaderFontSize: 12,
-});
+// customize ReactNativePaper colors
+// Reference: https://callstack.github.io/react-native-paper/theming.html
+declare global {
+  namespace ReactNativePaper {
+    interface ThemeColors {
+      success: string;
+    }
+    interface Theme {
+      success: string;
+    }
+  }
+}
 
 export const lightTheme = {
   ...PaperDefaultTheme,
@@ -56,17 +37,9 @@ export const lightTheme = {
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
-    // primary: COLORS.primary,
-    // accent: COLORS.secondary,
-    // accent: '#FFC597',
-    // background: '',
-    // surface: '',
-    // text: '',
-    // disabled: '',
-    // placeholder: '',
-    // backdrop: '',
-    // onSurface: '',
-    // notification: '',
+    primary: COLORS.primary,
+    accent: COLORS.secondary,
+    success: '#007E3C',
   },
 };
 
@@ -76,16 +49,7 @@ export const darkTheme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
-    // primary: COLORS.primary,
-    // accent: COLORS.secondary,
-    // accent: '#FFC597',
-    // background: '',
-    // surface: '',
-    // text: '',
-    // disabled: '',
-    // placeholder: '',
-    // backdrop: '',
-    // onSurface: '',
-    // notification: '',
+    // success: '#5CB85C',
+    success: '#00C851',
   },
 };

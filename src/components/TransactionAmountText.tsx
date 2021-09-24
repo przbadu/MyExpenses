@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, TextStyle} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {COLORS, numberToCurrency} from '../constants';
 import {TransactionTypeEnum} from '../database/models';
 
@@ -14,10 +15,17 @@ const TransactionAmountText = ({
   type: TransactionTypeEnum;
   style?: TextStyle;
 }) => {
+  const {colors} = useTheme();
+
+  console.log('colors', colors);
+
   return (
     <Text
       style={{
-        color: type == TransactionTypeEnum.expense ? COLORS.red : COLORS.green,
+        color:
+          type == TransactionTypeEnum.expense
+            ? colors.notification
+            : colors.success,
         ...style,
       }}>
       {numberToCurrency(amount, currency)}
