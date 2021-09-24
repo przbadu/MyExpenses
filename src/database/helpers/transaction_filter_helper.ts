@@ -24,7 +24,7 @@ const transactions = database.collections.get(Transaction.table);
  * @param filterBy - filterBy params
  * @returns appended query, and additional query arguments to skip SQL injection attack.
  */
-function prepareStartEndDateQuery(
+function prepareStartEndDateRawQuery(
   q: string,
   filterBy: filterTransactionByProps,
 ) {
@@ -43,7 +43,7 @@ function prepareStartEndDateQuery(
   }
 }
 
-function inQuery(q: string, columnName: string, ids: string[] | number[]) {
+function inRawQuery(q: string, columnName: string, ids: string[] | number[]) {
   if (ids?.length) {
     let query = q.includes('WHERE') ? ' AND ' : ' WHERE ';
     let args: any[] = [];
@@ -64,22 +64,26 @@ function inQuery(q: string, columnName: string, ids: string[] | number[]) {
   }
 }
 
-function applyFilter(filterBy: filterTransactionByProps) {
+function applyRawQueryFilter(filterBy: filterTransactionByProps) {
   let query = '';
   let args: any = [];
 
   // filter by start and end dates
-  const dateFilter = prepareStartEndDateQuery(query, filterBy!);
+  const dateFilter = prepareStartEndDateRawQuery(query, filterBy!);
   query += dateFilter.query;
   args = [...args, ...dateFilter.args];
 
   // filter by category ids
-  const categoryFilter = inQuery(query, 'category_id', filterBy?.categoryIds!);
+  const categoryFilter = inRawQuery(
+    query,
+    'category_id',
+    filterBy?.categoryIds!,
+  );
   query += categoryFilter.query;
   args = [...args, ...categoryFilter.args];
 
   // filter by wallet ids
-  const walletFilter = inQuery(query, 'wallet_id', filterBy?.walletIds!);
+  const walletFilter = inRawQuery(query, 'wallet_id', filterBy?.walletIds!);
   query += walletFilter.query;
   args = [...args, ...walletFilter.args];
 
@@ -97,7 +101,7 @@ export function transactionTypeSummary(
     'select transaction_type, SUM(amount) as sum_amount from transactions';
 
   // filter by start and end dates
-  const filter = applyFilter(filterBy!);
+  const filter = applyRawQueryFilter(filterBy!);
   query += filter.query;
   args = [...args, ...filter.args];
 
@@ -122,23 +126,36 @@ export function transactionTypeSummary(
 export function filterTransactions(
   filterBy: filterTransactionByProps | null = null,
 ) {
-  let args: any = [];
-  let convertedColumns = ' transaction_at as transactionAt,';
-  convertedColumns += ' transaction_type as transactionType, ';
-  convertedColumns += ' wallet_id as walletId, ';
-  convertedColumns += ' category_id as categoryId, ';
-  const monthColumn =
-    'strftime("%m", datetime(transaction_at/1000, "unixepoch"))';
-  let query = `SELECT *, ${convertedColumns} ${monthColumn} as "month" FROM transactions`;
+  let useQuery = [];
+  // Filter by transaction date
+  if (filterBy?.startDate && filterBy.endDate) {
+    const startTime = +dayjs(filterBy.startDate).startOf('month');
+    const endTime = +dayjs(filterBy.endDate);
 
-  const filter = applyFilter(filterBy!);
-  query += filter.query;
-  args = [...args, ...filter.args];
+    useQuery.push(
+      Q.and(
+        Q.where('transaction_at', Q.gte(startTime)),
+        Q.where('transaction_at', Q.lte(endTime)),
+      ),
+    );
+  }
+  // filter by category ids
+  if (filterBy?.categoryIds) {
+    let categoryIdsQuery: any = [];
+    filterBy.categoryIds.map(id =>
+      categoryIdsQuery.push(Q.where('category_id', id)),
+    );
+    useQuery.push(Q.or(...categoryIdsQuery));
+  }
+  // filter by wallet ids
+  if (filterBy?.walletIds) {
+    let walletIdsQuery: any = [];
+    filterBy.walletIds.map(id =>
+      walletIdsQuery.push(Q.where('category_id', id)),
+    );
+    useQuery.push(Q.or(...walletIdsQuery));
+  }
 
-  query += ' order by transaction_at DESC';
-
-  console.log(new Date().toString(), 'transactions', 'query', query);
-  console.log('args', args);
-
-  return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();
+  console.log('filter', filterBy);
+  return transactions.query(...useQuery).fetch();
 }

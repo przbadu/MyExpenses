@@ -59,8 +59,8 @@ export const filterByDailyTransactions = (date: string) => {
   return transactions
     .query(
       Q.and(
-        Q.where('transaction_at', Q.gt(startTime)),
-        Q.where('transaction_at', Q.lt(endTime)),
+        Q.where('transaction_at', Q.gte(startTime)),
+        Q.where('transaction_at', Q.lte(endTime)),
       ),
     )
     .fetch();
