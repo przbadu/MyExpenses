@@ -17,8 +17,6 @@ const TransactionAmountText = ({
 }) => {
   const {colors} = useTheme();
 
-  console.log('colors', colors);
-
   return (
     <Text
       style={{

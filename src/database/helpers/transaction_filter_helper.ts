@@ -107,10 +107,6 @@ export function transactionTypeSummary(
 
   query += ' group by transaction_type';
   query += ' order by transaction_type DESC';
-
-  console.log(new Date().toString(), 'summary', 'query', query);
-  console.log('args', args);
-
   return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();
 }
 

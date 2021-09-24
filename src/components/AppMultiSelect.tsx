@@ -25,8 +25,6 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   React.useEffect(() => {
     setData(options);
 
-    console.log('ssss', selectedValues);
-
     if (selectedValues) {
       const _selected = options.filter((o: {id: string}) =>
         selectedValues.includes(o.id),

@@ -29,8 +29,6 @@ const _TransactionFilters: React.FC<{
     handleFormChange({...form, categoryIds: items.map(i => i.id)});
   }
 
-  console.log('form', form);
-
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
       <View
