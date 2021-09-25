@@ -25,17 +25,27 @@ const AppLineChart = () => {
   });
 
   function renderTooltip() {
+    const label = numberToCurrency(tooltipPos.value.toFixed(2)) + 'k';
+
     return (
       <View>
         <Svg>
+          <Rect
+            x={tooltipPos.x - label.length - 35}
+            y={tooltipPos.y - 15}
+            width={`${label.length * 10}`}
+            height="30"
+            fill={colors.background}
+          />
+
           <TextSVG
             x={tooltipPos.x + 5}
-            y={tooltipPos.y - 5}
-            fill={dark ? colors.accent : colors.primary}
+            y={tooltipPos.y + 5}
+            fill={colors.text}
             fontSize="14"
             fontWeight="bold"
             textAnchor="middle">
-            {numberToCurrency(tooltipPos.value.toFixed(2)) + 'k'}
+            {label}
           </TextSVG>
         </Svg>
       </View>
