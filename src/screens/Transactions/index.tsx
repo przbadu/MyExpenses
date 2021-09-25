@@ -19,13 +19,13 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {COLORS} from '../../constants';
 import {CurrencyContext, CurrencyContextProps} from '../../store/context';
 import {
   AppModal,
   TransactionAmountText,
   TransactionRow,
   AppChip,
+  SummaryCard,
 } from '../../components';
 import TransactionFilters from './TransactionFilters';
 
@@ -35,7 +35,7 @@ const _Transactions: React.FC<{
   navigation: any;
 }> = ({transactions, navigation}) => {
   const [summary, setSummary] =
-    React.useState<{income: number; expense: number; balance: number}>();
+    React.useState<{income: number; expense: number}>();
   const [groupedTransactions, setGroupedTransactions] = React.useState<
     TransactionProps[]
   >([]);
@@ -72,7 +72,6 @@ const _Transactions: React.FC<{
     setSummary({
       income,
       expense,
-      balance: income + expense,
     });
   };
 
@@ -126,10 +125,10 @@ const _Transactions: React.FC<{
   function renderHeader() {
     return (
       <Appbar.Header>
-        <Appbar.Content title="TRANSACTIONS" color={COLORS.white} />
+        <Appbar.Content title="TRANSACTIONS" color={colors.white} />
         <Appbar.Action
           icon="calendar-blank-outline"
-          color={COLORS.white}
+          color={colors.white}
           onPress={() => navigate('CalendarTransactions')}
         />
 
@@ -140,7 +139,7 @@ const _Transactions: React.FC<{
             <Appbar.Action
               icon="dots-vertical"
               onPress={() => setShowMoreMenu(true)}
-              color={COLORS.white}
+              color={colors.white}
             />
           }
           style={{marginTop: 30}}>
@@ -151,48 +150,6 @@ const _Transactions: React.FC<{
           />
         </Menu>
       </Appbar.Header>
-    );
-  }
-
-  function renderSummary() {
-    return (
-      <Card style={{margin: 10}}>
-        <Card.Content
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            <Text>Income</Text>
-            <Text>Expense</Text>
-            <Text>Balance</Text>
-          </View>
-          <View>
-            <TransactionAmountText
-              amount={summary?.income || 0}
-              currency={currency}
-              type={TransactionTypeEnum.income}
-              style={{marginBottom: 5}}
-            />
-            <TransactionAmountText
-              amount={summary?.expense || 0}
-              currency={currency}
-              type={TransactionTypeEnum.expense}
-              style={{marginBottom: 5}}
-            />
-            <TransactionAmountText
-              amount={summary?.balance || 0}
-              currency={currency}
-              type={
-                summary?.balance! > 0
-                  ? TransactionTypeEnum.income
-                  : TransactionTypeEnum.expense
-              }
-            />
-          </View>
-        </Card.Content>
-      </Card>
     );
   }
 
@@ -236,37 +193,33 @@ const _Transactions: React.FC<{
 
   function renderFilterHeader() {
     return (
-      <View
-        style={{
-          marginTop: 20,
-          marginBottom: 10,
-          marginHorizontal: 10,
-          flexDirection: 'row',
-        }}>
-        <AppChip
-          selected={selectedFilterChip === '7days'}
-          onPress={() => periodicTransactionFilter('7days')}>
-          7 Days
-        </AppChip>
-        <AppChip
-          selected={selectedFilterChip === '1month'}
-          onPress={() => periodicTransactionFilter('1month')}>
-          1 Month
-        </AppChip>
-        <AppChip
-          selected={selectedFilterChip === '6months'}
-          onPress={() => periodicTransactionFilter('6months')}>
-          6 Months
-        </AppChip>
-        <AppChip
-          icon="filter"
-          onPress={() => {
-            setSelectedFilterChip(undefined);
-            setShowFilter(true);
-          }}>
-          Filter
-        </AppChip>
-      </View>
+      <Card>
+        <Card.Content style={{flexDirection: 'row'}}>
+          <AppChip
+            selected={selectedFilterChip === '7days'}
+            onPress={() => periodicTransactionFilter('7days')}>
+            7 Days
+          </AppChip>
+          <AppChip
+            selected={selectedFilterChip === '1month'}
+            onPress={() => periodicTransactionFilter('1month')}>
+            1 Month
+          </AppChip>
+          <AppChip
+            selected={selectedFilterChip === '6months'}
+            onPress={() => periodicTransactionFilter('6months')}>
+            6 Months
+          </AppChip>
+          <AppChip
+            icon="filter"
+            onPress={() => {
+              setSelectedFilterChip(undefined);
+              setShowFilter(true);
+            }}>
+            Filter
+          </AppChip>
+        </Card.Content>
+      </Card>
     );
   }
 
@@ -291,7 +244,11 @@ const _Transactions: React.FC<{
     <>
       {renderHeader()}
       {renderFilterHeader()}
-      {renderSummary()}
+      <SummaryCard
+        income={summary?.income || 0}
+        expense={summary?.expense || 0}
+        containerStyles={{marginHorizontal: 10, marginVertical: 20}}
+      />
       {renderSectionList()}
       {renderFilters()}
     </>

@@ -1,5 +1,3 @@
-import {COLORS} from '.';
-
 // Customize calendar theme
 export const calendarTheme = (
   colors: ReactNativePaper.ThemeColors,
@@ -11,11 +9,11 @@ export const calendarTheme = (
   textSectionTitleDisabledColor: colors.disabled,
   selectedDayBackgroundColor: colors.primary,
   dayTextColor: dark ? colors.disabled : colors.text,
-  selectedDayTextColor: COLORS.white,
+  selectedDayTextColor: colors.white,
   todayTextColor: colors.primary,
   textDisabledColor: '#d9e1e8',
   dotColor: colors.primary,
-  selectedDotColor: COLORS.white,
+  selectedDotColor: colors.white,
   arrowColor: colors.primary,
   disabledArrowColor: '#d9e1e8',
   monthTextColor: colors.primary,

@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from '../constants';
 
 const SwitchButtonContent: React.FC<{
   icon: string;
@@ -24,12 +23,12 @@ const SwitchButtonContent: React.FC<{
         <Icon
           name={icon}
           style={{marginRight: 10}}
-          color={active ? COLORS.white : colors.text}
+          color={active ? colors.white : colors.text}
           size={20}
         />
       )}
       {label && (
-        <Text style={{color: active ? COLORS.white : colors.text}}>
+        <Text style={{color: active ? colors.white : colors.text}}>
           {label}
         </Text>
       )}

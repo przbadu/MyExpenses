@@ -7,7 +7,7 @@ const AppChip = (props: any) => {
   return (
     <Chip
       style={{
-        backgroundColor: colors.surface,
+        backgroundColor: colors.background,
         marginRight: 10,
         ...props.style,
       }}

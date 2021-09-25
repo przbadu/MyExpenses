@@ -23,7 +23,11 @@ export const TabNavigation = () => {
         component={Home}
         options={{
           tabBarIcon: ({focused}) => (
-            <TabBarIcon label="Home" icon="home" focused={focused} />
+            <TabBarIcon
+              label="Stats"
+              icon="chart-timeline-variant"
+              focused={focused}
+            />
           ),
         }}
       />
@@ -32,7 +36,11 @@ export const TabNavigation = () => {
         component={Transactions}
         options={{
           tabBarIcon: ({focused}) => (
-            <TabBarIcon label="Transactions" icon="history" focused={focused} />
+            <TabBarIcon
+              label="Transactions"
+              icon="calendar-month-outline"
+              focused={focused}
+            />
           ),
         }}
       />
@@ -44,7 +52,7 @@ export const TabNavigation = () => {
             <TabBarIcon
               icon="plus"
               focused={focused}
-              iconColor={colors.surface}
+              iconColor={colors.white}
               containerStyles={{
                 width: 62,
                 height: 62,

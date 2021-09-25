@@ -24,9 +24,11 @@ declare global {
   namespace ReactNativePaper {
     interface ThemeColors {
       success: string;
+      white: string;
     }
     interface Theme {
       success: string;
+      white: string;
     }
   }
 }
@@ -40,6 +42,7 @@ export const lightTheme = {
     primary: COLORS.primary,
     accent: COLORS.secondary,
     success: '#007E3C',
+    white: '#FFFFFF',
   },
 };
 
@@ -51,5 +54,6 @@ export const darkTheme = {
     ...NavigationDarkTheme.colors,
     // success: '#5CB85C',
     success: '#00C851',
+    white: '#FFFFFF',
   },
 };

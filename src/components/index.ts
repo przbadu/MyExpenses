@@ -6,6 +6,7 @@ export * from './AppMultiSelect';
 export * from './AppTextInput';
 export * from './AppDatePicker';
 export * from './AppTimePicker';
+export * from './SummaryCard';
 export * from './SwitchButton';
 export * from './SwitchButtonContent';
 export * from './TabBarIcon';
