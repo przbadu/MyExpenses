@@ -1,7 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
-import {database} from '../index';
-import {Transaction} from '../models';
+
+import {formatDateColumn, transactions} from '.';
 const _format = 'YYYY-MM-DD';
 
 /**
@@ -13,11 +13,6 @@ export interface filterTransactionByProps {
   startDate?: Date;
   endDate?: Date;
 }
-
-/**
- * Transaction collection, used for making further queries to this table.
- */
-const transactions = database.collections.get(Transaction.table);
 
 /**
  * @param q - existing query string
@@ -33,8 +28,7 @@ function prepareStartEndDateRawQuery(
     const endDate = dayjs(filterBy.endDate).format(_format);
 
     let query = q.includes('WHERE') ? ' AND ' : ' WHERE ';
-    query +=
-      'strftime("%Y-%m-%d", datetime(transaction_at/1000, "unixepoch")) BETWEEN ? and ?';
+    query += `${formatDateColumn('%Y-%m-%d')} BETWEEN ? and ?`;
     const args = [startDate, endDate];
 
     return {query, args};

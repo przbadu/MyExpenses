@@ -5,3 +5,4 @@ export * from './wallet_helper';
 export * from './category_helper';
 export * from './transaction_helper';
 export * from './transaction_filter_helper';
+export * from './dashboard_filter';

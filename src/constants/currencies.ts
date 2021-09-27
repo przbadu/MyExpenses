@@ -1,3 +1,65 @@
+import currency from 'currency.js';
+const SI_SYMBOLS = ['', 'k', 'M', 'B', 'T', 'P', 'E'];
+
+/**
+ *
+ * @param amount - amount to be formatted
+ * @param symbol - currency symbol
+ * @returns Currency formatted amount e.g: $200, NPR 1,200
+ */
+export const numberToCurrency = (
+  amount: number | string,
+  symbol: string = 'Rs.',
+) => currency(amount, {symbol: `${symbol} `}).format();
+
+/**
+ *
+ * @param number Number to be converted e.g: 10000
+ * @param minDigits Minimum precision e.g: 1.0K
+ * @param maxDigits maximum precision e.g: 1.0000K
+ * @returns return number in human readable format e.g: 1.1K, 2M, 3B
+ */
+export const numberToHumanize = (
+  number: number,
+  minDigits: number = 1,
+  maxDigits: number = 1,
+) => {
+  if (number === 0) return number;
+
+  // determines SI symbol
+  const tier = Math.floor(Math.log10(Math.abs(number)) / 3);
+
+  // get suffix and determine scale
+  const suffix = SI_SYMBOLS[tier];
+  const scale = 10 ** (tier * 3);
+
+  // scale the number
+  const scaled = number / scale;
+
+  // format number and add suffix
+  return (
+    scaled.toLocaleString(undefined, {
+      minimumFractionDigits: minDigits,
+      maximumFractionDigits: maxDigits,
+    }) + suffix
+  );
+};
+
+export function getSiSymbol(number: number) {
+  if (number < 0) return '';
+
+  const tier = Math.floor(Math.log10(Math.abs(number)) / 3);
+  return SI_SYMBOLS[tier];
+}
+
+export function amountSeperator(number: number, avg: number) {
+  if (number === 0) return number;
+
+  const tier = Math.floor(Math.log10(Math.abs(avg)) / 3);
+  const scale = 10 ** (tier * 3);
+  return number / scale;
+}
+
 export const currencies = [
   {isoCode: 'AED', name: 'United Arab Emirates Dirham'},
   {isoCode: 'AFN', name: 'Afghan Afghani'},

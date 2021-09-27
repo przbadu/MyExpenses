@@ -1,4 +1,3 @@
-import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, SectionList} from 'react-native';
@@ -6,7 +5,6 @@ import {
   useTheme,
   Card,
   Appbar,
-  Text,
   Subheading,
   Headline,
   Button,
@@ -15,19 +13,13 @@ import {
 import {
   filterTransactionByProps,
   filterTransactions,
-  observeCurrentYearTransactions,
+  observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {CurrencyContext, CurrencyContextProps} from '../../store/context';
-import {
-  AppModal,
-  TransactionAmountText,
-  TransactionRow,
-  AppChip,
-  SummaryCard,
-} from '../../components';
+import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
+import withObservables from '@nozbe/with-observables';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -46,7 +38,6 @@ const _Transactions: React.FC<{
 
   const {navigate} = navigation;
   const {colors} = useTheme();
-  const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const [showFilter, setShowFilter] = React.useState(false);
 
   React.useEffect(() => {
@@ -256,7 +247,7 @@ const _Transactions: React.FC<{
 };
 
 const enhance = withObservables([], () => ({
-  transactions: observeCurrentYearTransactions(),
+  transactions: observeTransactions(),
 }));
 
 const Transactions = enhance(_Transactions);

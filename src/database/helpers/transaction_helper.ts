@@ -12,23 +12,23 @@ const now = new Date();
 /**
  * Transaction collection, used for making further queries to this table.
  */
-const transactions = database.collections.get(Transaction.table);
+export const transactions = database.collections.get(Transaction.table);
+
+/**
+ *
+ * @param format %Y %m %d (SQLITE supported date formats)
+ * @param column column name to be formated, must be date column, default: transaction_at
+ * @returns SQL string to support date format e.g: strftime("%Y-%m", datetime(transaction_at/1000, 'unixepoch'))
+ */
+export const formatDateColumn = (
+  format: string,
+  column: string = 'transaction_at',
+) => `strftime("${format}", datetime(${column}/1000, "unixepoch"))`;
 
 /**
  * @returns return all Transactions and observe them for changes
  */
 export const observeTransactions = () => transactions.query().observe();
-
-/**
- * @returns List of transactions for current year
- */
-export const observeCurrentYearTransactions = () =>
-  transactions.query(
-    Q.unsafeSqlQuery(
-      'SELECT *, strftime("%m", datetime(transaction_at/1000, "unixepoch")) as "month" FROM transactions' +
-        ' order by transaction_at DESC',
-    ),
-  );
 
 /**
  * @param date - must be in "%Y-%m" format, e.g: "2021-01"
@@ -39,7 +39,7 @@ export const transactionDaysForCurrentMonth = (date: string) => {
     .query(
       Q.unsafeSqlQuery(
         'SELECT transaction_at FROM transactions' +
-          ' WHERE strftime("%Y-%m", datetime(transaction_at/1000, "unixepoch")) = ?',
+          ` WHERE ${formatDateColumn('%Y-%m')} = ?`,
         [date],
       ),
     )

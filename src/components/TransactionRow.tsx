@@ -4,7 +4,12 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Card, useTheme, Text, Avatar} from 'react-native-paper';
 import {TransactionAmountText} from '.';
-import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
+import {
+  CategoryProps,
+  TransactionProps,
+  TransactionTypeEnum,
+  WalletProps,
+} from '../database/models';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
 
 const _TransactionRow = ({
@@ -28,20 +33,25 @@ const _TransactionRow = ({
               style={{
                 marginRight: 10,
                 width: 2,
-                backgroundColor: category.color,
+                backgroundColor:
+                  transaction.transactionType === TransactionTypeEnum.expense
+                    ? category.color
+                    : wallet.color,
                 height: 24,
               }}
             />
             <View style={styles.textContainer}>
-              <Text
-                numberOfLines={2}
-                style={{
-                  color: colors.accent,
-                  ...fonts.medium,
-                  letterSpacing: 1,
-                }}>
-                {category.name}
-              </Text>
+              {category && (
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    color: colors.accent,
+                    ...fonts.medium,
+                    letterSpacing: 1,
+                  }}>
+                  {category.name}
+                </Text>
+              )}
               <Text numberOfLines={2} style={{...fonts.light}}>
                 {transaction.notes}
               </Text>
