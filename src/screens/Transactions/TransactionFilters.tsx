@@ -14,8 +14,7 @@ const _TransactionFilters: React.FC<{
   categories: CategoryProps[];
   wallets: WalletProps[];
 }> = ({onFilter, categories, wallets}) => {
-  const {form, submitting, handleFormChange, setSubmitting, resetFilter} =
-    useForm();
+  const {form, submitting, handleFormChange, setSubmitting} = useForm();
 
   function prepareData(data: CategoryProps[] | WalletProps[]) {
     return data.map(item => ({id: item.id, name: item.name}));

@@ -14,9 +14,15 @@ import {
   numToMonthName,
   numToWeekName,
 } from '../../constants';
-import {lineChartData, observeTransactions} from '../../database/helpers';
+import {
+  lineChartData,
+  observeTransactions,
+  transactionTypeSummary,
+} from '../../database/helpers';
+import {TransactionTypeEnum} from '../../database/models';
 
 const _AppLineChart = ({transactions}: any) => {
+  const [balance, setBalance] = React.useState(0);
   const [filterBy, setFilterBy] = React.useState<'y' | 'm' | 'w'>('y');
   const [chartData, setChartData] = React.useState<
     {amount: number; date: string}[]
@@ -31,11 +37,23 @@ const _AppLineChart = ({transactions}: any) => {
 
   React.useEffect(() => {
     fetchChartData();
+    fetchSummary();
   }, [transactions]);
 
   const fetchChartData = async () => {
     const data = await lineChartData();
     setChartData(data);
+  };
+
+  const fetchSummary = async () => {
+    const summary: {transaction_type: TransactionTypeEnum; sum_amount: number} =
+      await transactionTypeSummary();
+    const _balance = summary.reduce((sum, tran) =>
+      tran.transactionType == TransactionTypeEnum.expense
+        ? sum - tran.sum_amount
+        : sum + tran.sum_amount,
+    );
+    setBalance(_balance);
   };
 
   function renderTooltip(symbol: string) {

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, SectionList} from 'react-native';
+import withObservables from '@nozbe/with-observables';
 import {
   useTheme,
   Card,
@@ -19,8 +20,7 @@ import {
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
-import withObservables from '@nozbe/with-observables';
-import {TransformProps} from 'react-native-svg';
+import {useForm} from './useFilterForm';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -33,10 +33,12 @@ const _Transactions: React.FC<{
     TransactionProps[]
   >([]);
   const [selectedFilterChip, setSelectedFilterChip] = React.useState<
-    '7days' | '1month' | '6months' | undefined
+    '7days' | '1month' | '6months' | 'custom' | undefined
   >();
   const [showMoreMenu, setShowMoreMenu] = React.useState(false);
 
+  const {form, submitting, handleFormChange, setSubmitting, resetFilter} =
+    useForm();
   const {navigate} = navigation;
   const {colors} = useTheme();
   const [showFilter, setShowFilter] = React.useState(false);
@@ -76,7 +78,7 @@ const _Transactions: React.FC<{
   };
 
   const periodicTransactionFilter = async (
-    filter: '7days' | '1month' | '6months',
+    filter: '7days' | '1month' | '6months' | 'custom',
   ) => {
     const endDate: Date = new Date();
     let startDate;
@@ -193,7 +195,7 @@ const _Transactions: React.FC<{
   function renderFilterHeader() {
     return (
       <Card>
-        <Card.Content style={{flexDirection: 'row'}}>
+        <Card.Content style={{flexDirection: 'row', flexWrap: 'wrap'}}>
           <AppChip
             selected={selectedFilterChip === '7days'}
             onPress={() => periodicTransactionFilter('7days')}>
@@ -210,13 +212,24 @@ const _Transactions: React.FC<{
             6 Months
           </AppChip>
           <AppChip
+            selected={selectedFilterChip === 'custom'}
             icon="filter"
             onPress={() => {
-              setSelectedFilterChip(undefined);
+              setSelectedFilterChip('custom');
               setShowFilter(true);
             }}>
             Filter
           </AppChip>
+
+          {selectedFilterChip && (
+            <AppChip
+              icon="filter-remove"
+              onPress={() => {
+                setSelectedFilterChip(undefined);
+                filterTransactionBy({});
+              }}
+            />
+          )}
         </Card.Content>
       </Card>
     );
