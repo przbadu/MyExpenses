@@ -1,3 +1,4 @@
+import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, Dimensions} from 'react-native';
@@ -10,14 +11,12 @@ import {
   chartConfig,
   getSiSymbol,
   numberToCurrency,
-  numberToHumanize,
   numToMonthName,
   numToWeekName,
-  thousandSeperated,
 } from '../../constants';
-import {lineChartData} from '../../database/helpers';
+import {lineChartData, observeTransactions} from '../../database/helpers';
 
-const AppLineChart = () => {
+const _AppLineChart = ({transactions}: any) => {
   const [filterBy, setFilterBy] = React.useState<'y' | 'm' | 'w'>('y');
   const [chartData, setChartData] = React.useState<
     {amount: number; date: string}[]
@@ -32,7 +31,7 @@ const AppLineChart = () => {
 
   React.useEffect(() => {
     fetchChartData();
-  }, []);
+  }, [transactions]);
 
   const fetchChartData = async () => {
     const data = await lineChartData();
@@ -141,5 +140,9 @@ const AppLineChart = () => {
     </View>
   );
 };
+
+const AppLineChart = withObservables([], () => ({
+  transactions: observeTransactions(),
+}))(_AppLineChart);
 
 export {AppLineChart};

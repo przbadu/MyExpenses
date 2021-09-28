@@ -20,6 +20,7 @@ import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
 import withObservables from '@nozbe/with-observables';
+import {TransformProps} from 'react-native-svg';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -43,7 +44,7 @@ const _Transactions: React.FC<{
   React.useEffect(() => {
     fetchSummary();
     transactionGroupedByMonth(transactions);
-  }, []);
+  }, [transactions]);
 
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
@@ -98,16 +99,23 @@ const _Transactions: React.FC<{
 
   // prepare transactions for SectionList, grouped by month
   function transactionGroupedByMonth(trans: TransactionProps[] | any) {
-    let result = trans.reduce(
-      (groupedTransaction: any, transaction: TransactionProps): object => {
-        const month = dayjs(transaction.transactionAt).format('YYYY MMM');
-        groupedTransaction[month] = groupedTransaction[month] || [];
-        groupedTransaction[month] = [...groupedTransaction[month], transaction];
+    let result = trans
+      .sort((a: TransactionProps, b: TransactionProps) =>
+        a.transactionAt! < b.transactionAt! ? 1 : -1,
+      )
+      .reduce(
+        (groupedTransaction: any, transaction: TransactionProps): object => {
+          const month = dayjs(transaction.transactionAt).format('YYYY MMM');
+          groupedTransaction[month] = groupedTransaction[month] || [];
+          groupedTransaction[month] = [
+            ...groupedTransaction[month],
+            transaction,
+          ];
 
-        return groupedTransaction;
-      },
-      Object.create(null),
-    );
+          return groupedTransaction;
+        },
+        Object.create(null),
+      );
 
     result = Object.keys(result).map(key => ({title: key, data: result[key]}));
     setGroupedTransactions(result);
@@ -246,10 +254,8 @@ const _Transactions: React.FC<{
   );
 };
 
-const enhance = withObservables([], () => ({
+const Transactions = withObservables([], () => ({
   transactions: observeTransactions(),
-}));
-
-const Transactions = enhance(_Transactions);
+}))(_Transactions);
 
 export {Transactions};

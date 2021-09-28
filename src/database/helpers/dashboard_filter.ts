@@ -1,6 +1,5 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
-import {lazy} from 'react';
 
 import {formatDateColumn, transactions} from '.';
 
@@ -11,7 +10,7 @@ export const yearlySum = () =>
         ' FROM transactions' +
         ` WHERE ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'` +
         ' GROUP BY date' +
-        ' ORDER BY amount',
+        ' ORDER BY date',
     ),
   );
 
