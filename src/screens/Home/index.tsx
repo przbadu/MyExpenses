@@ -19,22 +19,40 @@ const Home = () => {
   function renderFilters() {
     return (
       <Card>
-        <Card.Content style={{flexDirection: 'row'}}>
-          <AppChip
-            selected={filter === 'weekly'}
-            onPress={() => setFilter('weekly')}>
-            Weekly
-          </AppChip>
-          <AppChip
-            selected={filter === 'monthly'}
-            onPress={() => setFilter('monthly')}>
-            Monthly
-          </AppChip>
-          <AppChip
-            selected={filter === 'yearly'}
-            onPress={() => setFilter('yearly')}>
-            Yearly
-          </AppChip>
+        <Card.Content
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={{flexDirection: 'row'}}>
+            <AppChip
+              selected={filter === 'weekly'}
+              onPress={() => setFilter('weekly')}>
+              Weekly
+            </AppChip>
+            <AppChip
+              selected={filter === 'monthly'}
+              onPress={() => setFilter('monthly')}>
+              Monthly
+            </AppChip>
+            <AppChip
+              selected={filter === 'yearly'}
+              onPress={() => setFilter('yearly')}>
+              Yearly
+            </AppChip>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <IconButton
+              icon="chart-timeline-variant"
+              onPress={() => setChartStyle('line')}
+            />
+            <IconButton
+              icon="format-list-bulleted"
+              onPress={() => setChartStyle('pie')}
+            />
+          </View>
         </Card.Content>
       </Card>
     );
@@ -48,20 +66,6 @@ const Home = () => {
       </Appbar.Header>
 
       {renderFilters()}
-
-      <Surface style={styles.surface}>
-        <Subheading>Categories</Subheading>
-        <View style={{flexDirection: 'row'}}>
-          <IconButton
-            icon="chart-timeline-variant"
-            onPress={() => setChartStyle('line')}
-          />
-          <IconButton
-            icon="format-list-bulleted"
-            onPress={() => setChartStyle('pie')}
-          />
-        </View>
-      </Surface>
 
       {chartStyle === 'line' ? (
         <AppLineChart filter={filter} />

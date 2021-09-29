@@ -95,10 +95,8 @@ const _AppLineChart = ({
       Math,
       chartData.map(d => d.amount),
     );
-    // const average =
-    //   chartData.reduce((sum, d) => sum + d.amount, 0) / chartData.length;
     const siSymbol = getSiSymbol(maxNumber);
-    const data = chartData.map((d: {amount: number}): number =>
+    const data: number[] = chartData.map((d: {amount: number}): number =>
       amountSeperator(+d.amount, maxNumber),
     );
 
@@ -106,6 +104,7 @@ const _AppLineChart = ({
       if (filter === 'yearly') return numToMonthName(d.date);
       else if (filter === 'monthly') return d.date;
       else if (filter === 'weekly') return numToWeekName(d.date);
+      else return d.date;
     });
 
     return (

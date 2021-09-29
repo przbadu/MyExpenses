@@ -9,6 +9,7 @@ const AppChip = (props: any) => {
       style={{
         backgroundColor: colors.background,
         marginRight: 10,
+        maxHeight: 35,
         ...props.style,
       }}
       {...props}>
