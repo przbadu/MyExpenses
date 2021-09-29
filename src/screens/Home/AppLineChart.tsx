@@ -16,14 +16,20 @@ import {
 } from '../../constants';
 import {
   lineChartData,
+  lineChartFilterProps,
   observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionTypeEnum} from '../../database/models';
 
-const _AppLineChart = ({transactions}: any) => {
+const _AppLineChart = ({
+  transactions,
+  filter,
+}: {
+  transactions: any;
+  filter: lineChartFilterProps;
+}) => {
   const [balance, setBalance] = React.useState(0);
-  const [filterBy, setFilterBy] = React.useState<'y' | 'm' | 'w'>('y');
   const [chartData, setChartData] = React.useState<
     {amount: number; date: string}[]
   >([{date: dayjs().format('MM'), amount: 0}]);
@@ -38,10 +44,10 @@ const _AppLineChart = ({transactions}: any) => {
   React.useEffect(() => {
     fetchChartData();
     fetchSummary();
-  }, [transactions]);
+  }, [transactions, filter]);
 
   const fetchChartData = async () => {
-    const data = await lineChartData();
+    const data = await lineChartData(filter);
     setChartData(data);
   };
 
@@ -95,16 +101,12 @@ const _AppLineChart = ({transactions}: any) => {
     const data = chartData.map((d: {amount: number}): number =>
       amountSeperator(+d.amount, maxNumber),
     );
-    console.log('avg', maxNumber);
-    console.log('data', data);
 
-    const labels = chartData.map((d: {date: string}) =>
-      filterBy === 'y'
-        ? numToMonthName(d.date)
-        : filterBy == 'w'
-        ? numToWeekName(d.date)
-        : d.date,
-    );
+    const labels = chartData.map((d: {date: string}) => {
+      if (filter === 'yearly') return numToMonthName(d.date);
+      else if (filter === 'monthly') return d.date;
+      else if (filter === 'weekly') return numToWeekName(d.date);
+    });
 
     return (
       <LineChart

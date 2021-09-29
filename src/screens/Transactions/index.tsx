@@ -199,22 +199,22 @@ const _Transactions: React.FC<{
           <AppChip
             selected={selectedFilterChip === '7days'}
             onPress={() => periodicTransactionFilter('7days')}>
-            1 W
+            1W
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '1month'}
             onPress={() => periodicTransactionFilter('1month')}>
-            1 M
+            1M
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '6months'}
             onPress={() => periodicTransactionFilter('6months')}>
-            6 M
+            6M
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '1year'}
             onPress={() => periodicTransactionFilter('1year')}>
-            1 Y
+            1Y
           </AppChip>
           <AppChip
             selected={selectedFilterChip === 'custom'}

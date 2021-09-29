@@ -29,19 +29,19 @@ export const numToMonthName = (number: number | string) => {
 
 export const numToWeekName = (number: number | string) => {
   switch (+number) {
-    case 1:
+    case 0:
       return 'Sun';
-    case 2:
+    case 1:
       return 'Mon';
-    case 3:
+    case 2:
       return 'Tue';
-    case 4:
+    case 3:
       return 'Wed';
-    case 5:
+    case 4:
       return 'Thu';
-    case 6:
+    case 5:
       return 'Fri';
-    case 7:
+    case 6:
       return 'Sat';
   }
 };

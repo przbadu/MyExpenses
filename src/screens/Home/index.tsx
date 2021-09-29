@@ -8,33 +8,32 @@ import {
   Surface,
 } from 'react-native-paper';
 import {AppChip} from '../../components';
+import {lineChartFilterProps} from '../../database/helpers';
 import {AppLineChart} from './AppLineChart';
 import {AppPieChart} from './AppPieChart';
 
 const Home = () => {
   const [chartStyle, setChartStyle] = React.useState<'line' | 'pie'>('line');
-  const [filter, setFilter] = React.useState<'1d' | '1w' | '1m' | '6m' | '1y'>(
-    '1d',
-  );
+  const [filter, setFilter] = React.useState<lineChartFilterProps>('yearly');
 
   function renderFilters() {
     return (
       <Card>
         <Card.Content style={{flexDirection: 'row'}}>
-          <AppChip selected={filter === '1d'} onPress={() => setFilter('1d')}>
-            1D
+          <AppChip
+            selected={filter === 'weekly'}
+            onPress={() => setFilter('weekly')}>
+            Weekly
           </AppChip>
-          <AppChip selected={filter === '1w'} onPress={() => setFilter('1w')}>
-            1W
+          <AppChip
+            selected={filter === 'monthly'}
+            onPress={() => setFilter('monthly')}>
+            Monthly
           </AppChip>
-          <AppChip selected={filter === '1m'} onPress={() => setFilter('1m')}>
-            1M
-          </AppChip>
-          <AppChip selected={filter === '6m'} onPress={() => setFilter('6m')}>
-            6M
-          </AppChip>
-          <AppChip selected={filter === '1y'} onPress={() => setFilter('1y')}>
-            1Y
+          <AppChip
+            selected={filter === 'yearly'}
+            onPress={() => setFilter('yearly')}>
+            Yearly
           </AppChip>
         </Card.Content>
       </Card>
@@ -44,7 +43,8 @@ const Home = () => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="Stats" />
+        <Appbar.Content title="Dashboard" />
+        <Appbar.Action icon="magnify" onPress={() => {}} />
       </Appbar.Header>
 
       {renderFilters()}
@@ -63,7 +63,11 @@ const Home = () => {
         </View>
       </Surface>
 
-      {chartStyle === 'line' ? <AppLineChart /> : <AppPieChart />}
+      {chartStyle === 'line' ? (
+        <AppLineChart filter={filter} />
+      ) : (
+        <AppPieChart />
+      )}
       {/* Line Chart  */}
       {/* Pie chart */}
     </>
