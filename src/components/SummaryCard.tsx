@@ -1,15 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
-import {
-  Divider,
-  Text,
-  useTheme,
-  Subheading,
-  Surface,
-  Avatar,
-} from 'react-native-paper';
+import {Divider, Text, useTheme, Subheading, Surface} from 'react-native-paper';
 import {numberToCurrency} from '../constants';
-import {CurrencyContext} from '../store/context';
 
 const SummaryCard = ({
   income,
@@ -24,12 +16,14 @@ const SummaryCard = ({
   showIncomeExpense?: boolean;
   showNetBalance?: boolean;
 }) => {
-  const {currency} = React.useContext(CurrencyContext);
   const {colors} = useTheme();
   const balance = income - expense;
 
+  const inlineStyle = showIncomeExpense ? {} : {...styles.row2};
+  const textStyle = showIncomeExpense ? {} : {flex: 1, textAlign: 'right'};
+
   return (
-    <Surface style={{...styles.container, ...containerStyles}}>
+    <Surface style={{...styles.container, ...inlineStyle, ...containerStyles}}>
       {showNetBalance && (
         <>
           <Text>NET BALANCE</Text>
@@ -37,6 +31,7 @@ const SummaryCard = ({
             style={{
               marginBottom: 10,
               color: balance > 0 ? colors.success : colors.notification,
+              ...textStyle,
             }}>
             {numberToCurrency(balance)}
           </Subheading>
@@ -79,6 +74,11 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  row2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });
 

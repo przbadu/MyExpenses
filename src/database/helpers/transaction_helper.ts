@@ -28,7 +28,20 @@ export const formatDateColumn = (
 /**
  * @returns return all Transactions and observe them for changes
  */
-export const observeTransactions = () => transactions.query().observe();
+export const observeTransactions = () => {
+  const timestamp = new Date().getTime();
+  const startTime = +dayjs(timestamp).startOf('year');
+  const endTime = +dayjs(timestamp).endOf('year');
+
+  return transactions
+    .query(
+      Q.and(
+        Q.where('transaction_at', Q.gte(startTime)),
+        Q.where('transaction_at', Q.lte(endTime)),
+      ),
+    )
+    .observe();
+};
 
 /**
  * @param date - must be in "%Y-%m" format, e.g: "2021-01"

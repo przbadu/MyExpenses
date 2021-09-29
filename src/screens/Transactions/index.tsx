@@ -20,7 +20,6 @@ import {
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
-import {useForm} from './useFilterForm';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -33,12 +32,10 @@ const _Transactions: React.FC<{
     TransactionProps[]
   >([]);
   const [selectedFilterChip, setSelectedFilterChip] = React.useState<
-    '7days' | '1month' | '6months' | 'custom' | undefined
-  >();
+    '7days' | '1month' | '6months' | '1year' | 'custom' | undefined
+  >('1year');
   const [showMoreMenu, setShowMoreMenu] = React.useState(false);
 
-  const {form, submitting, handleFormChange, setSubmitting, resetFilter} =
-    useForm();
   const {navigate} = navigation;
   const {colors} = useTheme();
   const [showFilter, setShowFilter] = React.useState(false);
@@ -78,7 +75,7 @@ const _Transactions: React.FC<{
   };
 
   const periodicTransactionFilter = async (
-    filter: '7days' | '1month' | '6months' | 'custom',
+    filter: '7days' | '1month' | '6months' | '1year' | 'custom',
   ) => {
     const endDate: Date = new Date();
     let startDate;
@@ -92,6 +89,9 @@ const _Transactions: React.FC<{
     } else if (filter === '6months') {
       setSelectedFilterChip('6months');
       startDate = new Date(+dayjs().subtract(6, 'months').startOf('day'));
+    } else {
+      setSelectedFilterChip('1year');
+      startDate = new Date(+dayjs().subtract(1, 'year').startOf('day'));
     }
 
     await fetchSummary({startDate, endDate});
@@ -199,17 +199,22 @@ const _Transactions: React.FC<{
           <AppChip
             selected={selectedFilterChip === '7days'}
             onPress={() => periodicTransactionFilter('7days')}>
-            7 Days
+            1 W
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '1month'}
             onPress={() => periodicTransactionFilter('1month')}>
-            1 Month
+            1 M
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '6months'}
             onPress={() => periodicTransactionFilter('6months')}>
-            6 Months
+            6 M
+          </AppChip>
+          <AppChip
+            selected={selectedFilterChip === '1year'}
+            onPress={() => periodicTransactionFilter('1year')}>
+            1 Y
           </AppChip>
           <AppChip
             selected={selectedFilterChip === 'custom'}
@@ -221,12 +226,11 @@ const _Transactions: React.FC<{
             Filter
           </AppChip>
 
-          {selectedFilterChip && (
+          {selectedFilterChip !== '1year' && (
             <AppChip
               icon="filter-remove"
               onPress={() => {
-                setSelectedFilterChip(undefined);
-                filterTransactionBy({});
+                periodicTransactionFilter('1year');
               }}
             />
           )}
