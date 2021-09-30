@@ -3,6 +3,8 @@ import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
 import date from '@nozbe/watermelondb/decorators/date';
 import children from '@nozbe/watermelondb/decorators/children';
+import {TransactionProps} from '.';
+import {transactions} from '../helpers';
 
 // category types
 export interface CategoryProps {
@@ -10,6 +12,7 @@ export interface CategoryProps {
   createdAt?: Date;
   name: string;
   color?: string;
+  transactions?: TransactionProps[];
 }
 
 class Category extends Model {

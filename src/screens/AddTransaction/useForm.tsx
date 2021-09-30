@@ -49,10 +49,7 @@ export const validate = (values: FormProps) => {
     errors.notes = 'Notes can not be more than 255 characters.';
   }
 
-  if (
-    !values.categoryId &&
-    values.transactionType !== TransactionTypeEnum.income
-  ) {
+  if (!values.categoryId) {
     errors.categoryId = 'Please select category';
   }
 

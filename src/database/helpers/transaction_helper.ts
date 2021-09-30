@@ -52,7 +52,8 @@ export const transactionDaysForCurrentMonth = (date: string) => {
     .query(
       Q.unsafeSqlQuery(
         'SELECT transaction_at FROM transactions' +
-          ` WHERE ${formatDateColumn('%Y-%m')} = ?`,
+          ` WHERE ${formatDateColumn('%Y-%m')} = ?` +
+          ` AND _status IS NOT 'deleted'`,
         [date],
       ),
     )
@@ -84,6 +85,22 @@ export const uncategorizedId = () =>
     .get(Category.table)
     .query(Q.where('name', 'Uncategorized'))
     .fetchIds();
+
+export const transactionCount = (category_id: number | string | undefined) => {
+  const query = `SELECT COUNT(*) AS count FROM transactions WHERE category_id = ? AND _status IS NOT 'deleted'`;
+
+  console.log('query', query, category_id);
+  return transactions
+    .query(Q.unsafeSqlQuery(query, [category_id]))
+    .observeCount();
+};
+
+export const transactionSum = (category_id: number | string | undefined) => {
+  const query = `SELECT SUM(amount) AS sum FROM transactions WHERE category_id = ? AND _status IS NOT 'deleted'`;
+
+  console.log('query', query, category_id);
+  return transactions.query(Q.unsafeSqlQuery(query, [category_id])).observe();
+};
 
 /**
  * Create new transaction in database

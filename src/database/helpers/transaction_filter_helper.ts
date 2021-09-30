@@ -92,7 +92,7 @@ export function transactionTypeSummary(
 ) {
   let args: any = [];
   let query =
-    'select transaction_type, SUM(amount) as sum_amount from transactions';
+    "select transaction_type, SUM(amount) as sum_amount from transactions WHERE _status IS NOT 'deleted'";
 
   // filter by start and end dates
   const filter = applyRawQueryFilter(filterBy!);

@@ -23,6 +23,7 @@ export const lineChartData = (filter: lineChartFilterProps) => {
     `SELECT ${formatDateColumn(format)} as date, sum(amount) as amount` +
     ' FROM transactions' +
     ` WHERE ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'` +
+    " AND _status IS NOT 'deleted'" +
     ' GROUP BY date' +
     ' ORDER BY date';
 

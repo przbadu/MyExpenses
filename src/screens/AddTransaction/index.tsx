@@ -144,18 +144,16 @@ const AddTransaction = () => {
             />
 
             {renderTransactionDateTime()}
-            {isExpense() && (
-              <AppSelect
-                placeholder="Select Category"
-                value={categoryText!}
-                error={errors.categoryId}
-                left={<TextInput.Icon name="format-list-bulleted" />}
-                open={showCategoryModal}
-                onOpen={() => setShowCategoryModal(true)}
-                onClose={() => setShowCategoryModal(false)}
-                renderContent={() => <CategoryList onSelect={selectCategory} />}
-              />
-            )}
+            <AppSelect
+              placeholder="Select Category"
+              value={categoryText!}
+              error={errors.categoryId}
+              left={<TextInput.Icon name="format-list-bulleted" />}
+              open={showCategoryModal}
+              onOpen={() => setShowCategoryModal(true)}
+              onClose={() => setShowCategoryModal(false)}
+              renderContent={() => <CategoryList onSelect={selectCategory} />}
+            />
 
             <AppSelect
               placeholder="Select Wallet"

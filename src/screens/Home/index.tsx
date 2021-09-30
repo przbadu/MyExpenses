@@ -72,8 +72,6 @@ const Home = () => {
       ) : (
         <AppPieChart />
       )}
-      {/* Line Chart  */}
-      {/* Pie chart */}
     </>
   );
 };

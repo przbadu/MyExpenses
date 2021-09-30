@@ -33,10 +33,7 @@ const _TransactionRow = ({
               style={{
                 marginRight: 10,
                 width: 2,
-                backgroundColor:
-                  transaction.transactionType === TransactionTypeEnum.expense
-                    ? category.color
-                    : wallet.color,
+                backgroundColor: category.color,
                 height: 24,
               }}
             />

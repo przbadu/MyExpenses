@@ -170,7 +170,7 @@ const _Transactions: React.FC<{
 
   function renderSectionList() {
     return (
-      <View style={{flex: 1, marginBottom: 100, marginHorizontal: 10}}>
+      <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
         <SectionList
           sections={groupedTransactions}
           renderItem={({item}: {item: TransactionProps}) => (
