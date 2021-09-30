@@ -7,7 +7,11 @@ import {TabNavigation} from './TabNavigation';
 const Stack = createNativeStackNavigator();
 
 import {ThemeContext} from '../store/context/themeContext';
-import {CalendarTransactions, CategoryTransaction} from '../screens';
+import {
+  CalendarTransactions,
+  CategoryTransaction,
+  TransactionDetail,
+} from '../screens';
 
 export const AppNavigator = () => {
   const {theme} = React.useContext(ThemeContext);
@@ -27,6 +31,10 @@ export const AppNavigator = () => {
             <Stack.Screen
               name="CategoryTransactions"
               component={CategoryTransaction}
+            />
+            <Stack.Screen
+              name="TransactionDetail"
+              component={TransactionDetail}
             />
           </Stack.Navigator>
         </NavigationContainer>

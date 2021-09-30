@@ -12,16 +12,18 @@ const _TransactionRow = ({
   transaction,
   category,
   wallet,
+  onPress,
 }: {
   transaction: TransactionProps;
   category: CategoryProps;
   wallet: WalletProps;
+  onPress: () => void;
 }) => {
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const {colors, fonts} = useTheme();
 
   return (
-    <TouchableOpacity onPress={() => {}}>
+    <TouchableOpacity onPress={onPress}>
       <Surface style={{marginBottom: 5, ...styles.container}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View

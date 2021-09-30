@@ -5,7 +5,7 @@ import randomColor from 'randomcolor';
 import {database} from '../index';
 import {Category, CategoryProps} from '../models';
 
-const categories = database.collections.get(Category.table);
+export const categories = database.collections.get(Category.table);
 
 export const observeCategories = () => categories.query().observe();
 

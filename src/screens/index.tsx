@@ -4,5 +4,6 @@ export * from './CalendarTransactions';
 export * from './AddTransaction';
 export * from './CategoryTransactions';
 export * from './Transactions';
+export * from './TransactionDetail';
 export * from './Saving';
 export * from './Settings';

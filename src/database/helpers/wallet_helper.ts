@@ -3,7 +3,7 @@ import randomColor from 'randomcolor';
 import {database} from '../index';
 import {Wallet, WalletProps} from '../models';
 
-const wallets = database.collections.get(Wallet.table);
+export const wallets = database.collections.get(Wallet.table);
 
 export const observeWallets = () => wallets.query().observe();
 
