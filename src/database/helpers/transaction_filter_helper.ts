@@ -92,13 +92,15 @@ export function transactionTypeSummary(
 ) {
   let args: any = [];
   let query =
-    "select transaction_type, SUM(amount) as sum_amount from transactions WHERE _status IS NOT 'deleted'";
+    'select transaction_type, SUM(amount) as sum_amount from transactions';
 
   // filter by start and end dates
   const filter = applyRawQueryFilter(filterBy!);
   query += filter.query;
   args = [...args, ...filter.args];
 
+  query += query.includes('WHERE') ? ' AND ' : ' WHERE ';
+  query += ` _status IS NOT 'deleted'`;
   query += ' group by transaction_type';
   query += ' order by transaction_type DESC';
   return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();

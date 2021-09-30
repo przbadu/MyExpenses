@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {numberToCurrency} from '../constants';
 
@@ -33,8 +34,6 @@ const CategoryRow = ({
               <Text
                 numberOfLines={2}
                 style={{
-                  color: colors.accent,
-                  ...fonts.medium,
                   letterSpacing: 1,
                 }}>
                 {category.name}
@@ -42,12 +41,18 @@ const CategoryRow = ({
             )}
             <Text
               numberOfLines={2}
-              style={{...fonts.light, color: colors.disabled}}>
+              style={{...fonts.medium, color: colors.disabled}}>
               {category.count} Transactions
             </Text>
           </View>
 
           <Text>{numberToCurrency(category.sum)}</Text>
+          <Icon
+            name="chevron-right"
+            size={16}
+            style={{marginLeft: 10}}
+            color={colors.text}
+          />
         </View>
       </Surface>
     </TouchableOpacity>

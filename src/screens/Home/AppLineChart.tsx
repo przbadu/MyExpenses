@@ -1,9 +1,10 @@
 import withObservables from '@nozbe/with-observables';
+import {useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, Dimensions, FlatList} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import {Headline, Subheading, Surface, useTheme} from 'react-native-paper';
+import {Subheading, Surface, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
 import {CategoryRow, SummaryCard} from '../../components';
 import {
@@ -21,11 +22,7 @@ import {
   observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
-import {
-  CategoryProps,
-  TransactionProps,
-  TransactionTypeEnum,
-} from '../../database/models';
+import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 
 const _AppLineChart = ({
   transactions,
@@ -46,6 +43,7 @@ const _AppLineChart = ({
     visible: false,
     value: 0,
   });
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     fetchCategories();
@@ -166,8 +164,7 @@ const _AppLineChart = ({
   return (
     <>
       <SummaryCard
-        income={23000}
-        expense={12000}
+        balance={balance}
         containerStyles={{marginHorizontal: 10, marginTop: 10}}
         showIncomeExpense={false}
       />
@@ -182,7 +179,15 @@ const _AppLineChart = ({
           data={categories}
           keyExtractor={item => `category-list-${item.id}`}
           renderItem={({item}) => (
-            <CategoryRow category={item} onPress={() => {}} />
+            <CategoryRow
+              category={item}
+              onPress={() =>
+                navigation.navigate('CategoryTransactions', {
+                  categoryId: item.id,
+                  categoryName: item.name,
+                })
+              }
+            />
           )}
         />
       </View>

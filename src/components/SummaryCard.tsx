@@ -6,18 +6,20 @@ import {numberToCurrency} from '../constants';
 const SummaryCard = ({
   income,
   expense,
+  balance,
   containerStyles,
   showIncomeExpense = true,
   showNetBalance = true,
 }: {
-  income: number;
-  expense: number;
+  income?: number;
+  expense?: number;
+  balance?: number;
   containerStyles?: ViewStyle;
   showIncomeExpense?: boolean;
   showNetBalance?: boolean;
 }) => {
   const {colors} = useTheme();
-  const balance = income - expense;
+  const _balance = balance ? balance : income - expense;
 
   const inlineStyle = showIncomeExpense ? {} : {...styles.row2};
   const textStyle = showIncomeExpense ? {} : {flex: 1, textAlign: 'right'};
@@ -30,10 +32,10 @@ const SummaryCard = ({
           <Subheading
             style={{
               marginBottom: 10,
-              color: balance > 0 ? colors.success : colors.notification,
+              color: _balance > 0 ? colors.success : colors.notification,
               ...textStyle,
             }}>
-            {numberToCurrency(balance)}
+            {numberToCurrency(_balance)}
           </Subheading>
           <Divider />
         </>
