@@ -102,6 +102,11 @@ const CalendarTransactions = ({navigation}) => {
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}
+              onPress={() =>
+                navigation.navigate('TransactionDetail', {
+                  transactionId: item.id,
+                })
+              }
             />
           )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
