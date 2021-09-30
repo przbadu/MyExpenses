@@ -14,6 +14,7 @@ import {categories, transactions, wallets} from '../../database/helpers';
 import {
   CategoryProps,
   TransactionProps,
+  TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
 
@@ -38,7 +39,12 @@ const TransactionDetail = ({navigation, route}) => {
     setCategory(_category);
   };
 
-  function renderRow(label: string, value: any, heading: boolean = false) {
+  function renderRow(
+    label: string,
+    value: any,
+    heading: boolean = false,
+    isExpense: boolean = true,
+  ) {
     return (
       <View style={{...styles.row, marginVertical: 10}}>
         <Subheading style={{flex: 1}}>{label}</Subheading>
@@ -46,7 +52,10 @@ const TransactionDetail = ({navigation, route}) => {
 
         <View style={{flex: 2}}>
           {heading ? (
-            <Headline style={{color: colors.success}}>{value}</Headline>
+            <Headline
+              style={{color: isExpense ? colors.notification : colors.success}}>
+              {value}
+            </Headline>
           ) : (
             <Text>{value}</Text>
           )}
@@ -59,6 +68,7 @@ const TransactionDetail = ({navigation, route}) => {
     <View style={styles.container}>
       <Surface style={styles.surface}>
         <View>
+          {renderRow('Type', transaction?.transactionType?.toUpperCase())}
           {renderRow('Category', category?.name)}
           {renderRow('Wallet', wallet?.name)}
           {renderRow('Notes', transaction?.notes)}
@@ -72,7 +82,12 @@ const TransactionDetail = ({navigation, route}) => {
             'Last Updated',
             dayjs(transaction?.updatedAt).format('YYYY-MM-DD HH:mm'),
           )}
-          {renderRow('Amount', numberToCurrency(transaction?.amount), true)}
+          {renderRow(
+            'Amount',
+            numberToCurrency(transaction?.amount),
+            true,
+            transaction?.transactionType == TransactionTypeEnum.expense,
+          )}
         </View>
       </Surface>
 
