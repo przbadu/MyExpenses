@@ -4,9 +4,12 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {View, Dimensions, FlatList} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import {Subheading, Surface, useTheme} from 'react-native-paper';
+import {Caption, Subheading, Surface, Text, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {CategoryRow, SummaryCard} from '../../components';
+
 import {
   amountSeperator,
   chartConfig,
@@ -135,7 +138,6 @@ const _AppLineChart = ({
         chartConfig={chartConfig(colors, dark)}
         decorator={() => (tooltipPos.visible ? renderTooltip(siSymbol) : null)}
         onDataPointClick={data => {
-          console.log('data', data);
           let isSamePoint = tooltipPos.x === data.x && tooltipPos.y === data.y;
 
           isSamePoint
@@ -161,38 +163,46 @@ const _AppLineChart = ({
     );
   }
 
-  return (
-    <>
-      <SummaryCard
-        balance={balance}
-        containerStyles={{marginHorizontal: 10, marginTop: 10}}
-        showIncomeExpense={false}
-      />
-      <Surface style={{marginHorizontal: 10}}>{renderLineChart()}</Surface>
-
-      {/* render categories */}
-      <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
-        Categories
-      </Subheading>
-      <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
-        <FlatList
-          data={categories}
-          keyExtractor={item => `category-list-${item.id}`}
-          renderItem={({item}) => (
-            <CategoryRow
-              category={item}
-              onPress={() =>
-                navigation.navigate('CategoryTransactions', {
-                  categoryId: item.id,
-                  categoryName: item.name,
-                })
-              }
-            />
-          )}
+  if (chartData.length) {
+    return (
+      <>
+        <SummaryCard
+          balance={balance}
+          containerStyles={{marginHorizontal: 10, marginTop: 10}}
+          showIncomeExpense={false}
         />
+        <Surface style={{marginHorizontal: 10}}>{renderLineChart()}</Surface>
+
+        {/* render categories */}
+        <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
+          Categories
+        </Subheading>
+        <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
+          <FlatList
+            data={categories}
+            keyExtractor={item => `category-list-${item.id}`}
+            renderItem={({item}) => (
+              <CategoryRow
+                category={item}
+                onPress={() =>
+                  navigation.navigate('CategoryTransactions', {
+                    categoryId: item.id,
+                    categoryName: item.name,
+                  })
+                }
+              />
+            )}
+          />
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+        <Caption>Add transactions to generate report</Caption>
       </View>
-    </>
-  );
+    );
+  }
 };
 
 const AppLineChart = withObservables([], () => ({

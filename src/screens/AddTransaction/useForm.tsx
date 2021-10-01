@@ -9,6 +9,7 @@ import {DefaultTimeFormat} from '../../constants';
 const now = new Date();
 
 interface FormProps {
+  id?: string | number | undefined;
   amount: number | string;
   notes: string | '';
   transactionAt: Date;
@@ -80,7 +81,9 @@ export const useForm = (transactionId: string | undefined) => {
       saveTransaction({...form});
       handleFormChange({...initialFormState});
       setSubmitting(false);
-      navigation.navigate('Transactions');
+
+      if (transactionId) navigation.goBack();
+      else navigation.navigate('Transactions');
     }
     setSubmitting(false);
   };

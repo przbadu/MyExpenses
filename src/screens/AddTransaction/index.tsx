@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/core';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
@@ -19,9 +19,12 @@ import {styles} from './styles';
 import {DefaultDateFormat, DefaultTimeFormat} from '../../constants';
 import {
   CategoryProps,
+  Transaction,
+  TransactionProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
+import {transactions} from '../../database/helpers';
 
 const AddTransaction = ({navigation, route}) => {
   const transactionId = route?.params?.transactionId;
@@ -35,13 +38,12 @@ const AddTransaction = ({navigation, route}) => {
     resetForm,
     resetErrors,
   } = useForm(transactionId);
-  const [categoryText, setCategoryText] = React.useState<string | null>(null);
-  const [walletText, setWalletText] = React.useState<string | null>(null);
+  const [categoryText, setCategoryText] = useState<string | null>(null);
+  const [walletText, setWalletText] = useState<string | null>(null);
 
   // show/hide category/wallet modal
-  const [showCategoryModal, setShowCategoryModal] =
-    React.useState<boolean>(false);
-  const [showWalletModal, setShowWalletModal] = React.useState<boolean>(false);
+  const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
+  const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
 
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
@@ -69,6 +71,45 @@ const AddTransaction = ({navigation, route}) => {
       };
     }, []),
   );
+
+  // Fetch transaction and set default form data
+  useEffect(() => {
+    if (transactionId) setEditFormContent();
+  }, [transactionId]);
+
+  const setEditFormContent = async () => {
+    const _transaction: TransactionProps = (await transactions.find(
+      transactionId,
+    )) as Transaction;
+    const {
+      id,
+      amount,
+      notes,
+      transactionAt,
+      time,
+      transactionType,
+      isPaid,
+      walletId,
+      categoryId,
+    } = _transaction;
+    const _wallet = await _transaction.wallet;
+    const _category = await _transaction.category;
+
+    handleFormChange({
+      ...form,
+      id,
+      amount,
+      notes,
+      transactionAt,
+      transactionType,
+      isPaid,
+      time,
+      walletId,
+      categoryId,
+    });
+    setWalletText(_wallet.name);
+    setCategoryText(_category.name);
+  };
 
   function toggleTransactonType() {
     let type = TransactionTypeEnum.income;

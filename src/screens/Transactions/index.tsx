@@ -10,6 +10,7 @@ import {
   Headline,
   Button,
   Menu,
+  Caption,
 } from 'react-native-paper';
 import {
   filterTransactionByProps,
@@ -247,11 +248,8 @@ const _Transactions: React.FC<{
       <>
         {renderHeader()}
         <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-          <Headline style={{marginBottom: 10}}>No Data Found</Headline>
-          <Button
-            mode="outlined"
-            icon="filter"
-            onPress={() => setShowFilter(true)}>
+          <Caption>No Data Found</Caption>
+          <Button icon="filter" onPress={() => setShowFilter(true)}>
             Update Filter
           </Button>
         </View>
