@@ -25,7 +25,7 @@ interface ErrorProps {
   walletId: string | null;
 }
 
-const initialFormState = {
+export const initialFormState = {
   amount: 0,
   notes: '',
   transactionAt: now,
@@ -60,7 +60,8 @@ export const validate = (values: FormProps) => {
   return errors;
 };
 
-export const useForm = () => {
+export const useForm = (transactionId: string | undefined) => {
+  console.log('transaction_id', transactionId);
   const navigation = useNavigation();
   const [form, setForm] = React.useState<FormProps>(initialFormState);
   const [errors, setErrors] = React.useState<ErrorProps | any>({});
@@ -84,5 +85,16 @@ export const useForm = () => {
     setSubmitting(false);
   };
 
-  return {form, handleSubmit, errors, handleFormChange, submitting};
+  const resetForm = () => setForm(initialFormState);
+  const resetErrors = () => setErrors({});
+
+  return {
+    form,
+    errors,
+    submitting,
+    resetForm,
+    resetErrors,
+    handleSubmit,
+    handleFormChange,
+  };
 };

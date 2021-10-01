@@ -10,7 +10,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {numberToCurrency} from '../../constants';
-import {categories, transactions, wallets} from '../../database/helpers';
+import {transactions} from '../../database/helpers';
 import {
   CategoryProps,
   TransactionProps,
@@ -94,7 +94,7 @@ const TransactionDetail = ({navigation, route}) => {
       <Surface style={{...styles.buttonSurface}}>
         <Button
           mode="contained"
-          onPress={() => {}}
+          onPress={() => navigation.navigate('AddTransaction', {transactionId})}
           icon="pencil-outline"
           style={{width: 100, marginRight: 10}}>
           Edit

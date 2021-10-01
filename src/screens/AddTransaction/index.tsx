@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
+import {useFocusEffect} from '@react-navigation/core';
 import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 import dayjs from 'dayjs';
 
@@ -22,8 +23,18 @@ import {
   WalletProps,
 } from '../../database/models';
 
-const AddTransaction = () => {
-  const {submitting, form, errors, handleFormChange, handleSubmit} = useForm();
+const AddTransaction = ({navigation, route}) => {
+  const transactionId = route?.params?.transactionId;
+  // useful for editing a form
+  const {
+    submitting,
+    form,
+    errors,
+    handleFormChange,
+    handleSubmit,
+    resetForm,
+    resetErrors,
+  } = useForm(transactionId);
   const [categoryText, setCategoryText] = React.useState<string | null>(null);
   const [walletText, setWalletText] = React.useState<string | null>(null);
 
@@ -31,9 +42,6 @@ const AddTransaction = () => {
   const [showCategoryModal, setShowCategoryModal] =
     React.useState<boolean>(false);
   const [showWalletModal, setShowWalletModal] = React.useState<boolean>(false);
-
-  const isIncome = () => form.transactionType == TransactionTypeEnum.income;
-  const isExpense = () => form.transactionType == TransactionTypeEnum.expense;
 
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
@@ -45,6 +53,22 @@ const AddTransaction = () => {
     handleFormChange({...form, walletId: item.id});
     setShowWalletModal(false);
   };
+
+  // before leaving screen
+  useFocusEffect(
+    React.useCallback(() => {
+      // things todo on add transaction focused event
+      return () => {
+        // things to do on add transaction blur event
+        console.log('loosing focus');
+        navigation.setParams({transactionId: null});
+        resetForm();
+        resetErrors();
+        setWalletText(null);
+        setCategoryText(null);
+      };
+    }, []),
+  );
 
   function toggleTransactonType() {
     let type = TransactionTypeEnum.income;
