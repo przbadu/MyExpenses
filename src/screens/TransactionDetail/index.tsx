@@ -17,9 +17,11 @@ import {
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
+import {CurrencyContext} from '../../store/context';
 
 const TransactionDetail = ({navigation, route}) => {
   const {transactionId} = route.params;
+  const {currency} = React.useContext(CurrencyContext);
   const [transaction, setTransaction] = React.useState<TransactionProps>();
   const [wallet, setWallet] = React.useState<WalletProps>();
   const [category, setCategory] = React.useState<CategoryProps>();
@@ -104,7 +106,7 @@ const TransactionDetail = ({navigation, route}) => {
           )}
           {renderRow(
             'Amount',
-            numberToCurrency(transaction?.amount),
+            numberToCurrency(transaction?.amount, currency),
             true,
             transaction?.transactionType == TransactionTypeEnum.expense,
           )}

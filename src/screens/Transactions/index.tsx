@@ -205,7 +205,7 @@ const _Transactions: React.FC<{
           <AppChip
             selected={selectedFilterChip === '7days'}
             onPress={() => periodicTransactionFilter('7days')}>
-            1W
+            7D
           </AppChip>
           <AppChip
             selected={selectedFilterChip === '1month'}

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import {Divider, Text, useTheme, Subheading, Surface} from 'react-native-paper';
 import {numberToCurrency} from '../constants';
+import {CurrencyContext} from '../store/context';
 
 const SummaryCard = ({
   income,
@@ -18,6 +19,7 @@ const SummaryCard = ({
   showIncomeExpense?: boolean;
   showNetBalance?: boolean;
 }) => {
+  const {currency} = React.useContext(CurrencyContext);
   const {colors} = useTheme();
   const _balance = balance ? balance : income - expense;
 
@@ -35,7 +37,7 @@ const SummaryCard = ({
               color: _balance > 0 ? colors.success : colors.notification,
               ...textStyle,
             }}>
-            {numberToCurrency(_balance)}
+            {numberToCurrency(_balance || 0, currency)}
           </Subheading>
           <Divider />
         </>
@@ -46,13 +48,13 @@ const SummaryCard = ({
           <View>
             <Text>INCOME </Text>
             <Text style={{color: colors.success}}>
-              {numberToCurrency(income)}
+              {numberToCurrency(income, currency)}
             </Text>
           </View>
           <View>
             <Text>EXPENSE </Text>
             <Text style={{color: colors.notification}}>
-              {numberToCurrency(expense)}
+              {numberToCurrency(expense, currency)}
             </Text>
           </View>
         </View>

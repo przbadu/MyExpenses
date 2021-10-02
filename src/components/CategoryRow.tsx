@@ -3,6 +3,7 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {numberToCurrency} from '../constants';
+import {CurrencyContext} from '../store/context';
 
 const CategoryRow = ({
   category,
@@ -17,6 +18,7 @@ const CategoryRow = ({
   };
   onPress: Function;
 }) => {
+  const {currency} = React.useContext(CurrencyContext);
   const {colors, fonts} = useTheme();
 
   return (
@@ -46,7 +48,7 @@ const CategoryRow = ({
             </Text>
           </View>
 
-          <Text>{numberToCurrency(category.sum)}</Text>
+          <Text>{numberToCurrency(category.sum, currency)}</Text>
           <Icon
             name="chevron-right"
             size={16}

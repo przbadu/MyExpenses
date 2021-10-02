@@ -7,10 +7,8 @@ const SI_SYMBOLS = ['', 'k', 'M', 'B', 'T', 'P', 'E'];
  * @param symbol - currency symbol
  * @returns Currency formatted amount e.g: $200, NPR 1,200
  */
-export const numberToCurrency = (
-  amount: number | string,
-  symbol: string = 'Rs.',
-) => currency(amount, {symbol: `${symbol} `}).format();
+export const numberToCurrency = (amount: number | string, symbol: string) =>
+  currency(amount, {symbol: `${symbol} `}).format();
 
 /**
  *

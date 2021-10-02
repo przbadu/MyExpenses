@@ -1,11 +1,12 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import {TextInput} from 'react-native-paper';
+import {TextInput, useTheme} from 'react-native-paper';
 import {AppTextInput} from '.';
 
 const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
   const [open, setOpen] = React.useState(false);
+  const {dark} = useTheme();
   const {onConfirm} = props;
 
   return (
@@ -28,6 +29,7 @@ const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
           isVisible={open}
           mode="date"
           display="default"
+          isDarkModeEnabled={dark}
           onConfirm={value => {
             setOpen(false);
             onConfirm(value);

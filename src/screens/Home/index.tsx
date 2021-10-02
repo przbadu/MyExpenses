@@ -55,7 +55,7 @@ const Home = () => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="Dashboard" />
+        <Appbar.Content title="EXPENSE STATS" />
         <Appbar.Action icon="magnify" onPress={() => {}} />
       </Appbar.Header>
 

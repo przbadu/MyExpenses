@@ -1,20 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, TextStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {COLORS, numberToCurrency} from '../constants';
+import {numberToCurrency} from '../constants';
 import {TransactionTypeEnum} from '../database/models';
+import {CurrencyContext} from '../store/context';
 
 const TransactionAmountText = ({
   amount,
-  currency,
   type,
   style,
 }: {
   amount: number | string;
-  currency: string;
   type: TransactionTypeEnum;
   style?: TextStyle;
 }) => {
+  const {currency} = useContext(CurrencyContext);
   const {colors} = useTheme();
 
   return (
@@ -23,7 +23,9 @@ const TransactionAmountText = ({
         color:
           type == TransactionTypeEnum.expense
             ? colors.notification
-            : colors.success,
+            : type == TransactionTypeEnum.income
+            ? colors.success
+            : colors.text,
         ...style,
       }}>
       {numberToCurrency(amount, currency)}

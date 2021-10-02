@@ -14,6 +14,7 @@ export const categoryWithTransactionInfo = () => {
     select categories.id, categories.name, categories.color, sum(amount) as sum, count(*) as count
     from transactions
     INNER JOIN categories on categories.id = transactions.category_id
+    WHERE transaction_type = 'Expense'
     group by category_id
     order by sum DESC, count DESC;
   `;

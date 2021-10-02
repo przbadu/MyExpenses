@@ -25,6 +25,7 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {CurrencyContext} from '../../store/context';
 
 const _AppLineChart = ({
   transactions,
@@ -33,6 +34,7 @@ const _AppLineChart = ({
   transactions: TransactionProps[];
   filter: lineChartFilterProps;
 }) => {
+  const {currency} = React.useContext(CurrencyContext);
   const [balance, setBalance] = React.useState(0);
   const [categories, setCategories] = React.useState<[]>([]);
   const [chartData, setChartData] = React.useState<
@@ -72,7 +74,7 @@ const _AppLineChart = ({
           : sum + tran.sum_amount,
       0,
     );
-    setBalance(_balance);
+    setBalance(_balance || 0);
   };
 
   const fetchCategories = async () => {
@@ -81,7 +83,7 @@ const _AppLineChart = ({
   };
 
   function renderTooltip(symbol: string) {
-    const label = numberToCurrency(tooltipPos.value) + symbol;
+    const label = numberToCurrency(tooltipPos.value || 0, currency) + symbol;
 
     return (
       <View>
@@ -176,7 +178,7 @@ const _AppLineChart = ({
 
         {/* render categories */}
         <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
-          Categories
+          Expenses Categories
         </Subheading>
         <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
           <FlatList

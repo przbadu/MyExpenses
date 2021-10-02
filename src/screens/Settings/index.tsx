@@ -25,7 +25,7 @@ const Settings = () => {
         placeholder="Select currency"
         value={currency}
         icon="currency-usd"
-        onPress={() => setShowCurrencyModal(true)}
+        onOpen={() => setShowCurrencyModal(true)}
       />
       {showCurrencyModal && (
         <AppModal
