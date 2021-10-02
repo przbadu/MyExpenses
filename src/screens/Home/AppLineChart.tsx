@@ -24,14 +24,14 @@ import {
   observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
-import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {Transaction, TransactionTypeEnum} from '../../database/models';
 import {CurrencyContext} from '../../store/context';
 
 const _AppLineChart = ({
   transactions,
   filter,
 }: {
-  transactions: TransactionProps[];
+  transactions: Transaction[];
   filter: lineChartFilterProps;
 }) => {
   const {currency} = React.useContext(CurrencyContext);

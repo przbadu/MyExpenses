@@ -7,6 +7,7 @@ export * from './AppTextInput';
 export * from './AppDatePicker';
 export * from './AppTimePicker';
 export * from './CategoryRow';
+export * from './MenuItem';
 export * from './SummaryCard';
 export * from './SwitchButton';
 export * from './SwitchButtonContent';

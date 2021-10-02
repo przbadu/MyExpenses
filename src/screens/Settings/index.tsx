@@ -1,8 +1,11 @@
+import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Text, Appbar, Card, Switch} from 'react-native-paper';
+import {Appbar, Card, Switch} from 'react-native-paper';
 
-import {AppModal, AppSelect, AppSwitch} from '../../components';
+import {AppModal, AppSwitch, MenuItem} from '../../components';
+import {observeCategories, observeWallets} from '../../database/helpers';
+import {Category, WalletProps} from '../../database/models';
 import {
   ThemeContext,
   ThemeContentProps,
@@ -11,21 +14,27 @@ import {
 } from '../../store/context';
 import {CurrencyList} from './CurrencyList';
 
-const Settings = () => {
+let Settings = ({
+  navigation,
+  categories,
+  wallets,
+}: {
+  navigation: any;
+  categories: Category[];
+  wallets: WalletProps[];
+}) => {
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
-
   const {theme, toggleTheme} = useContext<ThemeContentProps>(ThemeContext);
   const {currency, updateCurrency} =
     useContext<CurrencyContextProps>(CurrencyContext);
 
   // render currency dropdown
   const renderCurrencySelect = () => (
-    <View style={{marginTop: 10}}>
-      <AppSelect
-        placeholder="Select currency"
-        value={currency}
-        icon="currency-usd"
-        onOpen={() => setShowCurrencyModal(true)}
+    <>
+      <MenuItem
+        label="Select Currency"
+        chipLabel={currency}
+        onPress={() => setShowCurrencyModal(true)}
       />
       {showCurrencyModal && (
         <AppModal
@@ -43,7 +52,7 @@ const Settings = () => {
           )}
         />
       )}
-    </View>
+    </>
   );
 
   return (
@@ -58,6 +67,17 @@ const Settings = () => {
             <Switch value={theme.dark} onValueChange={toggleTheme} />
           </AppSwitch>
 
+          <MenuItem
+            label="Categories"
+            chipLabel={categories.length}
+            onPress={() => navigation.navigate('ListCategories')}
+          />
+          <MenuItem
+            label="Wallets"
+            chipLabel={wallets.length}
+            onPress={() => navigation.navigate('ListWallets')}
+          />
+
           {renderCurrencySelect()}
         </Card.Content>
       </Card>
@@ -68,8 +88,20 @@ const Settings = () => {
 const styles = StyleSheet.create({
   card: {
     marginBottom: 5,
-    marginHorizontal: 10,
+  },
+  textMenu: {
+    marginTop: 15,
+  },
+  centerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
+
+Settings = withObservables([], () => ({
+  categories: observeCategories(),
+  wallets: observeWallets(),
+}))(Settings);
 
 export {Settings};

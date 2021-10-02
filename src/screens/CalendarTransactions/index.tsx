@@ -8,7 +8,7 @@ import {
   observeTransactions,
   transactionDaysForCurrentMonth,
 } from '../../database/helpers';
-import {TransactionProps} from '../../database/models';
+import {Transaction} from '../../database/models';
 import {calendarTheme} from '../../constants';
 import {Calendar} from 'react-native-calendars';
 import {TransactionRow} from '../../components';
@@ -18,8 +18,14 @@ import withObservables from '@nozbe/with-observables';
 const _format = 'YYYY-MM-DD';
 const _today = dayjs().format(_format);
 
-const _CalendarTransactions = ({navigation, transactions}) => {
-  const [_transactions, setTransactions] = React.useState([]);
+const _CalendarTransactions = ({
+  navigation,
+  transactions,
+}: {
+  navigation: any;
+  transactions: Transaction[];
+}) => {
+  const [_transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [markedDates, setMarkedDates] = React.useState<any>({
     [_today]: {selected: true},
   });
@@ -43,7 +49,7 @@ const _CalendarTransactions = ({navigation, transactions}) => {
   };
 
   const fetchFilteredTransactions = async (date: string) => {
-    const result = await filterByDailyTransactions(date);
+    const result = (await filterByDailyTransactions(date)) as Transaction[];
     setTransactions(result);
   };
 
@@ -100,7 +106,7 @@ const _CalendarTransactions = ({navigation, transactions}) => {
       <View style={{flex: 1, marginHorizontal: 10, marginTop: 15}}>
         <FlatList
           data={_transactions}
-          renderItem={({item}: {item: TransactionProps}) => (
+          renderItem={({item}) => (
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}

@@ -20,13 +20,12 @@ import {DefaultDateFormat, DefaultTimeFormat} from '../../constants';
 import {
   CategoryProps,
   Transaction,
-  TransactionProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
 import {transactions} from '../../database/helpers';
 
-const AddTransaction = ({navigation, route}) => {
+const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   const transactionId = route?.params?.transactionId;
   // useful for editing a form
   const {
@@ -77,7 +76,7 @@ const AddTransaction = ({navigation, route}) => {
   }, [transactionId]);
 
   const setEditFormContent = async () => {
-    const _transaction: TransactionProps = (await transactions.find(
+    const _transaction: Transaction = (await transactions.find(
       transactionId,
     )) as Transaction;
     const {amount, notes, transactionAt, time, transactionType, isPaid} =
@@ -168,7 +167,9 @@ const AddTransaction = ({navigation, route}) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="ADD TRANSACTION" />
+        <Appbar.Content
+          title={transactionId ? 'EDIT TRANSACTION' : 'ADD TRANSACTION'}
+        />
       </Appbar.Header>
       <ScrollView keyboardShouldPersistTaps="handled">
         <Card style={styles.container}>

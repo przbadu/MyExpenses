@@ -1,12 +1,31 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from 'react-native-paper';
 
 import {Home, AddTransaction, Transactions, Saving, Settings} from '../screens';
 import {TabBarIcon} from '../components';
+import {AddCategory, ListCategories} from '../screens/Categories';
+import {AddWallet, ListWallets} from '../screens/Wallets';
 
 const Tab = createBottomTabNavigator();
+const SettingStack = createNativeStackNavigator();
+
+function SettingsStackScreen() {
+  return (
+    <SettingStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <SettingStack.Screen name="Settings" component={Settings} />
+      <SettingStack.Screen name="AddCategory" component={AddCategory} />
+      <SettingStack.Screen name="ListCategories" component={ListCategories} />
+      <SettingStack.Screen name="AddWallet" component={AddWallet} />
+      <SettingStack.Screen name="ListWallets" component={ListWallets} />
+    </SettingStack.Navigator>
+  );
+}
 
 export const TabNavigation = () => {
   const {colors} = useTheme();
@@ -75,8 +94,8 @@ export const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Settings"
-        component={Settings}
+        name="MainSettings"
+        component={SettingsStackScreen}
         options={{
           tabBarIcon: ({focused}) => (
             <TabBarIcon label="Settings" icon="cog" focused={focused} />
