@@ -139,3 +139,53 @@ export const saveTransaction = async ({
     });
   });
 };
+
+export const updateTransaction = async (
+  id: string,
+  {
+    amount,
+    notes,
+    categoryId,
+    walletId,
+    isPaid,
+    transactionAt,
+    time,
+    transactionType,
+  }: TransactionProps,
+) => {
+  console.log('transaction id', id);
+  const transaction = (await transactions.find(id)) as Transaction;
+
+  if (!transaction) {
+    saveTransaction({
+      amount,
+      notes,
+      categoryId,
+      walletId,
+      isPaid,
+      transactionAt,
+      time,
+      transactionType,
+    } as TransactionProps);
+  } else {
+    await database.write(async () => {
+      await transaction.update(() => {
+        transaction.amount = Number(amount);
+        transaction.notes = notes;
+        transaction.category.id = categoryId;
+        transaction.wallet.id = walletId;
+        transaction.isPaid = isPaid;
+        transaction.transactionAt = transactionAt;
+        transaction.time = time;
+        transaction.transactionType = transactionType;
+      });
+    });
+  }
+};
+
+export const deleteTransaction = async (id: string) => {
+  const transaction = await transactions.find(id);
+  await database.write(async () => {
+    await transaction.destroyPermanently();
+  });
+};

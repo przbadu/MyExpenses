@@ -81,31 +81,21 @@ const AddTransaction = ({navigation, route}) => {
     const _transaction: TransactionProps = (await transactions.find(
       transactionId,
     )) as Transaction;
-    const {
-      id,
-      amount,
-      notes,
-      transactionAt,
-      time,
-      transactionType,
-      isPaid,
-      walletId,
-      categoryId,
-    } = _transaction;
+    const {amount, notes, transactionAt, time, transactionType, isPaid} =
+      _transaction;
     const _wallet = await _transaction.wallet;
     const _category = await _transaction.category;
 
     handleFormChange({
       ...form,
-      id,
       amount,
       notes,
       transactionAt,
       transactionType,
       isPaid,
       time,
-      walletId,
-      categoryId,
+      walletId: _wallet.id,
+      categoryId: _category.id,
     });
     setWalletText(_wallet.name);
     setCategoryText(_category.name);

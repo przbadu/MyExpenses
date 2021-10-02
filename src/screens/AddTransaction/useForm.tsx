@@ -3,13 +3,12 @@ import {useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 
 import {TransactionTypeEnum} from '../../database/models';
-import {saveTransaction} from '../../database/helpers';
+import {saveTransaction, updateTransaction} from '../../database/helpers';
 import {DefaultTimeFormat} from '../../constants';
 
 const now = new Date();
 
 interface FormProps {
-  id?: string | number | undefined;
   amount: number | string;
   notes: string | '';
   transactionAt: Date;
@@ -78,7 +77,9 @@ export const useForm = (transactionId: string | undefined) => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      saveTransaction({...form});
+      if (transactionId) updateTransaction(transactionId, {...form});
+      else saveTransaction({...form});
+
       handleFormChange({...initialFormState});
       setSubmitting(false);
 

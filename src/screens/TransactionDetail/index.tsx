@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, Alert} from 'react-native';
 import {
   Button,
   Headline,
@@ -10,7 +10,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {numberToCurrency} from '../../constants';
-import {transactions} from '../../database/helpers';
+import {deleteTransaction, transactions} from '../../database/helpers';
 import {
   CategoryProps,
   TransactionProps,
@@ -37,6 +37,26 @@ const TransactionDetail = ({navigation, route}) => {
     setTransaction(_transaction);
     setWallet(_wallet);
     setCategory(_category);
+  };
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Permanently Delete Transaction',
+      'You are permanently deleting this transaction and we will not be able to recover transaction after it is deleted, Are you sure to proceed?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Proceed',
+          onPress: async () => {
+            await deleteTransaction(transactionId);
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   function renderRow(
@@ -98,6 +118,15 @@ const TransactionDetail = ({navigation, route}) => {
           icon="pencil-outline"
           style={{width: 100, marginRight: 10}}>
           Edit
+        </Button>
+
+        <Button
+          mode="contained"
+          onPress={handleDelete}
+          icon="trash-can-outline"
+          color={colors.notification}
+          style={{width: 100, marginRight: 10}}>
+          Delete
         </Button>
 
         <Button

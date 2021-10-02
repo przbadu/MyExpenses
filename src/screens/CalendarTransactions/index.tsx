@@ -5,19 +5,21 @@ import {useTheme, Subheading, IconButton} from 'react-native-paper';
 
 import {
   filterByDailyTransactions,
+  observeTransactions,
   transactionDaysForCurrentMonth,
 } from '../../database/helpers';
 import {TransactionProps} from '../../database/models';
 import {calendarTheme} from '../../constants';
 import {Calendar} from 'react-native-calendars';
 import {TransactionRow} from '../../components';
+import withObservables from '@nozbe/with-observables';
 
 // Transaction component
 const _format = 'YYYY-MM-DD';
 const _today = dayjs().format(_format);
 
-const CalendarTransactions = ({navigation}) => {
-  const [transactions, setTransactions] = React.useState([]);
+const _CalendarTransactions = ({navigation, transactions}) => {
+  const [_transactions, setTransactions] = React.useState([]);
   const [markedDates, setMarkedDates] = React.useState<any>({
     [_today]: {selected: true},
   });
@@ -28,7 +30,7 @@ const CalendarTransactions = ({navigation}) => {
     const _date = dayjs().format('YYYY-MM');
     fetchFilteredTransactions(_today);
     fetchCurrentMonthDots(_date);
-  }, []);
+  }, [transactions]);
 
   const fetchCurrentMonthDots = async (date: string) => {
     const result = await transactionDaysForCurrentMonth(date);
@@ -97,7 +99,7 @@ const CalendarTransactions = ({navigation}) => {
 
       <View style={{flex: 1, marginHorizontal: 10, marginTop: 15}}>
         <FlatList
-          data={transactions}
+          data={_transactions}
           renderItem={({item}: {item: TransactionProps}) => (
             <TransactionRow
               transaction={item}
@@ -115,5 +117,9 @@ const CalendarTransactions = ({navigation}) => {
     </>
   );
 };
+
+const CalendarTransactions = withObservables([], () => ({
+  transactions: observeTransactions(),
+}))(_CalendarTransactions);
 
 export {CalendarTransactions};

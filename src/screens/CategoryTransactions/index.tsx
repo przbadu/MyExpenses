@@ -5,16 +5,19 @@ import {useTheme, Appbar, Subheading, Headline} from 'react-native-paper';
 import {
   filterTransactionByProps,
   filterTransactions,
+  observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {TransactionRow, SummaryCard} from '../../components';
+import withObservables from '@nozbe/with-observables';
 
 // Transaction component
-const CategoryTransaction: React.FC<{
+const _CategoryTransaction: React.FC<{
   navigation: any;
   route: any;
-}> = ({route, navigation}) => {
+  transactions: TransactionProps[];
+}> = ({route, navigation, transactions}) => {
   const [summary, setSummary] =
     React.useState<{income: number; expense: number}>();
   const [groupedTransactions, setGroupedTransactions] = React.useState<
@@ -26,7 +29,7 @@ const CategoryTransaction: React.FC<{
   React.useEffect(() => {
     fetchSummary();
     filterTransactionBy({categoryIds: [categoryId]});
-  }, []);
+  }, [transactions]);
 
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
@@ -140,5 +143,9 @@ const CategoryTransaction: React.FC<{
     </>
   );
 };
+
+const CategoryTransaction = withObservables([], () => ({
+  transactions: observeTransactions(),
+}))(_CategoryTransaction);
 
 export {CategoryTransaction};
