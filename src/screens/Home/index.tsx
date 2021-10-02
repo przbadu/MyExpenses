@@ -70,15 +70,4 @@ const Home = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  surface: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 10,
-    marginTop: 10,
-    padding: 10,
-  },
-});
-
 export {Home};

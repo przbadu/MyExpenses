@@ -62,7 +62,6 @@ const AddTransaction = ({navigation, route}) => {
       // things todo on add transaction focused event
       return () => {
         // things to do on add transaction blur event
-        console.log('loosing focus');
         navigation.setParams({transactionId: null});
         resetForm();
         resetErrors();

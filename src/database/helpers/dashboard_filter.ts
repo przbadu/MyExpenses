@@ -17,8 +17,6 @@ export const lineChartData = (filter: lineChartFilterProps) => {
   else if (filter === 'weekly') format = labels.weekly;
   else format = labels.yearly;
 
-  console.log('format', format);
-
   const query =
     `SELECT ${formatDateColumn(format)} as date, sum(amount) as amount` +
     ' FROM transactions' +

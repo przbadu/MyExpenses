@@ -9,9 +9,8 @@ import {
   GestureResponderEvent,
   TouchableOpacity,
 } from 'react-native';
-import {Text, useTheme, Portal, Modal as PaperModal} from 'react-native-paper';
+import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {darkTheme, lightTheme} from '../constants';
 
 const winHeight = Dimensions.get('window').height;
 

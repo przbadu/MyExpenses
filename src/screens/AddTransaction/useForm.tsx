@@ -61,7 +61,6 @@ export const validate = (values: FormProps) => {
 };
 
 export const useForm = (transactionId: string | undefined) => {
-  console.log('transaction_id', transactionId);
   const navigation = useNavigation();
   const [form, setForm] = React.useState<FormProps>(initialFormState);
   const [errors, setErrors] = React.useState<ErrorProps | any>({});

@@ -153,7 +153,6 @@ export const updateTransaction = async (
     transactionType,
   }: TransactionProps,
 ) => {
-  console.log('transaction id', id);
   const transaction = (await transactions.find(id)) as Transaction;
 
   if (!transaction) {
