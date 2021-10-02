@@ -70,14 +70,14 @@ export const useForm = (transactionId: string | undefined) => {
     setForm(formData);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmitting(true);
     const formErrors = validate(form);
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (transactionId) updateTransaction(transactionId, {...form});
-      else saveTransaction({...form});
+      if (transactionId) await updateTransaction(transactionId, {...form});
+      else await saveTransaction({...form});
 
       handleFormChange({...initialFormState});
       setSubmitting(false);

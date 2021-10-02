@@ -1,12 +1,11 @@
 import withObservables from '@nozbe/with-observables';
-import {useNavigation} from '@react-navigation/core';
+import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, Dimensions, FlatList} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import {Caption, Subheading, Surface, Text, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {CategoryRow, SummaryCard} from '../../components';
 
@@ -48,11 +47,13 @@ const _AppLineChart = ({
   });
   const navigation = useNavigation();
 
-  React.useEffect(() => {
-    fetchCategories();
-    fetchChartData();
-    fetchSummary();
-  }, [transactions, filter]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCategories();
+      fetchChartData();
+      fetchSummary();
+    }, []),
+  );
 
   const fetchChartData = async () => {
     const data = await lineChartData(filter);

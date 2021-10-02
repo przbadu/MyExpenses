@@ -7,7 +7,6 @@ import {
   Card,
   Appbar,
   Subheading,
-  Headline,
   Button,
   Menu,
   Caption,
@@ -21,6 +20,7 @@ import {
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
+import {useFocusEffect} from '@react-navigation/core';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -41,10 +41,12 @@ const _Transactions: React.FC<{
   const {colors} = useTheme();
   const [showFilter, setShowFilter] = React.useState(false);
 
-  React.useEffect(() => {
-    fetchSummary();
-    transactionGroupedByMonth(transactions);
-  }, [transactions]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSummary();
+      transactionGroupedByMonth(transactions);
+    }, [transactions]),
+  );
 
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
