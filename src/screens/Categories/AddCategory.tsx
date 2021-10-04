@@ -1,15 +1,7 @@
 import randomColor from 'randomcolor';
 import React from 'react';
 import {View} from 'react-native';
-import {
-  Avatar,
-  Button,
-  Card,
-  IconButton,
-  Modal,
-  Portal,
-  TextInput,
-} from 'react-native-paper';
+import {Button, Card, Modal, Portal, TextInput} from 'react-native-paper';
 import {AppTextInput} from '../../components';
 import {saveCategory, updateCategory} from '../../database/helpers';
 import {Category} from '../../database/models';
@@ -75,21 +67,12 @@ const AddCategory = ({
             />
 
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  marginRight: 10,
-                  width: 32,
-                  height: 32,
-                  borderRadius: 2,
-                  backgroundColor: color,
-                }}
-              />
               <AppTextInput
                 value={color}
                 onChangeText={text =>
                   text.length < 1 ? setColor(randomColor()) : setColor(text)
                 }
-                style={{flex: 1}}
+                style={{flex: 1, backgroundColor: color}}
                 right={<TextInput.Icon name="refresh" onPress={resetColor} />}
               />
             </View>

@@ -1,10 +1,11 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, View} from 'react-native';
-import {Appbar} from 'react-native-paper';
-import {observeWallets} from '../../database/helpers';
+import {Appbar, useTheme} from 'react-native-paper';
+import {deleteWallet, observeWallets} from '../../database/helpers';
 import {Wallet} from '../../database/models';
 import {ItemRow} from '../../components';
+import {AddWallet} from '.';
 
 let ListWallets = ({
   navigation,
@@ -13,16 +14,24 @@ let ListWallets = ({
   navigation: any;
   wallets: Wallet[];
 }) => {
+  const {colors} = useTheme();
+  const [showModal, setShowModal] = React.useState(false);
+  const [editing, setEditing] = React.useState<Wallet | undefined>();
+
   const handleDelete = async (wallet: Wallet) => {
-    await wallet.destroyPermanently();
+    await deleteWallet(wallet);
   };
 
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={'EXPENSE STATS'.toUpperCase()} />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Content title={'Manage Categories'.toUpperCase()} />
+        <Appbar.Action
+          onPress={() => setShowModal(true)}
+          icon="plus"
+          style={{backgroundColor: colors.primary}}
+        />
       </Appbar.Header>
 
       <View
@@ -36,8 +45,21 @@ let ListWallets = ({
           data={wallets}
           keyExtractor={item => `wallet-${item.id}`}
           renderItem={({item}: {item: Wallet}) => (
-            <ItemRow item={item} onDelete={handleDelete} />
+            <ItemRow
+              item={item}
+              onDelete={handleDelete}
+              onEdit={() => {
+                setEditing(item);
+                setShowModal(true);
+              }}
+            />
           )}
+        />
+        <AddWallet
+          hideModal={() => setShowModal(false)}
+          visible={showModal}
+          wallet={editing}
+          cancelEdit={() => setEditing(undefined)}
         />
       </View>
     </>

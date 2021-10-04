@@ -14,13 +14,32 @@ export const saveWallet = async ({
   color,
 }: WalletProps) => {
   await database.write(async () => {
-    await wallets.create(record => {
-      record.name = name;
-      record.isDefault = isDefault;
-      record.color = color;
+    await wallets.create(entry => {
+      entry.name = name;
+      entry.isDefault = isDefault;
+      entry.color = color;
     });
   });
 };
+
+export const updateWallet = async (
+  category: Wallet,
+  {name, color}: WalletProps,
+) => {
+  await database.write(async () => {
+    await category.update(entry => {
+      entry.name = name;
+      entry.color = color;
+    });
+  });
+};
+
+export const deleteWallet = async (category: Wallet) => {
+  await database.write(async () => {
+    await category.destroyPermanently();
+  });
+};
+
 // Generate default seed data for new setup
 export const setupDefaultWallet = async () => {
   await saveWallet({name: 'Cash', isDefault: true, color: randomColor()});
@@ -29,11 +48,4 @@ export const setupDefaultWallet = async () => {
   await saveWallet({name: 'Credit Card', color: randomColor()});
   await saveWallet({name: 'Debit Card', color: randomColor()});
   await saveWallet({name: 'Cheque', color: randomColor()});
-};
-
-export const deleteWallet = async (id: string) => {
-  const wallet = await wallets.find(id);
-  await database.write(async () => {
-    await wallet.destroyPermanently();
-  });
 };
