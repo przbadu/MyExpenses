@@ -30,3 +30,10 @@ export const setupDefaultWallet = async () => {
   await saveWallet({name: 'Debit Card', color: randomColor()});
   await saveWallet({name: 'Cheque', color: randomColor()});
 };
+
+export const deleteWallet = async (id: string) => {
+  const wallet = await wallets.find(id);
+  await database.write(async () => {
+    await wallet.destroyPermanently();
+  });
+};

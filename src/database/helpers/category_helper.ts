@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {Q} from '@nozbe/watermelondb';
 import randomColor from 'randomcolor';
 
@@ -29,6 +28,24 @@ export const saveCategory = async ({name, color}: CategoryProps) => {
       entry.name = name;
       entry.color = color;
     });
+  });
+};
+
+export const updateCategory = async (
+  category: Category,
+  {name, color}: CategoryProps,
+) => {
+  await database.write(async () => {
+    await category.update(entry => {
+      entry.name = name;
+      entry.color = color;
+    });
+  });
+};
+
+export const deleteCategory = async (category: Category) => {
+  await database.write(async () => {
+    await category.destroyPermanently();
   });
 };
 
