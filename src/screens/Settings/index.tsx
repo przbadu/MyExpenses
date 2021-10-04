@@ -1,7 +1,7 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Appbar, Card, Switch} from 'react-native-paper';
+import {Appbar, Card, Divider, Switch} from 'react-native-paper';
 
 import {AppModal, AppSwitch, MenuItem} from '../../components';
 import {observeCategories, observeWallets} from '../../database/helpers';
@@ -67,6 +67,8 @@ let Settings = ({
             <Switch value={theme.dark} onValueChange={toggleTheme} />
           </AppSwitch>
 
+          <Divider style={{marginTop: 20}} />
+
           <MenuItem
             label="Categories"
             chipLabel={categories.length}
@@ -77,6 +79,8 @@ let Settings = ({
             chipLabel={wallets.length}
             onPress={() => navigation.navigate('ListWallets')}
           />
+
+          <Divider style={{marginTop: 20}} />
 
           {renderCurrencySelect()}
         </Card.Content>

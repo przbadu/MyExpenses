@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
-import {Category, Wallet} from '../../database/models';
+import {Category, Wallet} from '../database/models';
 
 const ItemRow = ({
   item,
@@ -14,10 +14,8 @@ const ItemRow = ({
 }) => {
   const {colors} = useTheme();
 
-  function onPress() {}
-
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={() => onEdit(item)}>
       <Surface style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           <View
