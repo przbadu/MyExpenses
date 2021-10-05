@@ -1,5 +1,10 @@
-import {Model} from '@nozbe/watermelondb';
-import {field, readonly, date, children} from '@nozbe/watermelondb/decorators';
+import Model from '@nozbe/watermelondb/Model';
+import field from '@nozbe/watermelondb/decorators/field';
+import readonly from '@nozbe/watermelondb/decorators/readonly';
+import date from '@nozbe/watermelondb/decorators/date';
+import children from '@nozbe/watermelondb/decorators/children';
+import {TransactionProps} from '.';
+import {transactions} from '../helpers';
 
 // category types
 export interface CategoryProps {
@@ -7,6 +12,7 @@ export interface CategoryProps {
   createdAt?: Date;
   name: string;
   color?: string;
+  transactions?: TransactionProps[];
 }
 
 class Category extends Model {
@@ -14,7 +20,7 @@ class Category extends Model {
 
   // has_many associations
   static associations = {
-    transactions: {type: 'has_many', foreign_key: 'category_id'},
+    transactions: {type: 'has_many', foreignkey: 'category_id'},
   };
 
   // attributes

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 // global states
-import {ThemeProvider} from './store/context/themeContext';
+import {ThemeProvider, CurrencyProvider} from './store/context';
 
 import {AppNavigator} from './navigation';
 import {initialSetup} from './database/helpers';
@@ -22,7 +22,9 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <AppNavigator />
+      <CurrencyProvider>
+        <AppNavigator />
+      </CurrencyProvider>
     </ThemeProvider>
   );
 };

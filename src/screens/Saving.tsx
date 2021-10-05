@@ -10,7 +10,7 @@ const Saving = () => {
 
       <Card style={{marginVertical: 10}}>
         <Card.Content>
-          <Text>Saving Screen</Text>
+          <Text>Saving Screen, Coming Soon!</Text>
         </Card.Content>
       </Card>
     </>

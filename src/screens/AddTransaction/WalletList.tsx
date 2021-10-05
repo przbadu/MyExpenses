@@ -1,11 +1,15 @@
 import React from 'react';
-import {View, TouchableOpacity, FlatList} from 'react-native';
-import {Text} from 'react-native-paper';
+import {
+  TouchableOpacity,
+  FlatList,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import {Avatar, Text} from 'react-native-paper';
 import withObservables from '@nozbe/with-observables';
 
 import {WalletProps} from '../../database/models';
 import {observeWallets} from '../../database/helpers';
-import {CircleColor} from '../../components';
 
 interface WalletListProps {
   onSelect: (item: WalletProps) => void;
@@ -13,12 +17,16 @@ interface WalletListProps {
 }
 const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
   const renderItem = ({item}: {item: WalletProps}) => (
-    <TouchableOpacity
-      onPress={() => onSelect(item)}
-      style={{flexDirection: 'row', alignItems: 'center'}}>
-      <CircleColor color={item.color} />
-      <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
-    </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={() => onSelect(item)}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Avatar.Text
+          label=""
+          size={18}
+          style={{marginRight: 10, backgroundColor: item.color}}
+        />
+        <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
+      </View>
+    </TouchableWithoutFeedback>
   );
 
   return (
@@ -27,6 +35,7 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
       renderItem={renderItem}
       keyExtractor={(item: WalletProps) => String(item.id)}
       style={{paddingLeft: 20, paddingRight: 20}}
+      disableScrollViewPanResponder
     />
   );
 };

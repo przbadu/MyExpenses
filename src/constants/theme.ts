@@ -7,8 +7,31 @@ import {
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 
-// READ MORE:
-// https://callstack.github.io/react-native-paper/theming.html
+export const COLORS = {
+  white: '#FFFFFF',
+  pink: '#FF3378',
+  // primary: '#FF2278',
+  primary: '#3C27BE',
+  // secondary: '#FF6347',
+  secondary: '#8C7BBC',
+  green: '#5cb85c',
+  blue: '#28c2ff',
+};
+
+// customize ReactNativePaper colors
+// Reference: https://callstack.github.io/react-native-paper/theming.html
+declare global {
+  namespace ReactNativePaper {
+    interface ThemeColors {
+      success: string;
+      white: string;
+    }
+    interface Theme {
+      success: string;
+      white: string;
+    }
+  }
+}
 
 export const lightTheme = {
   ...PaperDefaultTheme,
@@ -16,16 +39,10 @@ export const lightTheme = {
   colors: {
     ...PaperDefaultTheme.colors,
     ...NavigationDefaultTheme.colors,
-    primary: '#FF8B2D',
-    // accent: '#FFC597',
-    // background: '',
-    // surface: '',
-    // text: '',
-    // disabled: '',
-    // placeholder: '',
-    // backdrop: '',
-    // onSurface: '',
-    // notification: '',
+    primary: COLORS.primary,
+    accent: COLORS.secondary,
+    success: '#007E3C',
+    white: '#FFFFFF',
   },
 };
 
@@ -35,15 +52,8 @@ export const darkTheme = {
   colors: {
     ...PaperDarkTheme.colors,
     ...NavigationDarkTheme.colors,
-    primary: '#FF8B2D',
-    // accent: '#FFC597',
-    // background: '',
-    // surface: '',
-    // text: '',
-    // disabled: '',
-    // placeholder: '',
-    // backdrop: '',
-    // onSurface: '',
-    // notification: '',
+    // success: '#5CB85C',
+    success: '#00C851',
+    white: '#FFFFFF',
   },
 };
