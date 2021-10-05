@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Chip, Text, useTheme} from 'react-native-paper';
+import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const MenuItem = ({
@@ -19,8 +19,7 @@ const MenuItem = ({
       <Text>{label}</Text>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         {chipLabel && (
-          <Text
-            style={{color: colors.notification, textTransform: 'uppercase'}}>
+          <Text style={{color: colors.disabled, textTransform: 'uppercase'}}>
             {chipLabel}
           </Text>
         )}

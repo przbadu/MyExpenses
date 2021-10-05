@@ -69,12 +69,12 @@ let Settings = ({
 
           <MenuItem
             label="Categories"
-            chipLabel={categories.length}
+            chipLabel={`${categories.length}`}
             onPress={() => navigation.navigate('ListCategories')}
           />
           <MenuItem
             label="Wallets"
-            chipLabel={wallets.length}
+            chipLabel={`${wallets.length}`}
             onPress={() => navigation.navigate('ListWallets')}
           />
 
