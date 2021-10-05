@@ -4,6 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {Appbar, Card, Divider, Switch} from 'react-native-paper';
 
 import {AppModal, AppSwitch, MenuItem} from '../../components';
+import AuthScreen from '../../components/AuthScreen';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {Category, WalletProps} from '../../database/models';
 import {
@@ -27,6 +28,7 @@ let Settings = ({
   const {theme, toggleTheme} = useContext<ThemeContentProps>(ThemeContext);
   const {currency, updateCurrency} =
     useContext<CurrencyContextProps>(CurrencyContext);
+  const [appLock, setAppLock] = React.useState(false);
 
   // render currency dropdown
   const renderCurrencySelect = () => (
@@ -61,22 +63,31 @@ let Settings = ({
         <Appbar.Content title="SETTING" />
       </Appbar.Header>
 
+      {appLock && <AuthScreen />}
+
       <Card style={{...styles.card, marginTop: 10}}>
         <Card.Content>
           <AppSwitch label="Dark Theme">
             <Switch value={theme.dark} onValueChange={toggleTheme} />
           </AppSwitch>
 
+          <AppSwitch label="Enable App Lock" containerStyle={{marginTop: 10}}>
+            <Switch
+              value={appLock}
+              onValueChange={() => setAppLock(!appLock)}
+            />
+          </AppSwitch>
+
           <Divider style={{marginTop: 20}} />
 
           <MenuItem
             label="Categories"
-            chipLabel={categories.length}
+            chipLabel={`${categories.length}`}
             onPress={() => navigation.navigate('ListCategories')}
           />
           <MenuItem
             label="Wallets"
-            chipLabel={wallets.length}
+            chipLabel={`${wallets.length}`}
             onPress={() => navigation.navigate('ListWallets')}
           />
 
