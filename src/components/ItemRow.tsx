@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
 import {Category, Wallet} from '../database/models';
+import ConfirmDialog from './ConfirmDialog';
 
 const ItemRow = ({
   item,
@@ -13,9 +14,18 @@ const ItemRow = ({
   onDelete: (item: Category | Wallet) => void;
 }) => {
   const {colors} = useTheme();
+  const [confirm, setConfirm] = React.useState(false);
 
   return (
     <TouchableOpacity onPress={() => onEdit(item)}>
+      <ConfirmDialog
+        visible={confirm}
+        title="Confirm Delete"
+        label="You are deleting selected item which cannot be recovered after deletion. Are you sure to continue?"
+        onCancel={() => setConfirm(false)}
+        onConfirm={() => onDelete(item)}
+      />
+
       <Surface style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           <View
@@ -44,7 +54,7 @@ const ItemRow = ({
             icon="trash-can-outline"
             size={16}
             color={colors.error}
-            onPress={() => onDelete(item)}
+            onPress={() => setConfirm(true)}
           />
         </View>
       </Surface>
