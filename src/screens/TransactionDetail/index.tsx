@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import {
   Button,
   Headline,
@@ -9,6 +9,7 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import {Subheader} from 'react-native-paper/lib/typescript/components/List/List';
 import {numberToCurrency} from '../../constants';
 import {deleteTransaction, transactions} from '../../database/helpers';
 import {
@@ -74,10 +75,10 @@ const TransactionDetail = ({navigation, route}) => {
 
         <View style={{flex: 2}}>
           {heading ? (
-            <Headline
+            <Subheading
               style={{color: isExpense ? colors.notification : colors.success}}>
               {value}
-            </Headline>
+            </Subheading>
           ) : (
             <Text>{value}</Text>
           )}
@@ -89,7 +90,7 @@ const TransactionDetail = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <Surface style={styles.surface}>
-        <View>
+        <ScrollView>
           {renderRow('Type', transaction?.transactionType?.toUpperCase())}
           {renderRow('Category', category?.name)}
           {renderRow('Wallet', wallet?.name)}
@@ -110,33 +111,37 @@ const TransactionDetail = ({navigation, route}) => {
             true,
             transaction?.transactionType == TransactionTypeEnum.expense,
           )}
-        </View>
+        </ScrollView>
       </Surface>
 
       <Surface style={{...styles.buttonSurface}}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate('AddTransaction', {transactionId})}
-          icon="pencil-outline"
-          style={{width: 100, marginRight: 10}}>
-          Edit
-        </Button>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <Button
+            mode="contained"
+            onPress={() =>
+              navigation.navigate('AddTransaction', {transactionId})
+            }
+            icon="pencil-outline"
+            style={{width: 100, marginRight: 10}}>
+            Edit
+          </Button>
 
-        <Button
-          mode="contained"
-          onPress={handleDelete}
-          icon="trash-can-outline"
-          color={colors.notification}
-          style={{width: 100, marginRight: 10}}>
-          Delete
-        </Button>
+          <Button
+            mode="contained"
+            onPress={handleDelete}
+            icon="trash-can-outline"
+            color={colors.notification}
+            style={{width: 100, marginRight: 10}}>
+            Delete
+          </Button>
 
-        <Button
-          mode="outlined"
-          icon="keyboard-backspace"
-          onPress={() => navigation.goBack()}>
-          Go Back
-        </Button>
+          <Button
+            mode="outlined"
+            icon="keyboard-backspace"
+            onPress={() => navigation.goBack()}>
+            Go Back
+          </Button>
+        </ScrollView>
       </Surface>
     </View>
   );
