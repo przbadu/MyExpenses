@@ -1,6 +1,6 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
-import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
+import {FlatList, TouchableOpacity, View} from 'react-native';
 import {Avatar, Text} from 'react-native-paper';
 import {responsiveHeight} from '../../constants';
 import {observeWallets} from '../../database/helpers';
@@ -12,7 +12,7 @@ interface WalletListProps {
 }
 const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
   const renderItem = ({item}: {item: WalletProps}) => (
-    <TouchableWithoutFeedback onPress={() => onSelect(item)}>
+    <TouchableOpacity onPress={() => onSelect(item)}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Avatar.Text
           label=""
@@ -21,7 +21,7 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
         />
         <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 
   return (
