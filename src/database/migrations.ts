@@ -1,6 +1,5 @@
 import {
   addColumns,
-  createTable,
   schemaMigrations,
 } from '@nozbe/watermelondb/Schema/migrations';
 import {Category, Transaction, Wallet} from './models';

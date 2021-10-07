@@ -1,17 +1,16 @@
-import React from 'react';
-import {Provider as PaperProvider, useTheme} from 'react-native-paper';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {TabNavigation} from './TabNavigation';
-
-const Stack = createNativeStackNavigator();
-
-import {ThemeContext} from '../store/context/themeContext';
+import React from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
   CalendarTransactions,
   CategoryTransaction,
   TransactionDetail,
 } from '../screens';
+import {ThemeContext} from '../store/context/themeContext';
+import {TabNavigation} from './TabNavigation';
+
+const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
   const {theme} = React.useContext(ThemeContext);

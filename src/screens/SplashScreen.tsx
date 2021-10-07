@@ -1,10 +1,10 @@
 import React from 'react';
 import {View} from 'react-native';
 import {
-  Text,
-  Surface,
   ActivityIndicator,
   Colors,
+  Surface,
+  Text,
   useTheme,
 } from 'react-native-paper';
 

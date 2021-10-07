@@ -1,6 +1,5 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
-
 import {formatDateColumn, transactions} from '.';
 
 export type lineChartFilterProps = 'yearly' | 'monthly' | 'weekly';

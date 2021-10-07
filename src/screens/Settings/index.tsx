@@ -4,6 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {Appbar, Card, Switch} from 'react-native-paper';
 
 import {AppModal, AppSwitch, MenuItem} from '../../components';
+import {responsiveHeight} from '../../constants';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {Category, WalletProps} from '../../database/models';
 import {
@@ -38,6 +39,7 @@ let Settings = ({
       />
       {showCurrencyModal && (
         <AppModal
+          transparentAreaHeight={responsiveHeight(10)}
           visible={showCurrencyModal}
           onClose={() => setShowCurrencyModal(false)}
           heading="Select Currency"

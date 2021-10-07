@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {AppModal, AppTextInput} from './index';
 

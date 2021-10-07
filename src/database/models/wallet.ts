@@ -1,9 +1,9 @@
-import Model from '@nozbe/watermelondb/Model';
+import {writer} from '@nozbe/watermelondb/decorators/action';
+import children from '@nozbe/watermelondb/decorators/children';
+import date from '@nozbe/watermelondb/decorators/date';
 import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
-import date from '@nozbe/watermelondb/decorators/date';
-import children from '@nozbe/watermelondb/decorators/children';
-import {writer} from '@nozbe/watermelondb/decorators/action';
+import Model from '@nozbe/watermelondb/Model';
 
 // wallet props
 export interface WalletProps {

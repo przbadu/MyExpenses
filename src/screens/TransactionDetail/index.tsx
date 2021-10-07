@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, StyleSheet, Dimensions, Alert} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {
   Button,
   Headline,

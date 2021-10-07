@@ -1,16 +1,18 @@
+import withObservables from '@nozbe/with-observables';
+import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, SectionList} from 'react-native';
-import withObservables from '@nozbe/with-observables';
+import {SectionList, View} from 'react-native';
 import {
-  useTheme,
-  Card,
   Appbar,
-  Subheading,
   Button,
-  Menu,
   Caption,
+  Card,
+  Menu,
+  Subheading,
+  useTheme,
 } from 'react-native-paper';
+import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -18,10 +20,7 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
-import {useFocusEffect} from '@react-navigation/core';
-import {responsiveHeight} from '../../constants';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -165,7 +164,6 @@ const _Transactions: React.FC<{
         onClose={() => setShowFilter(false)}
         heading="Filter Transactions"
         visible={showFilter}
-        transparentAreaHeight={responsiveHeight(20)}
         renderContent={() => (
           <TransactionFilters onFilter={filterTransactionBy} />
         )}

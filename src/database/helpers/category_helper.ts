@@ -1,6 +1,5 @@
 import {Q} from '@nozbe/watermelondb';
 import randomColor from 'randomcolor';
-
 import {database} from '../index';
 import {Category, CategoryProps} from '../models';
 

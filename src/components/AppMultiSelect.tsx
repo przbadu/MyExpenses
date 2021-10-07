@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Button, Checkbox, TextInput} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import {AppChip} from './AppChip';
 import {AppTextInput} from './index';
 

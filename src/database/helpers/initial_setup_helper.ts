@@ -1,7 +1,7 @@
 import {
   LocalStorage,
-  setupDefaultWallet,
   setupDefaultCategories,
+  setupDefaultWallet,
 } from './index';
 
 const SETUP_COMPLETED = 'SETUP_COMPLETED';

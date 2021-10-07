@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import {Q} from '@nozbe/watermelondb';
+import dayjs from 'dayjs';
 import {database} from '../index';
 import {
   Category,

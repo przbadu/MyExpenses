@@ -1,11 +1,10 @@
+import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, TouchableHighlight, View} from 'react-native';
 import {Avatar, Text} from 'react-native-paper';
-import withObservables from '@nozbe/with-observables';
-
-import {CategoryProps} from '../../database/models';
-import {observeCategories} from '../../database/helpers';
 import {responsiveHeight} from '../../constants';
+import {observeCategories} from '../../database/helpers';
+import {CategoryProps} from '../../database/models';
 
 interface CategoryListProps {
   onSelect: (item: CategoryProps) => void;

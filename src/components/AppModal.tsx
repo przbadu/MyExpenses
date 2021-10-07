@@ -1,16 +1,17 @@
 import React from 'react';
 import {
-  Modal,
-  View,
   Animated,
-  TouchableWithoutFeedback,
-  StyleSheet,
   Dimensions,
   GestureResponderEvent,
+  Modal,
+  StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import {Portal, Modal as PaperModal, Text, useTheme} from 'react-native-paper';
+import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {responsiveHeight} from '../constants';
 
 const winHeight = Dimensions.get('window').height;
 
@@ -44,7 +45,7 @@ const AppModal: React.FC<AppModalProps> = ({
   visible = false,
   heading,
   renderContent,
-  transparentAreaHeight = 20,
+  transparentAreaHeight = responsiveHeight(20),
 }) => {
   const {colors} = useTheme();
   const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;

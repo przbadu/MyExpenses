@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
-// global states
-import {ThemeProvider, CurrencyProvider} from './store/context';
-
-import {AppNavigator} from './navigation';
+import React, {useEffect, useState} from 'react';
 import {initialSetup} from './database/helpers';
+import {AppNavigator} from './navigation';
 import {SplashScreen} from './screens';
+// global states
+import {CurrencyProvider, ThemeProvider} from './store/context';
 
 const App = () => {
   const [loading, setLoading] = useState(true);

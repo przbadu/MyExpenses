@@ -1,10 +1,10 @@
-import Model from '@nozbe/watermelondb/Model';
+import {writer} from '@nozbe/watermelondb/decorators/action';
+import date from '@nozbe/watermelondb/decorators/date';
 import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
-import date from '@nozbe/watermelondb/decorators/date';
 import relation from '@nozbe/watermelondb/decorators/relation';
-import {writer} from '@nozbe/watermelondb/decorators/action';
-import {Category, CategoryProps, Wallet, WalletProps} from '.';
+import Model from '@nozbe/watermelondb/Model';
+import {CategoryProps, WalletProps} from '.';
 
 // category enum, we only support income and expense type category for now
 export enum TransactionTypeEnum {

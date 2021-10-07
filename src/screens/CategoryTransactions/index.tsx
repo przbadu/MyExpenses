@@ -1,7 +1,9 @@
+import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, SectionList} from 'react-native';
-import {useTheme, Appbar, Subheading, Headline} from 'react-native-paper';
+import {SectionList, View} from 'react-native';
+import {Appbar, Headline, Subheading, useTheme} from 'react-native-paper';
+import {SummaryCard, TransactionRow} from '../../components';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -9,8 +11,6 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
-import {TransactionRow, SummaryCard} from '../../components';
-import withObservables from '@nozbe/with-observables';
 
 // Transaction component
 const _CategoryTransaction: React.FC<{

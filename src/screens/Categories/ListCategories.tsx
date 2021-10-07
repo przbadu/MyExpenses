@@ -1,11 +1,11 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, View} from 'react-native';
-import {Appbar, TextInput, useTheme} from 'react-native-paper';
+import {Appbar, useTheme} from 'react-native-paper';
+import {AddCategory} from '.';
+import {ItemRow} from '../../components';
 import {deleteCategory, observeCategories} from '../../database/helpers';
 import {Category} from '../../database/models';
-import {AppTextInput, ItemRow} from '../../components';
-import {AddCategory} from '.';
 
 let ListCategories = ({
   navigation,

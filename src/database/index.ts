@@ -1,12 +1,10 @@
 import {Database} from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-
+import migrations from './migrations';
+// models
+import {Category, Transaction, Wallet} from './models';
 // schema
 import schema from './schema';
-import migrations from './migrations';
-
-// models
-import {Wallet, Category, Transaction} from './models';
 
 const adapter = new SQLiteAdapter({
   schema,

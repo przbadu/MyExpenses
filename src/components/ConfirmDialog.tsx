@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, Text} from 'react-native';
 import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
 
 interface ConfirmDialogProps {

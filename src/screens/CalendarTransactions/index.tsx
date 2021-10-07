@@ -1,18 +1,17 @@
+import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, FlatList} from 'react-native';
-import {useTheme, Subheading, IconButton} from 'react-native-paper';
-
+import {FlatList, View} from 'react-native';
+import {Calendar} from 'react-native-calendars';
+import {IconButton, Subheading, useTheme} from 'react-native-paper';
+import {TransactionRow} from '../../components';
+import {calendarTheme} from '../../constants';
 import {
   filterByDailyTransactions,
   observeTransactions,
   transactionDaysForCurrentMonth,
 } from '../../database/helpers';
 import {Transaction} from '../../database/models';
-import {calendarTheme} from '../../constants';
-import {Calendar} from 'react-native-calendars';
-import {TransactionRow} from '../../components';
-import withObservables from '@nozbe/with-observables';
 
 // Transaction component
 const _format = 'YYYY-MM-DD';

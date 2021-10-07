@@ -1,10 +1,9 @@
-import Model from '@nozbe/watermelondb/Model';
+import children from '@nozbe/watermelondb/decorators/children';
+import date from '@nozbe/watermelondb/decorators/date';
 import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
-import date from '@nozbe/watermelondb/decorators/date';
-import children from '@nozbe/watermelondb/decorators/children';
+import Model from '@nozbe/watermelondb/Model';
 import {TransactionProps} from '.';
-import {transactions} from '../helpers';
 
 // category types
 export interface CategoryProps {

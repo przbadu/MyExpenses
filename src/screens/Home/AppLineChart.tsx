@@ -2,13 +2,11 @@ import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {View, Dimensions, FlatList} from 'react-native';
+import {Dimensions, FlatList, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import {Caption, Subheading, Surface, Text, useTheme} from 'react-native-paper';
+import {Caption, Subheading, Surface, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
-
 import {CategoryRow, SummaryCard} from '../../components';
-
 import {
   amountSeperator,
   chartConfig,

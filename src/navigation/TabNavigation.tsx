@@ -1,11 +1,10 @@
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme} from 'react-native-paper';
-
-import {Home, AddTransaction, Transactions, Saving, Settings} from '../screens';
 import {TabBarIcon} from '../components';
+import {AddTransaction, Home, Saving, Settings, Transactions} from '../screens';
 import {AddCategory, ListCategories} from '../screens/Categories';
 import {AddWallet, ListWallets} from '../screens/Wallets';
 

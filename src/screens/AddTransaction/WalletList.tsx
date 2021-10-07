@@ -1,16 +1,10 @@
-import React from 'react';
-import {
-  TouchableOpacity,
-  FlatList,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import {Avatar, Text} from 'react-native-paper';
 import withObservables from '@nozbe/with-observables';
-
-import {WalletProps} from '../../database/models';
-import {observeWallets} from '../../database/helpers';
+import React from 'react';
+import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
+import {Avatar, Text} from 'react-native-paper';
 import {responsiveHeight} from '../../constants';
+import {observeWallets} from '../../database/helpers';
+import {WalletProps} from '../../database/models';
 
 interface WalletListProps {
   onSelect: (item: WalletProps) => void;

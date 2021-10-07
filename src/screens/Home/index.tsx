@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Appbar, Card, IconButton, Surface} from 'react-native-paper';
+import {View} from 'react-native';
+import {Appbar, Card, IconButton} from 'react-native-paper';
 import {AppChip} from '../../components';
 import {lineChartFilterProps} from '../../database/helpers';
 import {AppLineChart} from './AppLineChart';

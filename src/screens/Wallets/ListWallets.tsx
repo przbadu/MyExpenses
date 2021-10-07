@@ -2,10 +2,10 @@ import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
+import {AddWallet} from '.';
+import {ItemRow} from '../../components';
 import {deleteWallet, observeWallets} from '../../database/helpers';
 import {Wallet} from '../../database/models';
-import {ItemRow} from '../../components';
-import {AddWallet} from '.';
 
 let ListWallets = ({
   navigation,

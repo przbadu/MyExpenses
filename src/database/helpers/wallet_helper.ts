@@ -1,5 +1,4 @@
 import randomColor from 'randomcolor';
-
 import {database} from '../index';
 import {Wallet, WalletProps} from '../models';
 

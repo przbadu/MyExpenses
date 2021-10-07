@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
-import {currencies} from '../../constants';
+import {currencies, responsiveHeight} from '../../constants';
 
 const CurrencyList: React.FC<{currency: string; onSelect: Function}> = ({
   onSelect,
@@ -42,7 +42,11 @@ const CurrencyList: React.FC<{currency: string; onSelect: Function}> = ({
       data={currencies}
       renderItem={renderItem}
       keyExtractor={item => String(item.isoCode)}
-      style={{paddingLeft: 20, paddingRight: 20}}
+      style={{
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginBottom: responsiveHeight(10),
+      }}
       onScrollToIndexFailed={info => {
         // scrollToIndex();
       }}

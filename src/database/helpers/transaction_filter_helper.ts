@@ -1,7 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
-
 import {formatDateColumn, transactions} from '.';
+
 const _format = 'YYYY-MM-DD';
 
 /**

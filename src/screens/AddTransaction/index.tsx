@@ -1,33 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/core';
-import {Appbar, Card, Button, TextInput} from 'react-native-paper';
 import dayjs from 'dayjs';
-
+import React, {useEffect, useState} from 'react';
+import {ScrollView, View} from 'react-native';
+import {Appbar, Button, Card, TextInput} from 'react-native-paper';
 import {
-  SwitchButton,
-  AppTextInput,
-  AppSelect,
   AppDatePicker,
+  AppSelect,
+  AppTextInput,
   AppTimePicker,
+  SwitchButton,
   SwitchButtonContent,
 } from '../../components';
-import CategoryList from './CategoryList';
-import WalletList from './WalletList';
-import {useForm} from './useForm';
-import {styles} from './styles';
-import {
-  DefaultDateFormat,
-  DefaultTimeFormat,
-  responsiveHeight,
-} from '../../constants';
+import {DefaultDateFormat, DefaultTimeFormat} from '../../constants';
+import {transactions} from '../../database/helpers';
 import {
   CategoryProps,
   Transaction,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import {transactions} from '../../database/helpers';
+import CategoryList from './CategoryList';
+import {styles} from './styles';
+import {useForm} from './useForm';
+import WalletList from './WalletList';
 
 const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   const transactionId = route?.params?.transactionId;
@@ -212,7 +207,6 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               onOpen={() => setShowCategoryModal(true)}
               onClose={() => setShowCategoryModal(false)}
               renderContent={() => <CategoryList onSelect={selectCategory} />}
-              transparentAreaHeight={responsiveHeight(20)}
             />
 
             <AppSelect
@@ -224,7 +218,6 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               onClose={() => setShowWalletModal(false)}
               left={<TextInput.Icon name="bank" />}
               renderContent={() => <WalletList onSelect={selectWallet} />}
-              transparentAreaHeight={responsiveHeight(20)}
             />
 
             <Button
