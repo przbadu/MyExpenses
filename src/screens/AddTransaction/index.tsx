@@ -132,7 +132,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <View style={{flex: 1.8, marginRight: 5}}>
+        <View style={{flex: 1.4, marginRight: 5}}>
           <AppDatePicker
             label="Date"
             showSoftInputOnFocus={false}
@@ -199,7 +199,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
 
             {renderTransactionDateTime()}
             <AppSelect
-              placeholder="Select Category"
+              label="Category"
               value={categoryText!}
               error={errors.categoryId}
               left={<TextInput.Icon name="format-list-bulleted" />}
@@ -210,7 +210,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
             />
 
             <AppSelect
-              placeholder="Select Wallet"
+              label="Wallet"
               value={walletText!}
               error={errors.walletId}
               open={showWalletModal}

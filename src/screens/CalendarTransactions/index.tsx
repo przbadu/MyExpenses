@@ -68,44 +68,44 @@ const _CalendarTransactions = ({
 
   return (
     <>
-      <View style={{backgroundColor: colors.surface}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <IconButton
-            icon="keyboard-backspace"
-            onPress={() => navigation.goBack()}
-          />
-          <Subheading
-            style={{
-              flex: 1,
-              textAlign: 'center',
-              fontWeight: 'bold',
-              color: colors.accent,
-            }}>
-            Daily Transactions
-          </Subheading>
-        </View>
-
-        <Calendar
-          onDayPress={onDaySelect}
-          onMonthChange={({dateString}: {dateString: string}) => {
-            const [year, month] = dateString.split('-');
-            fetchCurrentMonthDots(`${year}-${month}`);
-          }}
-          markedDates={markedDates}
-          theme={{
-            ...calendarTheme(colors, dark),
-          }}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: colors.surface,
+        }}>
+        <IconButton
+          icon="keyboard-backspace"
+          onPress={() => navigation.goBack()}
         />
+        <Subheading
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: colors.accent,
+          }}>
+          Daily Transactions
+        </Subheading>
       </View>
 
-      <View style={{flex: 1, marginHorizontal: 10, marginTop: 15}}>
-        <FlatList
-          data={_transactions}
-          renderItem={({item}) => (
+      <FlatList
+        data={_transactions}
+        ListHeaderComponent={
+          <Calendar
+            onDayPress={onDaySelect}
+            onMonthChange={({dateString}: {dateString: string}) => {
+              const [year, month] = dateString.split('-');
+              fetchCurrentMonthDots(`${year}-${month}`);
+            }}
+            markedDates={markedDates}
+            theme={{
+              ...calendarTheme(colors, dark),
+            }}
+          />
+        }
+        renderItem={({item}) => (
+          <View style={{marginHorizontal: 5, marginTop: 15}}>
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}
@@ -115,10 +115,10 @@ const _CalendarTransactions = ({
                 })
               }
             />
-          )}
-          keyExtractor={(item, index) => String(item.id) + String(index)}
-        />
-      </View>
+          </View>
+        )}
+        keyExtractor={(item, index) => String(item.id) + String(index)}
+      />
     </>
   );
 };
