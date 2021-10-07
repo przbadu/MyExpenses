@@ -2,41 +2,52 @@ import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {ScrollView, SectionList, View} from 'react-native';
+import {Alert, ScrollView, SectionList, View} from 'react-native';
+import RNFS from 'react-native-fs';
 import {
   Appbar,
   Button,
   Caption,
-  Card,
+  Dialog,
   Menu,
+  Paragraph,
+  Portal,
   Subheading,
   Surface,
   useTheme,
 } from 'react-native-paper';
 import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
+import {DefaultDateFormat, numberToCurrency} from '../../constants';
 import {
   filterTransactionByProps,
   filterTransactions,
   observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
-import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {Transaction, TransactionTypeEnum} from '../../database/models';
+import {CurrencyContext} from '../../store/context';
 import TransactionFilters from './TransactionFilters';
 
 // Transaction component
 const _Transactions: React.FC<{
-  transactions: TransactionProps[];
+  transactions: Transaction[];
   navigation: any;
 }> = ({transactions, navigation}) => {
   const [summary, setSummary] =
     React.useState<{income: number; expense: number}>();
+  const [ungroupedTransactions, setUngroupedTransactions] = React.useState<
+    Transaction[]
+  >([]);
   const [groupedTransactions, setGroupedTransactions] = React.useState<
-    TransactionProps[]
+    Transaction[]
   >([]);
   const [selectedFilterChip, setSelectedFilterChip] = React.useState<
     '7days' | '1month' | '6months' | '1year' | 'custom' | undefined
   >('1year');
   const [showMoreMenu, setShowMoreMenu] = React.useState(false);
+  const {currency} = React.useContext(CurrencyContext);
+  const [showAlert, setShowAlert] = React.useState(false);
+  const [alertContent, setAlertContent] = React.useState('');
 
   const {navigate} = navigation;
   const {colors} = useTheme();
@@ -104,27 +115,50 @@ const _Transactions: React.FC<{
   };
 
   // prepare transactions for SectionList, grouped by month
-  function transactionGroupedByMonth(trans: TransactionProps[] | any) {
+  function transactionGroupedByMonth(trans: Transaction[] | any) {
     let result = trans
-      .sort((a: TransactionProps, b: TransactionProps) =>
+      .sort((a: Transaction, b: Transaction) =>
         a.transactionAt! < b.transactionAt! ? 1 : -1,
       )
-      .reduce(
-        (groupedTransaction: any, transaction: TransactionProps): object => {
-          const month = dayjs(transaction.transactionAt).format('YYYY MMM');
-          groupedTransaction[month] = groupedTransaction[month] || [];
-          groupedTransaction[month] = [
-            ...groupedTransaction[month],
-            transaction,
-          ];
+      .reduce((groupedTransaction: any, transaction: Transaction): object => {
+        const month = dayjs(transaction.transactionAt).format('YYYY MMM');
+        groupedTransaction[month] = groupedTransaction[month] || [];
+        groupedTransaction[month] = [...groupedTransaction[month], transaction];
 
-          return groupedTransaction;
-        },
-        Object.create(null),
-      );
+        return groupedTransaction;
+      }, Object.create(null));
 
     result = Object.keys(result).map(key => ({title: key, data: result[key]}));
     setGroupedTransactions(result);
+    setUngroupedTransactions(trans);
+  }
+
+  const exportCSV = async () => {
+    const csvContent = prepareCSV();
+    const path = `${RNFS.DocumentDirectoryPath}/myexpenses-${dayjs().format(
+      'YYYY-MM-DD-hh-mm-ss-a',
+    )}.csv`;
+
+    try {
+      await RNFS.writeFile(path, csvContent);
+      setAlertContent(`Successfully exported CSV file!: ${path}`);
+    } catch (e) {
+      setAlertContent('Error writing CSV data: ', e);
+    }
+    setShowAlert(true);
+  };
+
+  function prepareCSV() {
+    let csv = `Sn,Id,Date,Time,Amount,Type,Category,Wallet,Notes\n`;
+    transactions.map(async (trans, index) => {
+      const date = dayjs(trans.transactionAt).format(DefaultDateFormat);
+      const amount = numberToCurrency(trans.amount, currency);
+      const category = trans.category;
+      const wallet = trans.wallet;
+      csv += `${index},${trans.id},${date},${trans.time},${amount},${trans.transactionType},${category.name},${wallet.name},${trans.notes}\n`;
+    });
+
+    return csv;
   }
 
   function renderHeader() {
@@ -149,7 +183,7 @@ const _Transactions: React.FC<{
           }
           style={{marginTop: 30}}>
           <Menu.Item
-            onPress={() => alert('coming soon')}
+            onPress={exportCSV}
             icon="file-delimited-outline"
             title="Download CSV"
           />
@@ -177,7 +211,7 @@ const _Transactions: React.FC<{
       <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
         <SectionList
           sections={groupedTransactions}
-          renderItem={({item}: {item: TransactionProps}) => (
+          renderItem={({item}: {item: Transaction}) => (
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}
@@ -275,6 +309,17 @@ const _Transactions: React.FC<{
       />
       {renderSectionList()}
       {renderFilters()}
+
+      <Portal>
+        <Dialog visible={showAlert} onDismiss={() => setShowAlert(false)}>
+          <Dialog.Content>
+            <Paragraph>{alertContent}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setShowAlert(false)}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </>
   );
 };

@@ -23,6 +23,7 @@
     "react-native": "0.64.2",
     "react-native-calendars": "^1.1266.0",
     "react-native-chart-kit": "^6.11.0",
+    "react-native-fs": "^2.18.0",
     "react-native-modal-datetime-picker": "^11.0.0",
     "react-native-paper": "^4.9.2",
     "react-native-safe-area-context": "^3.3.0",
