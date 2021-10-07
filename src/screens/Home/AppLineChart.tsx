@@ -2,7 +2,7 @@ import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {Dimensions, FlatList, View} from 'react-native';
+import {Dimensions, FlatList, ScrollView, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import {Caption, Subheading, Surface, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
@@ -166,36 +166,42 @@ const _AppLineChart = ({
 
   if (chartData.length) {
     return (
-      <>
-        <SummaryCard
-          balance={balance}
-          containerStyles={{marginHorizontal: 10, marginTop: 10}}
-          showIncomeExpense={false}
-        />
-        <Surface style={{marginHorizontal: 10}}>{renderLineChart()}</Surface>
+      <FlatList
+        nestedScrollEnabled
+        data={categories}
+        keyExtractor={item => `category-list-${item.id}`}
+        ListHeaderComponent={
+          <>
+            <SummaryCard
+              balance={balance}
+              containerStyles={{marginHorizontal: 10, marginTop: 10}}
+              showIncomeExpense={false}
+            />
+            <Surface style={{marginHorizontal: 10}}>
+              {renderLineChart()}
+            </Surface>
 
-        {/* render categories */}
-        <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
-          Expenses Categories
-        </Subheading>
-        <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
-          <FlatList
-            data={categories}
-            keyExtractor={item => `category-list-${item.id}`}
-            renderItem={({item}) => (
-              <CategoryRow
-                category={item}
-                onPress={() =>
-                  navigation.navigate('CategoryTransactions', {
-                    categoryId: item.id,
-                    categoryName: item.name,
-                  })
-                }
-              />
-            )}
-          />
-        </View>
-      </>
+            {/* render categories */}
+            <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
+              Expenses Categories
+            </Subheading>
+          </>
+        }
+        renderItem={({item}) => (
+          <View style={{marginHorizontal: 10}}>
+            <CategoryRow
+              category={item}
+              onPress={() =>
+                navigation.navigate('CategoryTransactions', {
+                  categoryId: item.id,
+                  categoryName: item.name,
+                })
+              }
+            />
+          </View>
+        )}
+        style={{marginBottom: 80}}
+      />
     );
   } else {
     return (

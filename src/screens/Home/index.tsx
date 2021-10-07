@@ -1,6 +1,6 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Appbar, Card, IconButton} from 'react-native-paper';
+import {ScrollView, View} from 'react-native';
+import {Appbar, Card, IconButton, Surface} from 'react-native-paper';
 import {AppChip} from '../../components';
 import {lineChartFilterProps} from '../../database/helpers';
 import {AppLineChart} from './AppLineChart';
@@ -12,9 +12,14 @@ const Home = () => {
 
   function renderFilters() {
     return (
-      <Card>
-        <Card.Content
+      <Surface>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
           style={{
+            paddingHorizontal: 10,
+          }}
+          contentContainerStyle={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -47,8 +52,8 @@ const Home = () => {
               onPress={() => setChartStyle('pie')}
             />
           </View>
-        </Card.Content>
-      </Card>
+        </ScrollView>
+      </Surface>
     );
   }
 
