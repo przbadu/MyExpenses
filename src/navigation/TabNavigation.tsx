@@ -74,10 +74,11 @@ export const TabNavigation = () => {
               containerStyles={{
                 width: 62,
                 height: 62,
-                borderRadius: 64,
+                borderRadius: 62,
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: colors.primary,
+                marginBottom: 60,
               }}
             />
           ),

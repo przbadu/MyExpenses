@@ -25,10 +25,12 @@ declare global {
     interface ThemeColors {
       success: string;
       white: string;
+      lightBlue: string;
     }
     interface Theme {
       success: string;
       white: string;
+      lightBlue: string;
     }
   }
 }
@@ -43,6 +45,7 @@ export const lightTheme = {
     accent: COLORS.secondary,
     success: '#007E3C',
     white: '#FFFFFF',
+    lightBlue: '#abc95f',
   },
 };
 
@@ -55,5 +58,6 @@ export const darkTheme = {
     // success: '#5CB85C',
     success: '#00C851',
     white: '#FFFFFF',
+    lightBlue: '#4f626e',
   },
 };

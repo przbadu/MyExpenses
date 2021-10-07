@@ -10,8 +10,8 @@ const SwitchButtonContent: React.FC<{
 }> = ({icon, label, active}) => {
   const {colors, dark} = useTheme();
 
-  const darkActiveBG = active ? colors.accent : colors.background;
-  const lightActiveBG = active ? colors.primary : colors.background;
+  const darkActiveBG = active ? colors.lightBlue : colors.background;
+  const lightActiveBG = active ? colors.lightBlue : colors.background;
 
   return (
     <View
