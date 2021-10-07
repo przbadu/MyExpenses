@@ -2,7 +2,7 @@ import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {SectionList, View} from 'react-native';
+import {ScrollView, SectionList, View} from 'react-native';
 import {
   Appbar,
   Button,
@@ -10,6 +10,7 @@ import {
   Card,
   Menu,
   Subheading,
+  Surface,
   useTheme,
 } from 'react-native-paper';
 import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
@@ -200,8 +201,21 @@ const _Transactions: React.FC<{
 
   function renderFilterHeader() {
     return (
-      <Card>
-        <Card.Content style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+      <Surface
+        style={{
+          flexDirection: 'row',
+          paddingVertical: 5,
+          paddingHorizontal: 10,
+        }}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {selectedFilterChip !== '1year' && (
+            <AppChip
+              icon="filter-remove"
+              onPress={() => {
+                periodicTransactionFilter('1year');
+              }}
+            />
+          )}
           <AppChip
             selected={selectedFilterChip === '7days'}
             onPress={() => periodicTransactionFilter('7days')}>
@@ -231,17 +245,8 @@ const _Transactions: React.FC<{
             }}>
             Filter
           </AppChip>
-
-          {selectedFilterChip !== '1year' && (
-            <AppChip
-              icon="filter-remove"
-              onPress={() => {
-                periodicTransactionFilter('1year');
-              }}
-            />
-          )}
-        </Card.Content>
-      </Card>
+        </ScrollView>
+      </Surface>
     );
   }
 
