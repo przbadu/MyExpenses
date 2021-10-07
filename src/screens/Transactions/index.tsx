@@ -21,6 +21,7 @@ import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 import {AppModal, TransactionRow, AppChip, SummaryCard} from '../../components';
 import TransactionFilters from './TransactionFilters';
 import {useFocusEffect} from '@react-navigation/core';
+import {responsiveHeight} from '../../constants';
 
 // Transaction component
 const _Transactions: React.FC<{
@@ -164,6 +165,7 @@ const _Transactions: React.FC<{
         onClose={() => setShowFilter(false)}
         heading="Filter Transactions"
         visible={showFilter}
+        transparentAreaHeight={responsiveHeight(20)}
         renderContent={() => (
           <TransactionFilters onFilter={filterTransactionBy} />
         )}

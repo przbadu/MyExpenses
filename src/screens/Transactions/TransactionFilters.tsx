@@ -4,7 +4,7 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {AppDatePicker, AppMultiSelect} from '../../components';
-import {DefaultDateFormat} from '../../constants';
+import {DefaultDateFormat, responsiveHeight} from '../../constants';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {CategoryProps, WalletProps} from '../../database/models';
 import {useForm} from './useFilterForm';
@@ -29,7 +29,9 @@ const _TransactionFilters: React.FC<{
   }
 
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      style={{marginBottom: responsiveHeight(20)}}>
       <View
         style={{
           flexDirection: 'row',

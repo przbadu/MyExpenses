@@ -10,6 +10,7 @@ import withObservables from '@nozbe/with-observables';
 
 import {WalletProps} from '../../database/models';
 import {observeWallets} from '../../database/helpers';
+import {responsiveHeight} from '../../constants';
 
 interface WalletListProps {
   onSelect: (item: WalletProps) => void;
@@ -34,7 +35,11 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
       data={wallets}
       renderItem={renderItem}
       keyExtractor={(item: WalletProps) => String(item.id)}
-      style={{paddingLeft: 20, paddingRight: 20}}
+      style={{
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginBottom: responsiveHeight(20),
+      }}
       disableScrollViewPanResponder
     />
   );

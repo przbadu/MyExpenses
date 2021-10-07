@@ -5,6 +5,7 @@ import withObservables from '@nozbe/with-observables';
 
 import {CategoryProps} from '../../database/models';
 import {observeCategories} from '../../database/helpers';
+import {responsiveHeight} from '../../constants';
 
 interface CategoryListProps {
   onSelect: (item: CategoryProps) => void;
@@ -32,7 +33,11 @@ const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
       data={categories}
       renderItem={renderItem}
       keyExtractor={(item: CategoryProps) => String(item.id)}
-      style={{paddingLeft: 20, paddingRight: 20}}
+      style={{
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginBottom: responsiveHeight(20),
+      }}
       disableScrollViewPanResponder
     />
   );

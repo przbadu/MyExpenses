@@ -16,7 +16,11 @@ import CategoryList from './CategoryList';
 import WalletList from './WalletList';
 import {useForm} from './useForm';
 import {styles} from './styles';
-import {DefaultDateFormat, DefaultTimeFormat} from '../../constants';
+import {
+  DefaultDateFormat,
+  DefaultTimeFormat,
+  responsiveHeight,
+} from '../../constants';
 import {
   CategoryProps,
   Transaction,
@@ -208,6 +212,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               onOpen={() => setShowCategoryModal(true)}
               onClose={() => setShowCategoryModal(false)}
               renderContent={() => <CategoryList onSelect={selectCategory} />}
+              transparentAreaHeight={responsiveHeight(20)}
             />
 
             <AppSelect
@@ -219,6 +224,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               onClose={() => setShowWalletModal(false)}
               left={<TextInput.Icon name="bank" />}
               renderContent={() => <WalletList onSelect={selectWallet} />}
+              transparentAreaHeight={responsiveHeight(20)}
             />
 
             <Button

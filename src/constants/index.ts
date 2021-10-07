@@ -6,3 +6,4 @@ export * from './calendarTheme';
 export * from './chartTheme';
 export * from './currencies';
 export * from './date_helper';
+export * from './responsiveLayout';

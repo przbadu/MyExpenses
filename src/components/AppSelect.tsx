@@ -1,10 +1,10 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {AppModal, AppTextInput} from './index';
 
 const AppSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
-  const {renderContent, open, onOpen, onClose} = props;
+  const {renderContent, open, onOpen, onClose, transparentAreaHeight} = props;
 
   return (
     <>
@@ -24,6 +24,7 @@ const AppSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
           onClose={onClose}
           heading={props.placeholder!}
           renderContent={renderContent}
+          transparentAreaHeight={transparentAreaHeight}
         />
       )}
     </>
