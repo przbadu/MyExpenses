@@ -13,7 +13,7 @@ const AppSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
           underlineColor="transparent"
           showSoftInputOnFocus={false}
           editable={false}
-          right={<TextInput.Icon name="menu-down" />}
+          right={<TextInput.Icon name="menu-down" onPress={onOpen} />}
           {...props}
         />
       </TouchableOpacity>
