@@ -9,7 +9,7 @@ import {
   GestureResponderEvent,
   TouchableOpacity,
 } from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import {Portal, Modal as PaperModal, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const winHeight = Dimensions.get('window').height;
@@ -44,7 +44,7 @@ const AppModal: React.FC<AppModalProps> = ({
   visible = false,
   heading,
   renderContent,
-  transparentAreaHeight = 680,
+  transparentAreaHeight = 20,
 }) => {
   const {colors} = useTheme();
   const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
@@ -68,7 +68,7 @@ const AppModal: React.FC<AppModalProps> = ({
 
   const modalY = modalAnimatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: [winHeight, winHeight - transparentAreaHeight],
+    outputRange: [winHeight, transparentAreaHeight],
   });
 
   return (
