@@ -200,6 +200,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
             {renderTransactionDateTime()}
             <AppSelect
               label="Category"
+              placeholder="Select Category"
               value={categoryText!}
               error={errors.categoryId}
               left={<TextInput.Icon name="format-list-bulleted" />}
@@ -211,6 +212,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
 
             <AppSelect
               label="Wallet"
+              placeholder="Select Wallet"
               value={walletText!}
               error={errors.walletId}
               open={showWalletModal}
