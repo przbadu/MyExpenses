@@ -1,8 +1,10 @@
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
+import CSV from 'csvtojson';
 import dayjs from 'dayjs';
 import React from 'react';
 import {ScrollView, SectionList, View} from 'react-native';
+import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import {
   Appbar,
@@ -133,6 +135,42 @@ const _Transactions: React.FC<{
     setUngroupedTransactions(trans);
   }
 
+  const importCSV = async () => {
+    try {
+      const file = await selectFileToUpload();
+      if (file) {
+        const fileContent = await RNFS.readFile(file);
+        const json = await CSV().fromString(fileContent);
+        console.log('JSON response : ', json);
+      } else {
+        setAlertContent(`No file selected`);
+        setShowAlert(true);
+      }
+    } catch (error) {
+      setAlertContent(`ImportCSV Error : ${error}`);
+      setShowAlert(true);
+    }
+  };
+
+  const selectFileToUpload = async () => {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+
+      return res.uri;
+      // return await RNFS.readFile(file);
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+        setAlertContent(`ImportCSV Canceld by user : ${error}`);
+        setShowAlert(true);
+      } else {
+        setAlertContent(`ImportCSV Unknown error : ${error}`);
+        setShowAlert(true);
+      }
+    }
+  };
+
   const exportCSV = async () => {
     const csvContent = prepareCSV();
     const fileName = `myexpenses-${dayjs().format(
@@ -143,14 +181,11 @@ const _Transactions: React.FC<{
 
     try {
       await RNFS.writeFile(path, csvContent);
-      console.log('exportCSV writeFile succeeded and downloading');
       await RNFS.moveFile(path, downloadPath);
-      console.log('exportCSV writeFile downloaded, ', downloadPath);
-      setAlertContent(`Downloaded to ${downloadPath}`);
     } catch (error) {
       setAlertContent(`Error writing CSV data: ${error}`);
+      setShowAlert(true);
     }
-    setShowAlert(true);
   };
 
   function prepareCSV() {
@@ -190,7 +225,12 @@ const _Transactions: React.FC<{
           <Menu.Item
             onPress={exportCSV}
             icon="file-delimited-outline"
-            title="Download CSV"
+            title="Export CSV"
+          />
+          <Menu.Item
+            onPress={importCSV}
+            icon="file-delimited-outline"
+            title="Import CSV"
           />
         </Menu>
       </Appbar.Header>
