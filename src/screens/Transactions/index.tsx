@@ -20,6 +20,7 @@ import {
 } from 'react-native-paper';
 import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
 import {
+  bulkImportTransaction,
   filterTransactionByProps,
   filterTransactions,
   observeTransactions,
@@ -141,7 +142,7 @@ const _Transactions: React.FC<{
       if (file) {
         const fileContent = await RNFS.readFile(file);
         const json = await CSV().fromString(fileContent);
-        console.log('JSON response : ', json);
+        await bulkImportTransaction(json);
       } else {
         setAlertContent(`No file selected`);
         setShowAlert(true);
