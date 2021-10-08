@@ -2,7 +2,7 @@ import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {Alert, ScrollView, SectionList, View} from 'react-native';
+import {ScrollView, SectionList, View} from 'react-native';
 import RNFS from 'react-native-fs';
 import {
   Appbar,
@@ -17,7 +17,6 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
-import {DefaultDateFormat, numberToCurrency} from '../../lib';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -25,6 +24,7 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
+import {DefaultDateFormat, numberToCurrency} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 import TransactionFilters from './TransactionFilters';
 
@@ -135,15 +135,20 @@ const _Transactions: React.FC<{
 
   const exportCSV = async () => {
     const csvContent = prepareCSV();
-    const path = `${RNFS.DocumentDirectoryPath}/myexpenses-${dayjs().format(
+    const fileName = `myexpenses-${dayjs().format(
       'YYYY-MM-DD-hh-mm-ss-a',
     )}.csv`;
+    const path = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+    const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
 
     try {
       await RNFS.writeFile(path, csvContent);
-      setAlertContent(`Successfully exported CSV file!: ${path}`);
-    } catch (e) {
-      setAlertContent('Error writing CSV data: ', e);
+      console.log('exportCSV writeFile succeeded and downloading');
+      await RNFS.moveFile(path, downloadPath);
+      console.log('exportCSV writeFile downloaded, ', downloadPath);
+      setAlertContent(`Downloaded to ${downloadPath}`);
+    } catch (error) {
+      setAlertContent(`Error writing CSV data: ${error}`);
     }
     setShowAlert(true);
   };

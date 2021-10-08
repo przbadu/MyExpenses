@@ -1,10 +1,10 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Avatar, Text} from 'react-native-paper';
-import {responsiveHeight} from '../../lib';
 import {observeCategories} from '../../database/helpers';
 import {CategoryProps} from '../../database/models';
+import {responsiveHeight} from '../../lib';
 
 interface CategoryListProps {
   onSelect: (item: CategoryProps) => void;
@@ -12,7 +12,7 @@ interface CategoryListProps {
 }
 const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
   const renderItem = ({item}: {item: CategoryProps}) => (
-    <TouchableOpacity onPress={() => onSelect(item)}>
+    <TouchableWithoutFeedback onPress={() => onSelect(item)}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Avatar.Text
           label=""
@@ -21,7 +21,7 @@ const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
         />
         <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 
   return (

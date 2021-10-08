@@ -1,10 +1,10 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Avatar, Text} from 'react-native-paper';
-import {responsiveHeight} from '../../lib';
 import {observeWallets} from '../../database/helpers';
 import {WalletProps} from '../../database/models';
+import {responsiveHeight} from '../../lib';
 
 interface WalletListProps {
   onSelect: (item: WalletProps) => void;
@@ -12,7 +12,7 @@ interface WalletListProps {
 }
 const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
   const renderItem = ({item}: {item: WalletProps}) => (
-    <TouchableOpacity onPress={() => onSelect(item)}>
+    <TouchableWithoutFeedback onPress={() => onSelect(item)}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Avatar.Text
           label=""
@@ -21,7 +21,7 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
         />
         <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 
   return (
