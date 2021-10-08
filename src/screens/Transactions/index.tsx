@@ -172,7 +172,17 @@ const _Transactions: React.FC<{
   };
 
   const exportCSV = async () => {
-    const csvContent = prepareCSV();
+    let csvContent = `Id,Date,Time,Amount,Type,Category,Wallet,Notes\n`;
+
+    for await (const trans of transactions) {
+      const date = dayjs(trans.transactionAt).format(DefaultDateFormat);
+      const amount = numberToCurrency(trans.amount, currency);
+      const category = (await trans.wallet).name;
+      const wallet = (await trans.category).name;
+
+      csvContent += `${trans.id},${date},${trans.time},${amount},${trans.transactionType},${category},${wallet},${trans.notes}\n`;
+    }
+
     const fileName = `myexpenses-${dayjs().format(
       'YYYY-MM-DD-hh-mm-ss-a',
     )}.csv`;
@@ -187,19 +197,6 @@ const _Transactions: React.FC<{
       setShowAlert(true);
     }
   };
-
-  function prepareCSV() {
-    let csv = `Sn,Id,Date,Time,Amount,Type,Category,Wallet,Notes\n`;
-    transactions.map(async (trans, index) => {
-      const date = dayjs(trans.transactionAt).format(DefaultDateFormat);
-      const amount = numberToCurrency(trans.amount, currency);
-      const category = trans.category;
-      const wallet = trans.wallet;
-      csv += `${index},${trans.id},${date},${trans.time},${amount},${trans.transactionType},${category.name},${wallet.name},${trans.notes}\n`;
-    });
-
-    return csv;
-  }
 
   function renderHeader() {
     return (
