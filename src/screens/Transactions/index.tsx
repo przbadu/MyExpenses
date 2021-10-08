@@ -17,7 +17,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
-import {DefaultDateFormat, numberToCurrency} from '../../constants';
+import {DefaultDateFormat, numberToCurrency} from '../../lib';
 import {
   filterTransactionByProps,
   filterTransactions,

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {DefaultTimeFormat} from '../../constants';
+import {DefaultTimeFormat} from '../../lib';
 import {saveTransaction, updateTransaction} from '../../database/helpers';
 import {TransactionTypeEnum} from '../../database/models';
 

@@ -14,7 +14,7 @@ import {
   numberToCurrency,
   numToMonthName,
   numToWeekName,
-} from '../../constants';
+} from '../../lib';
 import {
   categoryWithTransactionInfo,
   lineChartData,

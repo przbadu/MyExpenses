@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-paper';
-import {currencies, responsiveHeight} from '../../constants';
+import {currencies, responsiveHeight} from '../../lib';
 
 const CurrencyList: React.FC<{currency: string; onSelect: Function}> = ({
   onSelect,

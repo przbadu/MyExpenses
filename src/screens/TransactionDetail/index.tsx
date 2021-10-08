@@ -10,7 +10,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {Subheader} from 'react-native-paper/lib/typescript/components/List/List';
-import {numberToCurrency} from '../../constants';
+import {numberToCurrency} from '../../lib';
 import {deleteTransaction, transactions} from '../../database/helpers';
 import {
   CategoryProps,

@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
-import {numberToCurrency} from '../constants';
+import {numberToCurrency} from '../lib';
 import {CurrencyContext} from '../store/context';
 import {CategoryProps} from '../database/models';
 

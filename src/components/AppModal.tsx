@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {responsiveHeight} from '../constants';
+import {responsiveHeight} from '../lib';
 
 const winHeight = Dimensions.get('window').height;
 

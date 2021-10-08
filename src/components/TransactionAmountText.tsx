@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Text, TextStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {numberToCurrency} from '../constants';
+import {numberToCurrency} from '../lib';
 import {TransactionTypeEnum} from '../database/models';
 import {CurrencyContext} from '../store/context';
 

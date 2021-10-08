@@ -5,7 +5,7 @@ import {FlatList, View} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import {IconButton, Subheading, useTheme} from 'react-native-paper';
 import {TransactionRow} from '../../components';
-import {calendarTheme} from '../../constants';
+import {calendarTheme} from '../../lib';
 import {
   filterByDailyTransactions,
   observeTransactions,

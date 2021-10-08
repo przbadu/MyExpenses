@@ -1,6 +1,6 @@
 import React from 'react';
 import {Appearance} from 'react-native';
-import {darkTheme, lightTheme} from '../../constants';
+import {darkTheme, lightTheme} from '../../lib';
 import {LocalStorage} from '../../database/helpers';
 
 export const APP_THEME = 'APP_THEME';

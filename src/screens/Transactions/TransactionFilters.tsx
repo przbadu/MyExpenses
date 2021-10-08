@@ -4,7 +4,7 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {AppDatePicker, AppMultiSelect} from '../../components';
-import {DefaultDateFormat, responsiveHeight} from '../../constants';
+import {DefaultDateFormat, responsiveHeight} from '../../lib';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {CategoryProps, WalletProps} from '../../database/models';
 import {useForm} from './useFilterForm';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 import {Divider, Text, useTheme, Subheading, Surface} from 'react-native-paper';
-import {numberToCurrency} from '../constants';
+import {numberToCurrency} from '../lib';
 import {CurrencyContext} from '../store/context';
 
 const SummaryCard = ({

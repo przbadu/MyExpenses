@@ -2,7 +2,7 @@ import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, TouchableOpacity, View} from 'react-native';
 import {Avatar, Text} from 'react-native-paper';
-import {responsiveHeight} from '../../constants';
+import {responsiveHeight} from '../../lib';
 import {observeCategories} from '../../database/helpers';
 import {CategoryProps} from '../../database/models';
 

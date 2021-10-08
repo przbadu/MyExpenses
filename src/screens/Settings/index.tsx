@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {Appbar, Card, Switch} from 'react-native-paper';
 
 import {AppModal, AppSwitch, MenuItem} from '../../components';
-import {responsiveHeight} from '../../constants';
+import {responsiveHeight} from '../../lib';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {Category, WalletProps} from '../../database/models';
 import {
