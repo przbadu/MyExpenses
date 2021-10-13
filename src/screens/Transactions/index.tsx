@@ -151,6 +151,7 @@ const _Transactions: React.FC<{
       setAlertContent(`ImportCSV Error : ${error}`);
       setShowAlert(true);
     }
+    setShowMoreMenu(false);
   };
 
   const selectFileToUpload = async () => {
@@ -197,6 +198,7 @@ const _Transactions: React.FC<{
       setAlertContent(`Error writing CSV data: ${error}`);
       setShowAlert(true);
     }
+    setShowMoreMenu(false);
   };
 
   function renderHeader() {

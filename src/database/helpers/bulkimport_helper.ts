@@ -1,6 +1,9 @@
 import {Q} from '@nozbe/watermelondb';
+import dayjs from 'dayjs';
+import randomColor from 'randomcolor';
+import {DefaultTimeFormat} from '../../lib';
 import {database} from '../index';
-import {Category, Transaction, TransactionProps, Wallet} from '../models';
+import {Category, Transaction, Wallet} from '../models';
 
 // This method will find category or wallet for given names
 const getRecordBy = async (
@@ -8,6 +11,8 @@ const getRecordBy = async (
   values: string[],
   tableName: string,
 ) => {
+  if (!values.length) return [];
+
   let valueQuery: any = [];
   let useQuery = [];
   values.map(value => valueQuery.push(Q.where(columnName, value)));
@@ -20,8 +25,9 @@ const getRecordBy = async (
 
 // this method will prepare new category or wallet for bulk creation/insertion
 const prepareCategoryOrWallet = async (tableName: string, name: string) => {
-  return database.collections.get(tableName).prepareCreate(item => {
+  return await database.collections.get(tableName).prepareCreate(item => {
     item.name = name;
+    item.color = randomColor();
   });
 };
 
@@ -31,13 +37,13 @@ const prepareNewTransaction = async (
   wallet: Wallet,
   category: Category,
 ) => {
-  return database.collections
+  return await database.collections
     .get(Transaction.table)
     .prepareCreate(transaction => {
-      transaction.amount = row['Amount'];
+      transaction.amount = parseFloat(row['Amount']);
       transaction.notes = row['Notes'];
-      transaction.time = row['Time'];
-      transaction.transactionAt = row['Date'];
+      transaction.time = row['Time'] || dayjs().format(DefaultTimeFormat);
+      transaction.transactionAt = row['Date'] || new Date();
       transaction.transactionType = row['Type'];
       transaction.wallet.set(wallet);
       transaction.category.set(category);
@@ -51,12 +57,11 @@ const prepareUpdateTransaction = async (
   wallet: Wallet,
   category: Category,
 ) => {
-  return transaction.prepareUpdate(trans => {
-    trans.id = row['Id'];
-    trans.amount = row['Amount'];
+  return await transaction.prepareUpdate(trans => {
+    trans.amount = parseFloat(row['Amount']);
     trans.notes = row['Notes'];
-    trans.time = row['Time'];
-    trans.transactionAt = row['Date'];
+    trans.time = row['Time'] || dayjs().format(DefaultTimeFormat);
+    trans.transactionAt = row['Date'] || new Date();
     trans.transactionType = row['Type'];
     trans.wallet.set(wallet);
     trans.category.set(category);
@@ -80,13 +85,17 @@ export const bulkImportTransaction = async (data: any[]) => {
     name => !existingCategoryNames.includes(name),
   );
 
-  // create new categories in bulk
-  const categoryWallets = [
-    ...newWalletNames.map(name => prepareCategoryOrWallet(Wallet.table, name)),
-    ...newCategoryNames.map(name =>
-      prepareCategoryOrWallet(Category.table, name),
-    ),
-  ];
+  let categoryWallets: any = [];
+  // Map will not block async calls, use for loop
+  for (const name of newWalletNames) {
+    const _data = await prepareCategoryOrWallet(Wallet.table, name);
+    categoryWallets.push(_data);
+  }
+  for (const name of newCategoryNames) {
+    const _data = await prepareCategoryOrWallet(Category.table, name);
+    categoryWallets.push(_data);
+  }
+
   await database.write(async () => {
     await database.batch(...categoryWallets);
   });
@@ -102,9 +111,6 @@ export const bulkImportTransaction = async (data: any[]) => {
   categories = [...categories, ..._newCategories];
   wallets = [...wallets, ..._newWallets];
 
-  console.log('Wallets', wallets);
-  console.log('Category', categories);
-
   // Find Transactions with id, used for update
   const transactionsToCreate = data.filter(row => !row['Id']);
   // Find transactions without id, used for creation
@@ -118,34 +124,34 @@ export const bulkImportTransaction = async (data: any[]) => {
     Transaction.table,
   );
 
-  // TODO: fix category id and wallet id for each transactions
-  const batchTransactions = [
-    ...transactionsToCreate.map(row => {
-      const wallet = wallets.find(wallet => wallet.name === row['Wallet']);
-      const category = categories.find(
-        category => category.name === row['Category'],
-      );
+  let batchTransactions = [];
+  for (const row of transactionsToCreate) {
+    const wallet = wallets.find(wallet => wallet.name === row['Wallet']);
+    const category = categories.find(
+      category => category.name === row['Category'],
+    );
 
-      return prepareNewTransaction(row, wallet as Wallet, category as Category);
-    }),
+    batchTransactions.push(
+      await prepareNewTransaction(row, wallet as Wallet, category as Category),
+    );
+  }
 
-    ...existingTransactions.map(transaction => {
-      const row = transactionsToUpdate.find(
-        _row => _row['Id'] == transaction.id,
-      );
-      const wallet = wallets.find(wallet => wallet.name === row['Wallet']);
-      const category = categories.find(
-        category => category.name === row['Category'],
-      );
+  for (const transaction of existingTransactions) {
+    const row = transactionsToUpdate.find(_row => _row['Id'] == transaction.id);
+    const wallet = wallets.find(wallet => wallet.name === row['Wallet']);
+    const category = categories.find(
+      category => category.name === row['Category'],
+    );
 
-      return prepareUpdateTransaction(
+    batchTransactions.push(
+      await prepareUpdateTransaction(
         row,
         transaction as Transaction,
         wallet as Wallet,
         category as Category,
-      );
-    }),
-  ];
+      ),
+    );
+  }
 
   database.write(async () => {
     await database.batch(...batchTransactions);
