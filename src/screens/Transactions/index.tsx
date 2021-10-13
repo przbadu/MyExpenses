@@ -224,12 +224,12 @@ const _Transactions: React.FC<{
           style={{marginTop: 30}}>
           <Menu.Item
             onPress={exportCSV}
-            icon="file-delimited-outline"
+            icon="database-export"
             title="Export CSV"
           />
           <Menu.Item
             onPress={importCSV}
-            icon="file-delimited-outline"
+            icon="database-import"
             title="Import CSV"
           />
         </Menu>

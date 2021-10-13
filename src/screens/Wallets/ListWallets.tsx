@@ -6,6 +6,7 @@ import {AddWallet} from '.';
 import {ItemRow} from '../../components';
 import {deleteWallet, observeWallets} from '../../database/helpers';
 import {Wallet} from '../../database/models';
+import {responsiveHeight} from '../../lib';
 
 let ListWallets = ({
   navigation,
@@ -39,7 +40,7 @@ let ListWallets = ({
           flex: 1,
           marginTop: 20,
           marginHorizontal: 10,
-          marginBottom: 60,
+          marginBottom: responsiveHeight(11),
         }}>
         <FlatList
           data={wallets}

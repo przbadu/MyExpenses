@@ -6,6 +6,7 @@ import {AddCategory} from '.';
 import {ItemRow} from '../../components';
 import {deleteCategory, observeCategories} from '../../database/helpers';
 import {Category} from '../../database/models';
+import {responsiveHeight} from '../../lib';
 
 let ListCategories = ({
   navigation,
@@ -39,7 +40,7 @@ let ListCategories = ({
           flex: 1,
           marginTop: 20,
           marginHorizontal: 10,
-          marginBottom: 60,
+          marginBottom: responsiveHeight(11),
         }}>
         <FlatList
           data={categories}

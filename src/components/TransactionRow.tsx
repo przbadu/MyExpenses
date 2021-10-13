@@ -24,7 +24,7 @@ const _TransactionRow = ({
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <Surface style={{marginBottom: 5, ...styles.container}}>
+      <Surface style={{...styles.container}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={{
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginRight: 20,
-    flexShrink: 1,
+    maxWidth: 200,
   },
   amountContainer: {
     paddingRight: 10,
