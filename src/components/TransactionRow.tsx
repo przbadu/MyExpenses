@@ -33,8 +33,12 @@ const _TransactionRow = ({
               padding: 5,
               borderRadius: 4,
             }}>
-            <Text>{dayjs(transaction.transactionAt).format('MMM')}</Text>
-            <Text>{dayjs(transaction.transactionAt).format('DD')}</Text>
+            <Text style={{color: colors.white}}>
+              {dayjs(transaction.transactionAt).format('MMM')}
+            </Text>
+            <Text style={{color: colors.white}}>
+              {dayjs(transaction.transactionAt).format('DD')}
+            </Text>
           </View>
           <View style={styles.textContainer}>
             {category && (
