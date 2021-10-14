@@ -1,6 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Button, Card, Modal, Portal, TextInput} from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Modal,
+  Portal,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
 import {AppTextInput} from '../../components';
 import {saveWallet, updateWallet} from '../../database/helpers';
 import {Wallet} from '../../database/models';
@@ -11,12 +18,17 @@ const AddWallet = ({
   wallet,
   hideModal,
   cancelEdit,
+  handleDelete,
+  onSubmitted,
 }: {
   visible: boolean;
   wallet: Wallet | undefined;
   hideModal: () => void;
   cancelEdit: () => void;
+  handleDelete: (wallet: Wallet | undefined) => void;
+  onSubmitted: () => void;
 }) => {
+  const {colors} = useTheme();
   const [name, setName] = React.useState<string>('');
   const [color, setColor] = React.useState<string>(generateColor());
   const [errors, setErrors] = React.useState<{name: string | undefined}>({
@@ -36,6 +48,7 @@ const AddWallet = ({
     } else {
       if (wallet) await updateWallet(wallet, {name, color});
       else await saveWallet({name, color});
+      onSubmitted();
       beforeHideModal();
     }
   };
@@ -84,6 +97,15 @@ const AddWallet = ({
               style={{marginRight: 10, marginLeft: 10}}>
               Save
             </Button>
+            {wallet && (
+              <Button
+                onPress={() => handleDelete(wallet)}
+                mode="outlined"
+                color={colors.notification}
+                style={{marginRight: 10, marginLeft: 10}}>
+                Delete
+              </Button>
+            )}
             <Button onPress={beforeHideModal} mode="outlined">
               Cancel
             </Button>

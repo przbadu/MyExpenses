@@ -1,3 +1,4 @@
+import {Q} from '@nozbe/watermelondb';
 import {generateColor} from '../../lib';
 import {database} from '../index';
 import {Wallet, WalletProps} from '../models';
@@ -5,6 +6,23 @@ import {Wallet, WalletProps} from '../models';
 export const wallets = database.collections.get(Wallet.table);
 
 export const observeWallets = () => wallets.query().observe();
+
+export const walletsWithAmount = () => {
+  const query = `
+    select
+      wallets.id,
+      name,
+      color,
+      (select sum(amount) from transactions where transaction_type = 'Income' and wallet_id = wallets.id) totalIncome,
+      (select sum(amount) from transactions where transaction_type = 'Expense' and wallet_id = wallets.id) totalExpense,
+      count(*) as count
+    from wallets
+    LEFT JOIN transactions on transactions.wallet_id = wallets.id
+    group by wallets.id
+    order by name DESC
+  `;
+  return wallets.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
+};
 
 // Create new wallet
 export const saveWallet = async ({
@@ -33,9 +51,10 @@ export const updateWallet = async (
   });
 };
 
-export const deleteWallet = async (category: Wallet) => {
+export const deleteWallet = async (wallet: Wallet) => {
   await database.write(async () => {
-    await category.destroyPermanently();
+    const _wallet = await wallets.find(wallet.id);
+    if (_wallet) await _wallet.destroyPermanently();
   });
 };
 

@@ -32,7 +32,6 @@ export const categoryWithTransactionInfo = () => {
       count(*) as count
     from transactions
     INNER JOIN categories on categories.id = transactions.category_id
-    WHERE transaction_type = 'Expense'
     group by category_id
     order by totalExpense DESC, totalIncome DESC, count DESC;
   `;
@@ -75,5 +74,4 @@ export const setupDefaultCategories = async () => {
   await saveCategory({name: 'Travel', color: generateColor()});
   await saveCategory({name: 'Shopping', color: generateColor()});
   await saveCategory({name: 'Others', color: generateColor()});
-  await saveCategory({name: 'Uncategorized', color: generateColor()});
 };

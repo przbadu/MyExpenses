@@ -1,33 +1,45 @@
-import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {AddWallet} from '.';
 import {ItemRow} from '../../components';
-import {deleteWallet, observeWallets} from '../../database/helpers';
+import {deleteWallet, walletsWithAmount} from '../../database/helpers';
 import {Wallet} from '../../database/models';
 import {responsiveHeight} from '../../lib';
 
-let ListWallets = ({
-  navigation,
-  wallets,
-}: {
-  navigation: any;
-  wallets: Wallet[];
-}) => {
+let ListWallets = ({navigation}: {navigation: any}) => {
   const {colors} = useTheme();
+  const [wallets, setWallets] = React.useState<Wallet[]>([]);
   const [showModal, setShowModal] = React.useState(false);
   const [editing, setEditing] = React.useState<Wallet | undefined>();
+  const [submitted, setSubmitted] = React.useState(false);
 
-  const handleDelete = async (wallet: Wallet) => {
-    await deleteWallet(wallet);
+  const handleDelete = async (wallet: Wallet | undefined) => {
+    if (wallet) {
+      await deleteWallet(wallet);
+      setSubmitted(true);
+    }
   };
+
+  React.useEffect(() => {
+    fetchWallets();
+  }, []);
+
+  React.useEffect(() => {
+    if (submitted) fetchWallets();
+  }, [submitted]);
+
+  async function fetchWallets() {
+    const _wallets = await walletsWithAmount();
+    setWallets(_wallets);
+    setSubmitted(false);
+  }
 
   return (
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={'Manage Categories'.toUpperCase()} />
+        <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
         <Appbar.Action
           onPress={() => setShowModal(true)}
           icon="plus"
@@ -48,11 +60,12 @@ let ListWallets = ({
           renderItem={({item}: {item: Wallet}) => (
             <ItemRow
               item={item}
-              onDelete={handleDelete}
+              onDelete={() => handleDelete(item)}
               onEdit={() => {
                 setEditing(item);
                 setShowModal(true);
               }}
+              isWallet
             />
           )}
         />
@@ -61,14 +74,12 @@ let ListWallets = ({
           visible={showModal}
           wallet={editing}
           cancelEdit={() => setEditing(undefined)}
+          onSubmitted={() => setSubmitted(true)}
+          handleDelete={handleDelete}
         />
       </View>
     </>
   );
 };
-
-ListWallets = withObservables([], () => ({
-  wallets: observeWallets(),
-}))(ListWallets);
 
 export {ListWallets};

@@ -2,19 +2,25 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
 import {Category, Wallet} from '../database/models';
+import {numberToCurrency, responsiveWidth} from '../lib';
+import {CurrencyContext} from '../store/context';
 import ConfirmDialog from './ConfirmDialog';
 
 const ItemRow = ({
   item,
   onEdit,
   onDelete,
+  isWallet = false,
 }: {
   item: Category | Wallet;
   onEdit: (item: Category | Wallet) => void;
   onDelete: (item: Category | Wallet) => void;
+  isWallet: boolean;
 }) => {
   const {colors} = useTheme();
+  const {currency} = React.useContext(CurrencyContext);
   const [confirm, setConfirm] = React.useState(false);
+  const balance = item.totalIncome - item.totalExpense;
 
   return (
     <TouchableOpacity onPress={() => onEdit(item)}>
@@ -23,24 +29,37 @@ const ItemRow = ({
         title="Confirm Delete"
         label="You are deleting selected item which cannot be recovered after deletion. Are you sure to continue?"
         onCancel={() => setConfirm(false)}
-        onConfirm={() => onDelete(item)}
+        onConfirm={() => {
+          onDelete(item);
+        }}
       />
 
       <Surface style={styles.container}>
-        <View style={{flexDirection: 'row'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
           <View
             style={{
               ...styles.line,
               backgroundColor: item.color,
             }}
           />
-          <Text
-            numberOfLines={2}
-            style={{
-              letterSpacing: 1,
-            }}>
-            {item.name}
-          </Text>
+          <View>
+            <Text numberOfLines={2} style={{letterSpacing: 1}}>
+              {item.name}
+            </Text>
+            {isWallet && (
+              <Text
+                style={{
+                  color: balance <= 0 ? colors.notification : colors.success,
+                  marginRight: 10,
+                }}>
+                {numberToCurrency(balance, currency)}
+              </Text>
+            )}
+          </View>
         </View>
 
         <View style={{flexDirection: 'row'}}>
