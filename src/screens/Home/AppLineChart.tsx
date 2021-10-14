@@ -14,6 +14,8 @@ import {
   numberToCurrency,
   numToMonthName,
   numToWeekName,
+  responsiveHeight,
+  responsiveWidth,
 } from '../../lib';
 import {
   categoryWithTransactionInfo,
@@ -37,10 +39,10 @@ const _AppLineChart = ({
   const [categories, setCategories] = React.useState<[]>([]);
   const [incomeChartData, setIncomeChartData] = React.useState<
     {amount: number; date: string}[]
-  >([{date: dayjs().format('MM'), amount: 0}]);
+  >([]);
   const [expenseChartData, setExpenseChartData] = React.useState<
     {amount: number; date: string}[]
-  >([{date: dayjs().format('MM'), amount: 0}]);
+  >([]);
   const {colors, dark} = useTheme();
   const [tooltipPos, setTooltipPos] = React.useState({
     x: 0,
@@ -126,29 +128,53 @@ const _AppLineChart = ({
       (d: {amount: number}): number => amountSeperator(+d.amount, maxNumber),
     );
 
-    const labels = incomeChartData.map((d: {date: string}) => {
-      if (filter === 'yearly') return numToMonthName(d.date);
-      else if (filter === 'monthly') return d.date;
-      else if (filter === 'weekly') return numToWeekName(d.date);
-      else return d.date;
-    });
+    let labels;
+    if (incomeChartData.length) {
+      labels = incomeChartData.map((d: {date: string}) => {
+        if (filter === 'yearly') return numToMonthName(d.date);
+        else if (filter === 'monthly') return d.date;
+        else if (filter === 'weekly') return numToWeekName(d.date);
+        else return d.date;
+      });
+    } else {
+      labels = expenseChartData.map((d: {date: string}) => {
+        if (filter === 'yearly') return numToMonthName(d.date);
+        else if (filter === 'monthly') return d.date;
+        else if (filter === 'weekly') return numToWeekName(d.date);
+        else return d.date;
+      });
+    }
+
+    let lineChartDataset = [];
+    let legends = [];
+    if (incomeData.length) {
+      legends.push('Income');
+      lineChartDataset.push({
+        data: incomeData,
+        color: () => colors.success,
+      });
+    }
+    if (expenseData.length) {
+      legends.push('Expense');
+      lineChartDataset.push({
+        data: expenseData,
+        color: () => colors.notification,
+      });
+    }
 
     return (
       <LineChart
         data={{
           labels: labels,
-          datasets: [
-            {data: incomeData, color: () => colors.success},
-            {data: expenseData, color: () => colors.notification},
-          ],
-          legend: ['Income', 'Expense'],
+          datasets: lineChartDataset,
+          legend: legends,
         }}
-        width={Dimensions.get('window').width - 20} // from react-native
-        height={200}
+        width={Dimensions.get('window').width - responsiveWidth(5)} // from react-native
+        height={responsiveHeight(30)}
         // yAxisLabel="$"
         yAxisSuffix={siSymbol}
         yAxisInterval={1} // optional, defaults to 1
-        chartConfig={chartConfig(colors, dark)}
+        chartConfig={chartConfig(colors)}
         decorator={() => (tooltipPos.visible ? renderTooltip(siSymbol) : null)}
         onDataPointClick={data => {
           let isSamePoint = tooltipPos.x === data.x && tooltipPos.y === data.y;
@@ -195,7 +221,7 @@ const _AppLineChart = ({
 
             {/* render categories */}
             <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
-              Expenses Categories
+              {`Categories`.toUpperCase()}
             </Subheading>
           </>
         }

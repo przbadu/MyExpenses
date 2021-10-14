@@ -1,7 +1,4 @@
-export const chartConfig = (
-  colors: ReactNativePaper.ThemeColors,
-  dark?: boolean,
-) => ({
+export const chartConfig = (colors: ReactNativePaper.ThemeColors) => ({
   backgroundColor: colors.surface,
   backgroundGradientFrom: colors.surface,
   backgroundGradientTo: colors.surface,
@@ -13,6 +10,6 @@ export const chartConfig = (
   propsForDots: {
     r: '4',
     strokeWidth: '1',
-    stroke: colors.success,
+    // stroke: colors.success,
   },
 });
