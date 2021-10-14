@@ -7,8 +7,9 @@ import {CurrencyContext} from '../store/context';
 import {CategoryProps} from '../database/models';
 
 interface _CategoryProps extends CategoryProps {
-  count?: number;
-  sum?: number;
+  count: number;
+  totalIncome: number;
+  totalExpense: number;
 }
 
 const CategoryRow = ({
@@ -20,6 +21,7 @@ const CategoryRow = ({
 }) => {
   const {currency} = React.useContext(CurrencyContext);
   const {colors, fonts} = useTheme();
+  const total = category.totalIncome - category.totalExpense;
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -48,7 +50,16 @@ const CategoryRow = ({
             </Text>
           </View>
 
-          <Text>{numberToCurrency(Number(category.sum), currency)}</Text>
+          <View>
+            <Text style={{color: colors.notification}}>
+              {numberToCurrency(Number(category.totalExpense), currency)}
+            </Text>
+            {category.totalIncome > 0 && (
+              <Text style={{color: colors.success}}>
+                {numberToCurrency(Number(category.totalIncome), currency)}
+              </Text>
+            )}
+          </View>
           <Icon
             name="chevron-right"
             size={16}

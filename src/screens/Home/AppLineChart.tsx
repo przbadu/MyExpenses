@@ -176,7 +176,7 @@ const _AppLineChart = ({
     );
   }
 
-  if (incomeChartData.length) {
+  if (incomeChartData.length || expenseChartData.length) {
     return (
       <FlatList
         nestedScrollEnabled
