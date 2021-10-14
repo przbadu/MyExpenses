@@ -10,7 +10,31 @@ const labels = {
   weekly: '%w',
 };
 
-export const lineChartData = (filter: lineChartFilterProps) => {
+export const lineChartData = (
+  filter: lineChartFilterProps,
+  transactionType: 'Income' | 'Expense' = 'Expense',
+) => {
+  let format = labels.yearly;
+  if (filter === 'monthly') format = labels.monthly;
+  else if (filter === 'weekly') format = labels.weekly;
+  else format = labels.yearly;
+
+  const query =
+    `SELECT ${formatDateColumn(format)} as date, sum(amount) as amount` +
+    ' FROM transactions' +
+    ` WHERE ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'` +
+    " AND _status IS NOT 'deleted' AND transaction_type = ?" +
+    ' GROUP BY date' +
+    ' ORDER BY date';
+
+  console.log('query', query);
+
+  return transactions
+    .query(Q.unsafeSqlQuery(query, [transactionType]))
+    .unsafeFetchRaw();
+};
+
+export const lineChartIncomeData = (filter: lineChartFilterProps) => {
   let format = labels.yearly;
   if (filter === 'monthly') format = labels.monthly;
   else if (filter === 'weekly') format = labels.weekly;

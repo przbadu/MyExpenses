@@ -3,7 +3,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
 import {Dimensions, FlatList, ScrollView, View} from 'react-native';
-import {LineChart} from 'react-native-chart-kit';
+import {BarChart, LineChart} from 'react-native-chart-kit';
 import {Caption, Subheading, Surface, useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
 import {CategoryRow, SummaryCard} from '../../components';
@@ -35,7 +35,10 @@ const _AppLineChart = ({
   const {currency} = React.useContext(CurrencyContext);
   const [balance, setBalance] = React.useState(0);
   const [categories, setCategories] = React.useState<[]>([]);
-  const [chartData, setChartData] = React.useState<
+  const [incomeChartData, setIncomeChartData] = React.useState<
+    {amount: number; date: string}[]
+  >([{date: dayjs().format('MM'), amount: 0}]);
+  const [expenseChartData, setExpenseChartData] = React.useState<
     {amount: number; date: string}[]
   >([{date: dayjs().format('MM'), amount: 0}]);
   const {colors, dark} = useTheme();
@@ -56,8 +59,10 @@ const _AppLineChart = ({
   );
 
   const fetchChartData = async () => {
-    const data = await lineChartData(filter);
-    setChartData(data);
+    const incomeData = await lineChartData(filter, 'Income');
+    const expenseData = await lineChartData(filter, 'Expense');
+    setIncomeChartData(incomeData);
+    setExpenseChartData(expenseData);
   };
 
   const fetchSummary = async () => {
@@ -111,14 +116,17 @@ const _AppLineChart = ({
   function renderLineChart() {
     const maxNumber = Math.max.apply(
       Math,
-      chartData.map(d => d.amount),
+      incomeChartData.map(d => d.amount),
     );
     const siSymbol = getSiSymbol(maxNumber);
-    const data: number[] = chartData.map((d: {amount: number}): number =>
-      amountSeperator(+d.amount, maxNumber),
+    const incomeData: number[] = incomeChartData.map(
+      (d: {amount: number}): number => amountSeperator(+d.amount, maxNumber),
+    );
+    const expenseData: number[] = expenseChartData.map(
+      (d: {amount: number}): number => amountSeperator(+d.amount, maxNumber),
     );
 
-    const labels = chartData.map((d: {date: string}) => {
+    const labels = incomeChartData.map((d: {date: string}) => {
       if (filter === 'yearly') return numToMonthName(d.date);
       else if (filter === 'monthly') return d.date;
       else if (filter === 'weekly') return numToWeekName(d.date);
@@ -129,7 +137,11 @@ const _AppLineChart = ({
       <LineChart
         data={{
           labels: labels,
-          datasets: [{data}],
+          datasets: [
+            {data: incomeData, color: () => colors.success},
+            {data: expenseData, color: () => colors.notification},
+          ],
+          legend: ['Income', 'Expense'],
         }}
         width={Dimensions.get('window').width - 20} // from react-native
         height={200}
@@ -164,7 +176,7 @@ const _AppLineChart = ({
     );
   }
 
-  if (chartData.length) {
+  if (incomeChartData.length) {
     return (
       <FlatList
         nestedScrollEnabled
