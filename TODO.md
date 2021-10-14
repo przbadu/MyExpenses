@@ -17,3 +17,5 @@
 - [ ] https://www.npmjs.com/package/@react-native-community/datetimepicker
 
 - [ ] Lock orientation to Portrait only from xcode
+
+- [ ] https://sentry.io/onboarding/self-ooi/get-started/

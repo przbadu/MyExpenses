@@ -14,13 +14,6 @@ let ListWallets = ({navigation}: {navigation: any}) => {
   const [editing, setEditing] = React.useState<Wallet | undefined>();
   const [submitted, setSubmitted] = React.useState(false);
 
-  const handleDelete = async (wallet: Wallet | undefined) => {
-    if (wallet) {
-      await deleteWallet(wallet);
-      setSubmitted(true);
-    }
-  };
-
   React.useEffect(() => {
     fetchWallets();
   }, []);
@@ -28,6 +21,15 @@ let ListWallets = ({navigation}: {navigation: any}) => {
   React.useEffect(() => {
     if (submitted) fetchWallets();
   }, [submitted]);
+
+  const handleDelete = async (wallet: Wallet | undefined) => {
+    if (wallet) {
+      await deleteWallet(wallet);
+      setSubmitted(true);
+      setEditing(undefined);
+      setShowModal(false);
+    }
+  };
 
   async function fetchWallets() {
     const _wallets = await walletsWithAmount();

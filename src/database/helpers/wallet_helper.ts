@@ -40,11 +40,13 @@ export const saveWallet = async ({
 };
 
 export const updateWallet = async (
-  category: Wallet,
+  wallet: Wallet,
   {name, color}: WalletProps,
 ) => {
   await database.write(async () => {
-    await category.update(entry => {
+    console.log('wallet', wallet);
+    const _wallet = await wallets.find(wallet.id);
+    await _wallet.update(entry => {
       entry.name = name;
       entry.color = color;
     });

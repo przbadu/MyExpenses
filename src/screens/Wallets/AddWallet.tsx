@@ -85,6 +85,7 @@ const AddWallet = ({
                   text.length < 1 ? setColor(generateColor()) : setColor(text)
                 }
                 style={{flex: 1, backgroundColor: color}}
+                selectionColor={colors.white}
                 right={<TextInput.Icon name="refresh" onPress={resetColor} />}
               />
             </View>
