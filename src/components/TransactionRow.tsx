@@ -29,11 +29,13 @@ const _TransactionRow = ({
           <View
             style={{
               marginRight: 10,
-              width: 2,
               backgroundColor: category.color,
-              height: 24,
-            }}
-          />
+              padding: 5,
+              borderRadius: 4,
+            }}>
+            <Text>{dayjs(transaction.transactionAt).format('MMM')}</Text>
+            <Text>{dayjs(transaction.transactionAt).format('DD')}</Text>
+          </View>
           <View style={styles.textContainer}>
             {category && (
               <Text
@@ -47,6 +49,10 @@ const _TransactionRow = ({
             <Text numberOfLines={2} style={{...fonts.light}}>
               {transaction.notes}
             </Text>
+            <Text
+              style={{...fonts.medium, fontSize: 11, color: colors.disabled}}>
+              {transaction.time}
+            </Text>
           </View>
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -56,10 +62,8 @@ const _TransactionRow = ({
               currency={currency}
               type={transaction.transactionType!}
             />
-            <Text
-              style={{...fonts.medium, fontSize: 12, color: colors.disabled}}>
-              {dayjs(transaction.transactionAt).format('MMM DD')},{' '}
-              {transaction.time}
+            <Text style={{...fonts.light, textAlign: 'right'}}>
+              {wallet.name}
             </Text>
           </View>
           <Icon name="chevron-right" size={16} color={colors.text} />

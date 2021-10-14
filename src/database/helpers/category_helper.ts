@@ -1,5 +1,5 @@
 import {Q} from '@nozbe/watermelondb';
-import randomColor from 'randomcolor';
+import {generateColor} from '../../lib';
 import {database} from '../index';
 import {Category, CategoryProps} from '../models';
 
@@ -49,11 +49,11 @@ export const deleteCategory = async (category: Category) => {
 };
 
 export const setupDefaultCategories = async () => {
-  await saveCategory({name: 'Electricity', color: randomColor()});
-  await saveCategory({name: 'Food', color: randomColor()});
-  await saveCategory({name: 'Medical', color: randomColor()});
-  await saveCategory({name: 'Travel', color: randomColor()});
-  await saveCategory({name: 'Shopping', color: randomColor()});
-  await saveCategory({name: 'Others', color: randomColor()});
-  await saveCategory({name: 'Uncategorized', color: randomColor()});
+  await saveCategory({name: 'Electricity', color: generateColor()});
+  await saveCategory({name: 'Food', color: generateColor()});
+  await saveCategory({name: 'Medical', color: generateColor()});
+  await saveCategory({name: 'Travel', color: generateColor()});
+  await saveCategory({name: 'Shopping', color: generateColor()});
+  await saveCategory({name: 'Others', color: generateColor()});
+  await saveCategory({name: 'Uncategorized', color: generateColor()});
 };

@@ -1,10 +1,10 @@
-import randomColor from 'randomcolor';
 import React from 'react';
 import {View} from 'react-native';
 import {Button, Card, Modal, Portal, TextInput} from 'react-native-paper';
 import {AppTextInput} from '../../components';
 import {saveCategory, updateCategory} from '../../database/helpers';
 import {Category} from '../../database/models';
+import {generateColor} from '../../lib';
 
 const AddCategory = ({
   visible,
@@ -18,7 +18,7 @@ const AddCategory = ({
   cancelEdit: () => void;
 }) => {
   const [name, setName] = React.useState<string>('');
-  const [color, setColor] = React.useState<string>(randomColor());
+  const [color, setColor] = React.useState<string>(generateColor());
   const [errors, setErrors] = React.useState<{name: string | undefined}>({
     name: undefined,
   });
@@ -49,7 +49,7 @@ const AddCategory = ({
   }
 
   function resetColor() {
-    setColor(randomColor());
+    setColor(generateColor());
   }
 
   return (
@@ -70,7 +70,7 @@ const AddCategory = ({
               <AppTextInput
                 value={color}
                 onChangeText={text =>
-                  text.length < 1 ? setColor(randomColor()) : setColor(text)
+                  text.length < 1 ? setColor(generateColor()) : setColor(text)
                 }
                 style={{flex: 1, backgroundColor: color}}
                 right={<TextInput.Icon name="refresh" onPress={resetColor} />}

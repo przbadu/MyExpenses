@@ -1,7 +1,6 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
-import randomColor from 'randomcolor';
-import {DefaultTimeFormat} from '../../lib';
+import {DefaultTimeFormat, generateColor} from '../../lib';
 import {database} from '../index';
 import {Category, Transaction, Wallet} from '../models';
 
@@ -27,7 +26,7 @@ const getRecordBy = async (
 const prepareCategoryOrWallet = async (tableName: string, name: string) => {
   return await database.collections.get(tableName).prepareCreate(item => {
     item.name = name;
-    item.color = randomColor();
+    item.color = generateColor();
   });
 };
 

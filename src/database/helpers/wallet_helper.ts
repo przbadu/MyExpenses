@@ -1,4 +1,4 @@
-import randomColor from 'randomcolor';
+import {generateColor} from '../../lib';
 import {database} from '../index';
 import {Wallet, WalletProps} from '../models';
 
@@ -41,10 +41,10 @@ export const deleteWallet = async (category: Wallet) => {
 
 // Generate default seed data for new setup
 export const setupDefaultWallet = async () => {
-  await saveWallet({name: 'Cash', isDefault: true, color: randomColor()});
-  await saveWallet({name: 'Net Banking', color: randomColor()});
-  await saveWallet({name: 'ATM', color: randomColor()});
-  await saveWallet({name: 'Credit Card', color: randomColor()});
-  await saveWallet({name: 'Debit Card', color: randomColor()});
-  await saveWallet({name: 'Cheque', color: randomColor()});
+  await saveWallet({name: 'Cash', isDefault: true, color: generateColor()});
+  await saveWallet({name: 'Net Banking', color: generateColor()});
+  await saveWallet({name: 'ATM', color: generateColor()});
+  await saveWallet({name: 'Credit Card', color: generateColor()});
+  await saveWallet({name: 'Debit Card', color: generateColor()});
+  await saveWallet({name: 'Cheque', color: generateColor()});
 };
