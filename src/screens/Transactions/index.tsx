@@ -51,6 +51,7 @@ const _Transactions: React.FC<{
   const {currency} = React.useContext(CurrencyContext);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alertContent, setAlertContent] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   const {navigate} = navigation;
   const {colors} = useTheme();
@@ -58,10 +59,20 @@ const _Transactions: React.FC<{
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchSummary();
-      transactionGroupedByMonth(transactions);
+      refreshData();
     }, [transactions]),
   );
+
+  React.useEffect(() => {
+    refreshData();
+  }, [selectedFilterChip]);
+
+  async function refreshData() {
+    setLoading(true);
+    await fetchSummary();
+    await transactionGroupedByMonth(transactions);
+    setLoading(false);
+  }
 
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
@@ -273,6 +284,8 @@ const _Transactions: React.FC<{
               {title}
             </Subheading>
           )}
+          refreshing={loading}
+          onRefresh={refreshData}
         />
       </View>
     );
