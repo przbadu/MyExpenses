@@ -102,7 +102,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
               This Month
             </AppChip>
             <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
-              This Quarter
+              Quarterly
             </AppChip>
             <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
               This Year
