@@ -35,6 +35,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      setFilter('m');
       fetchReports();
     }, []),
   );
@@ -46,7 +47,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   async function fetchReports() {
     setLoading(true);
     await fetchCategories();
-    await fetchChartData();
+    // await fetchChartData();
     await fetchSummary();
     setLoading(false);
   }
@@ -102,7 +103,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
               This Month
             </AppChip>
             <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
-              Quarterly
+              This Quarter
             </AppChip>
             <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
               This Year

@@ -89,10 +89,12 @@ const AppLineChart = ({
         expenseData.push(prepareChartData('expense', i.toString()));
       }
     } else if (filter === 'q') {
-      for (var i = 1; i <= 4; i++) {
-        labels.push(`Q${i}`);
-        incomeData.push(prepareChartData('income', i));
-        expenseData.push(prepareChartData('expense', i));
+      const start = +dayjs().startOf('quarter').format('MM');
+      const end = +dayjs().endOf('quarter').format('MM');
+      for (var i = start; i <= end; i++) {
+        labels.push(numToMonthName(i));
+        incomeData.push(prepareChartData('income', i.toString()));
+        expenseData.push(prepareChartData('expense', i.toString()));
       }
     } else {
       for (var i = 1; i <= +dayjs().endOf('month').format('MM'); i++) {

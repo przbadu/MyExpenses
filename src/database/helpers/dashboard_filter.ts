@@ -1,11 +1,15 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
+import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 import {formatDateColumn, transactions} from '.';
+
+dayjs.extend(quarterOfYear);
 
 export type lineChartFilterProps = 'y' | 'q' | 'm' | 'w';
 
 const labels = {
   yearly: '%m',
+  quarterly: '%m',
   monthly: '%d',
   weekly: '%w',
 };
@@ -16,13 +20,19 @@ export const lineChartData = (
 ) => {
   let format = labels.yearly;
   if (filter === 'y') format = labels.yearly;
-  else if (filter === 'q') format = labels.weekly;
+  else if (filter === 'q') format = labels.quarterly;
   else if (filter === 'w') format = labels.weekly;
   else format = labels.monthly;
 
   let dateFilter;
-  if (filter === 'y' || filter === 'q') {
+  if (filter === 'y') {
     dateFilter = ` ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'`;
+  } else if (filter === 'q') {
+    let start = dayjs().startOf('quarter').format('YYYY-MM');
+    let end = dayjs().endOf('quarter').format('YYYY-MM');
+    dateFilter = ` ${formatDateColumn(
+      '%Y-%m',
+    )} >= '${start}' AND ${formatDateColumn('%Y-%m')} <= '${end}'`;
   } else if (filter == 'm')
     dateFilter = ` ${formatDateColumn('%Y-%m')} = '${dayjs().format(
       'YYYY-MM',
@@ -36,16 +46,8 @@ export const lineChartData = (
   } else
     dateFilter = ` ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'`;
 
-  let selectQ;
-  if (filter === 'q') {
-    selectQ =
-      '(cast(strftime("%m", datetime(transaction_at/1000, "unixepoch") )as integer) + 2) / 3 as date';
-  } else {
-    selectQ = `${formatDateColumn(format)} as date`;
-  }
-
   const query =
-    `SELECT ${selectQ}, sum(amount) as amount` +
+    `SELECT ${formatDateColumn(format)} as date, sum(amount) as amount` +
     ' FROM transactions' +
     ` WHERE ${dateFilter}` +
     " AND _status IS NOT 'deleted' AND transaction_type = ?" +
