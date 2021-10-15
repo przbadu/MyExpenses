@@ -21,9 +21,9 @@ export const lineChartData = (
   else format = labels.monthly;
 
   let dateFilter;
-  if (filter == 'y')
+  if (filter === 'y' || filter === 'q') {
     dateFilter = ` ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'`;
-  else if (filter == 'm')
+  } else if (filter == 'm')
     dateFilter = ` ${formatDateColumn('%Y-%m')} = '${dayjs().format(
       'YYYY-MM',
     )}'`;
@@ -36,8 +36,16 @@ export const lineChartData = (
   } else
     dateFilter = ` ${formatDateColumn('%Y')} = '${dayjs().format('YYYY')}'`;
 
+  let selectQ;
+  if (filter === 'q') {
+    selectQ =
+      '(cast(strftime("%m", datetime(transaction_at/1000, "unixepoch") )as integer) + 2) / 3 as date';
+  } else {
+    selectQ = `${formatDateColumn(format)} as date`;
+  }
+
   const query =
-    `SELECT ${formatDateColumn(format)} as date, sum(amount) as amount` +
+    `SELECT ${selectQ}, sum(amount) as amount` +
     ' FROM transactions' +
     ` WHERE ${dateFilter}` +
     " AND _status IS NOT 'deleted' AND transaction_type = ?" +

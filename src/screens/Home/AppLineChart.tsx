@@ -88,6 +88,12 @@ const AppLineChart = ({
         incomeData.push(prepareChartData('income', i.toString()));
         expenseData.push(prepareChartData('expense', i.toString()));
       }
+    } else if (filter === 'q') {
+      for (var i = 1; i <= 4; i++) {
+        labels.push(`Q${i}`);
+        incomeData.push(prepareChartData('income', i));
+        expenseData.push(prepareChartData('expense', i));
+      }
     } else {
       for (var i = 1; i <= +dayjs().endOf('month').format('MM'); i++) {
         labels.push(i);

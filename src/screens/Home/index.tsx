@@ -101,6 +101,9 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
             <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
               This Month
             </AppChip>
+            <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
+              This Quarter
+            </AppChip>
             <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
               This Year
             </AppChip>
