@@ -18,10 +18,13 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
+import {responsiveHeight} from '../../lib';
 import {AppLineChart} from './AppLineChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
   const [filter, setFilter] = React.useState<lineChartFilterProps>('m');
+  const [totalIncome, setTotalIncome] = React.useState(0);
+  const [totalExpense, setTotalExpense] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
   const [categories, setCategories] = React.useState<[]>([]);
   const [incomeChartData, setIncomeChartData] = React.useState<
@@ -30,6 +33,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   const [expenseChartData, setExpenseChartData] = React.useState<
     {amount: number; date: string}[]
   >([]);
+  const [manualRefresh, setManualRefresh] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const navigation = useNavigation();
 
@@ -43,6 +47,13 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   React.useEffect(() => {
     fetchChartData();
   }, [filter]);
+
+  React.useEffect(() => {
+    if (manualRefresh) {
+      setManualRefresh(false);
+      fetchReports();
+    }
+  }, [manualRefresh]);
 
   async function fetchReports() {
     setLoading(true);
@@ -66,6 +77,20 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
       transaction_type: TransactionTypeEnum;
       sum_amount: number;
     }[] = await transactionTypeSummary();
+    const _income = summary.reduce(
+      (sum, tran) =>
+        tran.transaction_type === TransactionTypeEnum.income
+          ? sum + tran.sum_amount
+          : sum + 0,
+      0,
+    );
+    const _expense = summary.reduce(
+      (sum, tran) =>
+        tran.transaction_type === TransactionTypeEnum.expense
+          ? sum + tran.sum_amount
+          : sum + 0,
+      0,
+    );
     const _balance = summary.reduce(
       (sum, tran) =>
         tran.transaction_type == TransactionTypeEnum.expense
@@ -74,6 +99,8 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
       0,
     );
     setBalance(_balance || 0);
+    setTotalIncome(_income);
+    setTotalExpense(_expense);
   };
 
   const fetchCategories = async () => {
@@ -81,50 +108,69 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     setCategories(_categories);
   };
 
+  function renderHeading(heading: string) {
+    return (
+      <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
+        {heading.toUpperCase()}
+      </Subheading>
+    );
+  }
+
   function renderFilters() {
     return (
-      <Surface>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: 10,
-          }}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{flexDirection: 'row', marginBottom: 5}}>
-            <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
-              This Week
-            </AppChip>
-            <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
-              This Month
-            </AppChip>
-            <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
-              This Quarter
-            </AppChip>
-            <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
-              This Year
-            </AppChip>
-          </View>
-        </ScrollView>
-      </Surface>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+        }}
+        contentContainerStyle={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <View style={{flexDirection: 'row', marginBottom: 5}}>
+          <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
+            This Week
+          </AppChip>
+          <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
+            This Month
+          </AppChip>
+          <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
+            This Quarter
+          </AppChip>
+          <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
+            This Year
+          </AppChip>
+        </View>
+      </ScrollView>
     );
   }
 
   function renderListHeaderComponent() {
     return (
       <>
+        {renderHeading('cash flow (All)')}
         <SummaryCard
+          expense={totalExpense}
+          income={totalIncome}
           balance={balance}
           containerStyles={{marginHorizontal: 10, marginTop: 10}}
-          showIncomeExpense={false}
         />
-        <Surface style={{marginHorizontal: 10}}>
+
+        {renderHeading('Report')}
+        <Surface style={{marginHorizontal: 10, marginTop: 10}}>
+          {renderFilters()}
           {loading ? (
-            <ActivityIndicator animating style={{marginBottom: 10}} />
+            <View
+              style={{
+                height: responsiveHeight(34),
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator animating style={{marginBottom: 10}} />
+            </View>
           ) : (
             <AppLineChart
               expenseChartData={expenseChartData}
@@ -136,9 +182,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         </Surface>
 
         {/* render categories */}
-        <Subheading style={{marginHorizontal: 10, marginTop: 20}}>
-          {`Categories`.toUpperCase()}
-        </Subheading>
+        {renderHeading('Categories')}
       </>
     );
   }
@@ -176,6 +220,8 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         ListHeaderComponent={renderListHeaderComponent()}
         ListEmptyComponent={renderEmptyPlaceholder}
         renderItem={({item}) => renderItem(item)}
+        refreshing={loading}
+        onRefresh={() => setManualRefresh(true)}
         style={{marginBottom: 80}}
       />
     );
@@ -184,11 +230,10 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="EXPENSE STATS" />
+        <Appbar.Content title="STATS" />
         <Appbar.Action icon="magnify" onPress={() => {}} />
       </Appbar.Header>
 
-      {renderFilters()}
       {renderCharts()}
     </>
   );
