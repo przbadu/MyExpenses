@@ -1,16 +1,7 @@
 import dayjs from 'dayjs';
 import React from 'react';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import {
-  Button,
-  Headline,
-  Subheading,
-  Surface,
-  Text,
-  useTheme,
-} from 'react-native-paper';
-import {Subheader} from 'react-native-paper/lib/typescript/components/List/List';
-import {numberToCurrency} from '../../lib';
+import {Button, Subheading, Surface, Text, useTheme} from 'react-native-paper';
 import {deleteTransaction, transactions} from '../../database/helpers';
 import {
   CategoryProps,
@@ -18,6 +9,7 @@ import {
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
+import {numberToCurrency} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 
 const TransactionDetail = ({navigation, route}) => {

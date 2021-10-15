@@ -5,9 +5,12 @@ import {FlatList, ScrollView, View} from 'react-native';
 import {
   ActivityIndicator,
   Appbar,
+  Button,
   Caption,
+  IconButton,
   Subheading,
   Surface,
+  useTheme,
 } from 'react-native-paper';
 import {AppChip, CategoryRow, SummaryCard} from '../../components';
 import {
@@ -182,7 +185,23 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         </Surface>
 
         {/* render categories */}
-        {renderHeading('Categories')}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          {renderHeading('Categories')}
+          <View style={{flexDirection: 'row', marginTop: 20}}>
+            <Button
+              icon="plus"
+              onPress={() =>
+                navigation.navigate('ListCategories', {add: true})
+              }>
+              Add Category
+            </Button>
+          </View>
+        </View>
       </>
     );
   }
@@ -231,7 +250,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     <>
       <Appbar.Header>
         <Appbar.Content title="STATS" />
-        <Appbar.Action icon="magnify" onPress={() => {}} />
+        <Appbar.Action icon="chart-pie" onPress={() => {}} />
       </Appbar.Header>
 
       {renderCharts()}

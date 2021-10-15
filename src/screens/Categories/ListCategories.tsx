@@ -1,4 +1,5 @@
 import withObservables from '@nozbe/with-observables';
+import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
@@ -11,9 +12,11 @@ import {responsiveHeight} from '../../lib';
 let ListCategories = ({
   navigation,
   categories,
+  route,
 }: {
   navigation: any;
   categories: Category[];
+  route: any;
 }) => {
   const {colors} = useTheme();
   const [showModal, setShowModal] = React.useState(false);
@@ -21,7 +24,17 @@ let ListCategories = ({
 
   const handleDelete = async (category: Category) => {
     await deleteCategory(category);
+    navigation.setParams({add: false});
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (route.params) {
+        const _add = route.params.add;
+        setShowModal(_add);
+      }
+    }, []),
+  );
 
   return (
     <>
