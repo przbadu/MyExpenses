@@ -1,7 +1,8 @@
+import dayjs from 'dayjs';
 import React from 'react';
 import {Dimensions, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import {ActivityIndicator, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
 import {lineChartFilterProps} from '../../database/helpers';
 import {
@@ -64,37 +65,49 @@ const AppLineChart = ({
     );
   }
 
-  const maxNumber = Math.max.apply(
-    Math,
-    incomeChartData.map(d => d.amount),
-  );
-  const siSymbol = getSiSymbol(maxNumber);
-  const incomeData: number[] = incomeChartData.map(
-    (d: {amount: number}): number => amountSeperator(+d.amount, maxNumber),
-  );
-  const expenseData: number[] = expenseChartData.map(
-    (d: {amount: number}): number => amountSeperator(+d.amount, maxNumber),
-  );
-
-  let labels;
-  if (incomeChartData.length) {
-    labels = incomeChartData.map((d: {date: string}) => {
-      if (filter === 'yearly') return numToMonthName(d.date);
-      else if (filter === 'monthly') return d.date;
-      else if (filter === 'weekly') return numToWeekName(d.date);
-      else return d.date;
-    });
-  } else {
-    labels = expenseChartData.map((d: {date: string}) => {
-      if (filter === 'yearly') return numToMonthName(d.date);
-      else if (filter === 'monthly') return d.date;
-      else if (filter === 'weekly') return numToWeekName(d.date);
-      else return d.date;
-    });
+  function prepareChartData(type: 'income' | 'expense', date: number | string) {
+    const data = type === 'income' ? incomeChartData : expenseChartData;
+    const result = data.find(d => d.date === date);
+    return result ? amountSeperator(+result.amount, maxNumber) : 0;
   }
 
+  function getLabelAndValues() {
+    let labels = [];
+    let incomeData = [];
+    let expenseData = [];
+    if (filter === 'y') {
+      for (var i = 1; i <= 12; i++) {
+        labels.push(numToMonthName(i));
+        const _date = i < 10 ? `0${i}` : i.toString();
+        incomeData.push(prepareChartData('income', _date));
+        expenseData.push(prepareChartData('expense', _date));
+      }
+    } else if (filter === 'w') {
+      for (var i = 0; i < 7; i++) {
+        labels.push(numToWeekName(i));
+        incomeData.push(prepareChartData('income', i.toString()));
+        expenseData.push(prepareChartData('expense', i.toString()));
+      }
+    } else {
+      for (var i = 1; i <= +dayjs().endOf('month').format('MM'); i++) {
+        labels.push(i);
+        const _date = i < 10 ? `0${i}` : i.toString();
+        incomeData.push(prepareChartData('income', _date));
+        expenseData.push(prepareChartData('expense', _date));
+      }
+    }
+
+    return {labels, incomeData, expenseData};
+  }
+
+  const maxNumber = Math.max.apply(
+    Math,
+    [...incomeChartData, ...expenseChartData].map(d => d.amount),
+  );
+  const siSymbol = getSiSymbol(maxNumber);
   let lineChartDataset = [];
   let legends = [];
+  const {labels, incomeData, expenseData} = getLabelAndValues();
   if (incomeData.length) {
     legends.push('Income');
     lineChartDataset.push({

@@ -21,7 +21,7 @@ import {Transaction, TransactionTypeEnum} from '../../database/models';
 import {AppLineChart} from './AppLineChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
-  const [filter, setFilter] = React.useState<lineChartFilterProps>('yearly');
+  const [filter, setFilter] = React.useState<lineChartFilterProps>('m');
   const [balance, setBalance] = React.useState(0);
   const [categories, setCategories] = React.useState<[]>([]);
   const [incomeChartData, setIncomeChartData] = React.useState<
@@ -95,20 +95,14 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
             alignItems: 'center',
           }}>
           <View style={{flexDirection: 'row', marginBottom: 5}}>
-            <AppChip
-              selected={filter === 'weekly'}
-              onPress={() => setFilter('weekly')}>
-              Weekly
+            <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
+              This Week
             </AppChip>
-            <AppChip
-              selected={filter === 'monthly'}
-              onPress={() => setFilter('monthly')}>
-              Monthly
+            <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
+              This Month
             </AppChip>
-            <AppChip
-              selected={filter === 'yearly'}
-              onPress={() => setFilter('yearly')}>
-              Yearly
+            <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
+              This Year
             </AppChip>
           </View>
         </ScrollView>
