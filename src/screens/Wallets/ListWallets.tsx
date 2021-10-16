@@ -40,7 +40,11 @@ let ListWallets = ({navigation}: {navigation: any}) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.BackAction
+          onPress={() =>
+            navigation.navigate('MainSettings', {screen: 'Settings'})
+          }
+        />
         <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
         <Appbar.Action
           onPress={() => setShowModal(true)}

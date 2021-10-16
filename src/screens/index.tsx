@@ -2,7 +2,7 @@ export * from './AddTransaction';
 export * from './CalendarTransactions';
 export * from './CategoryTransactions';
 export * from './Home';
-export * from './Saving';
+export * from './Savings';
 export * from './Settings';
 export * from './SplashScreen';
 export * from './TransactionDetail';

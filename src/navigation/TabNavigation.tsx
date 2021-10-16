@@ -4,25 +4,45 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {TabBarIcon} from '../components';
-import {AddTransaction, Home, Saving, Settings, Transactions} from '../screens';
+import {
+  AddSaving,
+  AddTransaction,
+  Home,
+  ListSavings,
+  Settings,
+  Transactions,
+} from '../screens';
 import {AddCategory, ListCategories} from '../screens/Categories';
 import {AddWallet, ListWallets} from '../screens/Wallets';
 
 const Tab = createBottomTabNavigator();
 const SettingStack = createNativeStackNavigator();
+const SavingStack = createNativeStackNavigator();
 
 function SettingsStackScreen() {
   return (
     <SettingStack.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
+      }}
+      initialRouteName="Settings">
       <SettingStack.Screen name="Settings" component={Settings} />
       <SettingStack.Screen name="AddCategory" component={AddCategory} />
       <SettingStack.Screen name="ListCategories" component={ListCategories} />
       <SettingStack.Screen name="AddWallet" component={AddWallet} />
       <SettingStack.Screen name="ListWallets" component={ListWallets} />
     </SettingStack.Navigator>
+  );
+}
+
+function SavingsStackScreen() {
+  return (
+    <SavingStack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="ListSavings">
+      <SavingStack.Screen name="AddSaving" component={AddSaving} />
+      <SavingStack.Screen name="ListSavings" component={ListSavings} />
+    </SavingStack.Navigator>
   );
 }
 
@@ -86,7 +106,7 @@ export const TabNavigation = () => {
       />
       <Tab.Screen
         name="Saving"
-        component={Saving}
+        component={SavingsStackScreen}
         options={{
           tabBarIcon: ({focused}) => (
             <TabBarIcon label="Savings" icon="piggy-bank" focused={focused} />

@@ -1,8 +1,9 @@
 import {
   addColumns,
+  createTable,
   schemaMigrations,
 } from '@nozbe/watermelondb/Schema/migrations';
-import {Category, Transaction, Wallet} from './models';
+import {Category, Saving, Transaction, Wallet} from './models';
 
 export default schemaMigrations({
   migrations: [
@@ -25,6 +26,21 @@ export default schemaMigrations({
         addColumns({
           table: Transaction.table,
           columns: [{name: 'time', type: 'string'}],
+        }),
+      ],
+    },
+    {
+      toVersion: 4,
+      steps: [
+        createTable({
+          name: Saving.table,
+          columns: [
+            {name: 'title', type: 'string'},
+            {name: 'required_amount', type: 'number'},
+            {name: 'target_amount', type: 'number'},
+            {name: 'fulfilled', type: 'boolean'},
+            {name: 'onhold', type: 'boolean'},
+          ],
         }),
       ],
     },
