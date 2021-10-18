@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import {Appbar, Button, Card, TextInput} from 'react-native-paper';
 import {
@@ -42,6 +42,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   // show/hide category/wallet modal
   const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
   const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
+  const notesRef = useRef(null);
 
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
@@ -185,6 +186,9 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               selectTextOnFocus
               left={<TextInput.Icon name="currency-usd" />}
               error={errors.amount}
+              returnKeyType="next"
+              onSubmitEditing={() => notesRef.current?.focus()}
+              blurOnSubmit={false}
             />
             <AppTextInput
               label="Notes"
@@ -195,6 +199,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               right={<TextInput.Affix text={`${form.notes.length}/255`} />}
               left={<TextInput.Icon name="calendar-text" />}
               error={errors.notes}
+              ref={notesRef}
             />
 
             {renderTransactionDateTime()}
