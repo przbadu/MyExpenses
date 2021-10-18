@@ -1,8 +1,8 @@
 import {appSchema, tableSchema} from '@nozbe/watermelondb/Schema';
-import {Category, Saving, Transaction, Wallet} from './models';
+import {Category, Saving, SavingAmount, Transaction, Wallet} from './models';
 
 export default appSchema({
-  version: 4,
+  version: 5,
   tables: [
     tableSchema({
       name: Wallet.table,
@@ -48,6 +48,15 @@ export default appSchema({
         {name: 'target_amount', type: 'number'},
         {name: 'fulfilled', type: 'boolean'},
         {name: 'onhold', type: 'boolean'},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+    tableSchema({
+      name: SavingAmount.table,
+      columns: [
+        {name: 'amount', type: 'number'},
+        {name: 'created_at', type: 'number'},
       ],
     }),
   ],
