@@ -1,7 +1,7 @@
 import {database} from '../index';
 import {Saving, SavingProps} from '../models';
 
-export const savings = database.collections.get(Saving.table);
+export const savings = database.get(Saving.table);
 
 export const observeSavings = () => savings.query().observe();
 

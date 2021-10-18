@@ -1,12 +1,20 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 import {TextInput, HelperText, useTheme} from 'react-native-paper';
 
-const AppTextInput = (props: React.ComponentProps<typeof TextInput>) => {
+let AppTextInput = (
+  props: React.ComponentProps<typeof TextInput>,
+  ref: any,
+) => {
   const {colors} = useTheme();
 
   return (
     <>
-      <TextInput outlineColor={colors.disabled} mode="outlined" {...props} />
+      <TextInput
+        outlineColor={colors.disabled}
+        mode="outlined"
+        {...props}
+        ref={ref}
+      />
       {props.error && (
         <HelperText type="error" visible={props.error}>
           {props.error}
@@ -15,5 +23,7 @@ const AppTextInput = (props: React.ComponentProps<typeof TextInput>) => {
     </>
   );
 };
+
+AppTextInput = forwardRef(AppTextInput);
 
 export {AppTextInput};

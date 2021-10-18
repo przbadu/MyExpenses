@@ -1,7 +1,7 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, View} from 'react-native';
-import {Appbar, Text} from 'react-native-paper';
+import {Appbar, Button, Caption, Surface, Text} from 'react-native-paper';
 import {deleteSaving, observeSavings} from '../../database/helpers';
 import {Saving} from '../../database/models';
 import {responsiveHeight} from '../../lib';
@@ -21,14 +21,25 @@ let ListSavings = ({
   };
 
   function renderEmptyList() {
-    return <Text>No result found</Text>;
+    return (
+      <Surface style={{padding: 20}}>
+        <Caption style={{textAlign: 'center'}}>No result found</Caption>
+        <Button onPress={() => navigation.navigate('AddSaving')}>
+          Add your first saving!
+        </Button>
+      </Surface>
+    );
   }
 
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Savings'.toUpperCase()} />
+
+        <Appbar.Action
+          icon="plus"
+          onPress={() => navigation.navigate('AddSaving')}
+        />
       </Appbar.Header>
 
       <View

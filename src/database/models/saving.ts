@@ -9,8 +9,8 @@ export interface SavingProps {
   title: string;
   requiredAmount: number;
   targetAmount: number;
-  fulfilled: boolean;
-  onHold: boolean;
+  fulfilled?: boolean;
+  onHold?: boolean;
 }
 
 class Saving extends Model {
