@@ -1,4 +1,5 @@
 import React from 'react';
+import {createSaving} from '../../database/helpers';
 
 const initialState = {
   title: '',
@@ -8,10 +9,10 @@ const initialState = {
 };
 
 interface FormProps {
-  id?: string | undefined;
-  title: string | undefined;
-  requiredAmount: number | undefined;
-  targetAmount: number | undefined;
+  id?: string;
+  title: string;
+  requiredAmount: number | string;
+  targetAmount: number | string;
   availableAmount: number;
 }
 
@@ -54,7 +55,7 @@ export const useForm = (navigation: any) => {
     setForm({...form, ...initialState});
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     setSubmitting(true);
     // validation
     const _formError = validate(form);
@@ -62,7 +63,11 @@ export const useForm = (navigation: any) => {
 
     if (Object.keys(_formError).length === 0) {
       // create or update saving
-      console.log('valid form');
+      await createSaving(form);
+      resetForm();
+      setSubmitting(false);
+
+      navigation.navigate('ListSavings');
     }
     setSubmitting(false);
   }
