@@ -12,7 +12,7 @@ import {
   Settings,
   Transactions,
 } from '../screens';
-import {AddCategory, ListCategories} from '../screens/Categories';
+import {AddCategory, EditCategory, ListCategories} from '../screens/Categories';
 import {AddWallet, ListWallets} from '../screens/Wallets';
 
 const Tab = createBottomTabNavigator();
@@ -28,6 +28,7 @@ function SettingsStackScreen() {
       initialRouteName="Settings">
       <SettingStack.Screen name="Settings" component={Settings} />
       <SettingStack.Screen name="AddCategory" component={AddCategory} />
+      <SettingStack.Screen name="EditCategory" component={EditCategory} />
       <SettingStack.Screen name="ListCategories" component={ListCategories} />
       <SettingStack.Screen name="AddWallet" component={AddWallet} />
       <SettingStack.Screen name="ListWallets" component={ListWallets} />

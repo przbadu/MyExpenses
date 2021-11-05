@@ -3,7 +3,6 @@ import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
-import {AddCategory} from '.';
 import {ItemRow} from '../../components';
 import {deleteCategory, observeCategories} from '../../database/helpers';
 import {Category} from '../../database/models';
@@ -19,22 +18,11 @@ let ListCategories = ({
   route: any;
 }) => {
   const {colors} = useTheme();
-  const [showModal, setShowModal] = React.useState(false);
-  const [editing, setEditing] = React.useState<Category | undefined>();
 
   const handleDelete = async (category: Category) => {
     await deleteCategory(category);
     navigation.setParams({add: false});
   };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (route.params) {
-        const _add = route.params.add;
-        setShowModal(_add);
-      }
-    }, []),
-  );
 
   return (
     <>
@@ -46,7 +34,7 @@ let ListCategories = ({
         />
         <Appbar.Content title={'Manage Categories'.toUpperCase()} />
         <Appbar.Action
-          onPress={() => setShowModal(true)}
+          onPress={() => navigation.navigate('AddCategory')}
           icon="plus"
           style={{backgroundColor: colors.primary}}
         />
@@ -67,24 +55,18 @@ let ListCategories = ({
               item={item}
               onDelete={handleDelete}
               onEdit={() => {
-                setEditing(item);
-                setShowModal(true);
+                navigation.navigate('EditCategory', {id: item.id});
               }}
             />
           )}
-        />
-        <AddCategory
-          hideModal={() => setShowModal(false)}
-          visible={showModal}
-          category={editing}
-          cancelEdit={() => setEditing(undefined)}
         />
       </View>
     </>
   );
 };
 
-ListCategories = withObservables([], () => ({
+// TODO: refresh list when category is updated
+ListCategories = withObservables(['route'], () => ({
   categories: observeCategories(),
 }))(ListCategories);
 

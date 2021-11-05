@@ -15,7 +15,7 @@ const ItemRow = ({
   item: Category | Wallet;
   onEdit: (item: Category | Wallet) => void;
   onDelete: (item: Category | Wallet) => void;
-  isWallet: boolean;
+  isWallet?: boolean;
 }) => {
   const {colors} = useTheme();
   const {currency} = React.useContext(CurrencyContext);
