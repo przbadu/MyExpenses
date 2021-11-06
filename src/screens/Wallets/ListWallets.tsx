@@ -1,7 +1,7 @@
+import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
-import {AddWallet} from '.';
 import {ItemRow} from '../../components';
 import {deleteWallet, walletsWithAmount} from '../../database/helpers';
 import {Wallet} from '../../database/models';
@@ -10,31 +10,21 @@ import {responsiveHeight} from '../../lib';
 let ListWallets = ({navigation}: {navigation: any}) => {
   const {colors} = useTheme();
   const [wallets, setWallets] = React.useState<Wallet[]>([]);
-  const [showModal, setShowModal] = React.useState(false);
-  const [editing, setEditing] = React.useState<Wallet | undefined>();
-  const [submitted, setSubmitted] = React.useState(false);
 
-  React.useEffect(() => {
-    fetchWallets();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchWallets();
+    }, []),
+  );
 
-  React.useEffect(() => {
-    if (submitted) fetchWallets();
-  }, [submitted]);
-
-  const handleDelete = async (wallet: Wallet | undefined) => {
-    if (wallet) {
-      await deleteWallet(wallet);
-      setSubmitted(true);
-      setEditing(undefined);
-      setShowModal(false);
-    }
+  const handleDelete = async (wallet: Wallet) => {
+    await deleteWallet(wallet);
+    await fetchWallets();
   };
 
   async function fetchWallets() {
     const _wallets = await walletsWithAmount();
     setWallets(_wallets);
-    setSubmitted(false);
   }
 
   return (
@@ -47,7 +37,7 @@ let ListWallets = ({navigation}: {navigation: any}) => {
         />
         <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
         <Appbar.Action
-          onPress={() => setShowModal(true)}
+          onPress={() => navigation.navigate('AddWallet')}
           icon="plus"
           style={{backgroundColor: colors.primary}}
         />
@@ -67,21 +57,10 @@ let ListWallets = ({navigation}: {navigation: any}) => {
             <ItemRow
               item={item}
               onDelete={() => handleDelete(item)}
-              onEdit={() => {
-                setEditing(item);
-                setShowModal(true);
-              }}
+              onEdit={() => navigation.navigate('EditWallet', {id: item.id})}
               isWallet
             />
           )}
-        />
-        <AddWallet
-          hideModal={() => setShowModal(false)}
-          visible={showModal}
-          wallet={editing}
-          cancelEdit={() => setEditing(undefined)}
-          onSubmitted={() => setSubmitted(true)}
-          handleDelete={handleDelete}
         />
       </View>
     </>

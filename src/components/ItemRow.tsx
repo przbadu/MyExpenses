@@ -30,7 +30,9 @@ const ItemRow = ({
         label="You are deleting selected item which cannot be recovered after deletion. Are you sure to continue?"
         onCancel={() => setConfirm(false)}
         onConfirm={() => {
+          console.log('item', item);
           onDelete(item);
+          setConfirm(false);
         }}
       />
 

@@ -13,7 +13,7 @@ import {
   Transactions,
 } from '../screens';
 import {AddCategory, EditCategory, ListCategories} from '../screens/Categories';
-import {AddWallet, ListWallets} from '../screens/Wallets';
+import {AddWallet, EditWallet, ListWallets} from '../screens/Wallets';
 
 const Tab = createBottomTabNavigator();
 const SettingStack = createNativeStackNavigator();
@@ -31,6 +31,7 @@ function SettingsStackScreen() {
       <SettingStack.Screen name="EditCategory" component={EditCategory} />
       <SettingStack.Screen name="ListCategories" component={ListCategories} />
       <SettingStack.Screen name="AddWallet" component={AddWallet} />
+      <SettingStack.Screen name="EditWallet" component={EditWallet} />
       <SettingStack.Screen name="ListWallets" component={ListWallets} />
     </SettingStack.Navigator>
   );
