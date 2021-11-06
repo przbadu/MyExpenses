@@ -8,21 +8,13 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {AppTextInput} from '../../components';
 import AppColorPicker from '../../components/AppColorPicker';
 import {saveWallet, updateWallet} from '../../database/helpers';
 import {Wallet} from '../../database/models';
-import {categoryIcons, generateColor} from '../../lib';
+import {generateColor, generateColors, walletIcons} from '../../lib';
 
-function generateColors() {
-  let initialColors: string[] = [];
-  for (let i = 0; i < 10; i++) {
-    initialColors.push(generateColor());
-  }
-  return initialColors;
-}
 let initialColors: string[] = generateColors();
 
 const Form = ({
@@ -115,7 +107,7 @@ const Form = ({
             <Text>Choose an icon</Text>
             <View
               style={{flexDirection: 'row', flexWrap: 'wrap', marginTop: 10}}>
-              {categoryIcons.map(i => (
+              {walletIcons.map(i => (
                 <AppColorPicker
                   key={i}
                   color={

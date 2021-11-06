@@ -1,4 +1,15 @@
-export const walletIcons = [];
+export const walletIcons = [
+  'wallet',
+  'wallet-giftcard',
+  'wallet-membership',
+  'wallet-travel',
+  'cash',
+  'cash-100',
+  'cash-multiple',
+  'bank',
+  'piggy-bank',
+  'credit-card',
+];
 
 export const categoryIcons = [
   'home',
