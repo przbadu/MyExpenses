@@ -111,6 +111,10 @@ let ListSavings = ({
         <View style={styles.row}>
           <View style={{maxWidth: '60%'}}>
             <Text style={{...fonts.medium}}>{item.title}</Text>
+            <Text style={{...fonts.regular, color: colors.disabled}}>
+              ({(item.requiredAmount - totalSavingAmount) / item.targetAmount}{' '}
+              months to go)
+            </Text>
           </View>
           <View>
             <Text>{humanizeAmount(item.requiredAmount)}</Text>
