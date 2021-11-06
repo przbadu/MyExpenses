@@ -48,7 +48,6 @@ const Form = ({
 
   return (
     <Card style={{marginTop: 10}}>
-      <Card.Title title="Add New Category" />
       <Card.Content style={{marginBottom: 20}}>
         <AppTextInput
           placeholder="Enter category name"

@@ -11,7 +11,7 @@ const AddWallet = ({navigation}: {navigation: any}) => {
             navigation.navigate('MainSettings', {screen: 'Settings'})
           }
         />
-        <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
+        <Appbar.Content title={'Add New Wallets'.toUpperCase()} />
       </Appbar.Header>
 
       <Form navigation={navigation} />

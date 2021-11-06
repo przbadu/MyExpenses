@@ -6,7 +6,6 @@ import {
   Button,
   Caption,
   ProgressBar,
-  Subheading,
   Surface,
   Text,
   useTheme,
