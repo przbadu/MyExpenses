@@ -197,10 +197,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
               icon="plus"
               onPress={() =>
                 navigation.navigate('MainSettings', {
-                  screen: 'ListCategories',
-                  params: {
-                    add: true,
-                  },
+                  screen: 'AddCategory',
                 })
               }>
               Add Category
