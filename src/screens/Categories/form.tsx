@@ -39,6 +39,8 @@ const Form = ({
       setIcon(category.icon);
       setRandomColors([...randomColors, category.color]);
     }
+
+    return () => {};
   }, [category]);
 
   const handleSubmit = async () => {

@@ -2,9 +2,10 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
-import {numberToCurrency} from '../lib';
+import {numberToCurrency, responsiveWidth} from '../lib';
 import {CurrencyContext} from '../store/context';
 import {CategoryProps} from '../database/models';
+import {AppColorPicker} from '.';
 
 interface _CategoryProps extends CategoryProps {
   count: number;
@@ -27,11 +28,11 @@ const CategoryRow = ({
     <TouchableOpacity onPress={onPress}>
       <Surface style={styles.container}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={{
-              backgroundColor: category.color,
-              ...styles.line,
-            }}
+          <AppColorPicker
+            icon={category.icon}
+            color={category.color!}
+            containerStyles={{marginBottom: 0, marginRight: 10}}
+            size={responsiveWidth(10)}
           />
           <View style={styles.textContainer}>
             {category && (
