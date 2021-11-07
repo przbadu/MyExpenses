@@ -28,11 +28,7 @@ let ListWallets = ({
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction
-          onPress={() =>
-            navigation.navigate('MainSettings', {screen: 'Settings'})
-          }
-        />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
         <Appbar.Action
           onPress={() => navigation.navigate('AddWallet')}
@@ -41,26 +37,18 @@ let ListWallets = ({
         />
       </Appbar.Header>
 
-      <View
-        style={{
-          flex: 1,
-          marginTop: 20,
-          marginHorizontal: 10,
-          marginBottom: responsiveHeight(11),
-        }}>
-        <FlatList
-          data={wallets}
-          keyExtractor={item => `wallet-${item.id}`}
-          renderItem={({item}: {item: Wallet}) => (
-            <ItemRow
-              item={item}
-              onDelete={() => handleDelete(item)}
-              onEdit={() => navigation.navigate('EditWallet', {id: item.id})}
-              isWallet
-            />
-          )}
-        />
-      </View>
+      <FlatList
+        data={wallets}
+        keyExtractor={item => `wallet-${item.id}`}
+        renderItem={({item}: {item: Wallet}) => (
+          <ItemRow
+            item={item}
+            onDelete={() => handleDelete(item)}
+            onEdit={() => navigation.navigate('EditWallet', {id: item.id})}
+            isWallet
+          />
+        )}
+      />
     </>
   );
 };

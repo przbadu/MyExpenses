@@ -195,11 +195,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
           <View style={{flexDirection: 'row', marginTop: 20}}>
             <Button
               icon="plus"
-              onPress={() =>
-                navigation.navigate('MainSettings', {
-                  screen: 'AddCategory',
-                })
-              }>
+              onPress={() => navigation.navigate('AddCategory')}>
               Add Category
             </Button>
           </View>

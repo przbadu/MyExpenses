@@ -25,15 +25,7 @@ function SettingsStackScreen() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Settings">
-      <SettingStack.Screen name="Settings" component={Settings} />
-      <SettingStack.Screen name="AddCategory" component={AddCategory} />
-      <SettingStack.Screen name="EditCategory" component={EditCategory} />
-      <SettingStack.Screen name="ListCategories" component={ListCategories} />
-      <SettingStack.Screen name="AddWallet" component={AddWallet} />
-      <SettingStack.Screen name="EditWallet" component={EditWallet} />
-      <SettingStack.Screen name="ListWallets" component={ListWallets} />
-    </SettingStack.Navigator>
+      initialRouteName="Settings"></SettingStack.Navigator>
   );
 }
 
@@ -117,7 +109,7 @@ export const TabNavigation = () => {
       />
       <Tab.Screen
         name="MainSettings"
-        component={SettingsStackScreen}
+        component={Settings}
         options={{
           tabBarIcon: ({focused}) => (
             <TabBarIcon label="Settings" icon="cog" focused={focused} />

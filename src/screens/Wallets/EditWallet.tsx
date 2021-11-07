@@ -9,11 +9,7 @@ let EditWallet = ({wallet, navigation}: {wallet: Wallet; navigation: any}) => {
   return (
     <>
       <Appbar.Header>
-        <Appbar.BackAction
-          onPress={() =>
-            navigation.navigate('MainSettings', {screen: 'Settings'})
-          }
-        />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={'Manage Wallets'.toUpperCase()} />
       </Appbar.Header>
 

@@ -7,6 +7,8 @@ import {
   CategoryTransaction,
   TransactionDetail,
 } from '../screens';
+import {AddCategory, EditCategory, ListCategories} from '../screens/Categories';
+import {AddWallet, EditWallet, ListWallets} from '../screens/Wallets';
 import {ThemeContext} from '../store/context/themeContext';
 import {TabNavigation} from './TabNavigation';
 
@@ -35,6 +37,12 @@ export const AppNavigator = () => {
               name="TransactionDetail"
               component={TransactionDetail}
             />
+            <Stack.Screen name="AddCategory" component={AddCategory} />
+            <Stack.Screen name="EditCategory" component={EditCategory} />
+            <Stack.Screen name="ListCategories" component={ListCategories} />
+            <Stack.Screen name="AddWallet" component={AddWallet} />
+            <Stack.Screen name="EditWallet" component={EditWallet} />
+            <Stack.Screen name="ListWallets" component={ListWallets} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

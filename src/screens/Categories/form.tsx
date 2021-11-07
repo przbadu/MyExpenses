@@ -65,8 +65,8 @@ const Form = ({
   }
 
   return (
-    <ScrollView style={{marginBottom: responsiveHeight(15)}}>
-      <Card style={{marginTop: 10}}>
+    <ScrollView>
+      <Card>
         <Card.Content style={{marginBottom: 20}}>
           <AppTextInput
             placeholder="Enter category name"

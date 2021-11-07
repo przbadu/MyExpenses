@@ -40,27 +40,19 @@ let ListCategories = ({
         />
       </Appbar.Header>
 
-      <View
-        style={{
-          flex: 1,
-          marginTop: 20,
-          marginHorizontal: 10,
-          marginBottom: responsiveHeight(11),
-        }}>
-        <FlatList
-          data={categories}
-          keyExtractor={item => `category-${item.id}`}
-          renderItem={({item}: {item: Category}) => (
-            <ItemRow
-              item={item}
-              onDelete={handleDelete}
-              onEdit={() => {
-                navigation.navigate('EditCategory', {id: item.id});
-              }}
-            />
-          )}
-        />
-      </View>
+      <FlatList
+        data={categories}
+        keyExtractor={item => `category-${item.id}`}
+        renderItem={({item}: {item: Category}) => (
+          <ItemRow
+            item={item}
+            onDelete={handleDelete}
+            onEdit={() => {
+              navigation.navigate('EditCategory', {id: item.id});
+            }}
+          />
+        )}
+      />
     </>
   );
 };

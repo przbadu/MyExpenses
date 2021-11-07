@@ -66,7 +66,7 @@ const Form = ({
 
   return (
     <ScrollView>
-      <Card style={{marginBottom: responsiveHeight(10), marginTop: 10}}>
+      <Card>
         <Card.Content>
           <AppTextInput
             placeholder="Enter wallet name"
