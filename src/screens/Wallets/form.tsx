@@ -108,6 +108,7 @@ const Form = ({
                   selected={color === c}
                   color={c}
                   onPress={() => setColor(c)}
+                  containerStyles={{marginBottom: 10}}
                 />
               ))}
             </View>
@@ -125,6 +126,7 @@ const Form = ({
                   }
                   icon={i}
                   onPress={() => setIcon(i)}
+                  containerStyles={{marginBottom: 10}}
                 />
               ))}
             </View>

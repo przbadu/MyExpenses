@@ -31,7 +31,6 @@ const CategoryRow = ({
           <AppColorPicker
             icon={category.icon}
             color={category.color!}
-            containerStyles={{marginBottom: 0, marginRight: 10}}
             size={responsiveWidth(10)}
           />
           <View style={styles.textContainer}>

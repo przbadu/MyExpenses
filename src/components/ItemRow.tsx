@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {AppColorPicker} from '.';
 import {Category, Wallet} from '../database/models';
 import {numberToCurrency, responsiveWidth} from '../lib';
 import {CurrencyContext} from '../store/context';
@@ -45,22 +46,7 @@ const ItemRow = ({
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <View
-            style={{
-              backgroundColor: item.color,
-              borderRadius: responsiveWidth(10),
-              width: responsiveWidth(10),
-              height: responsiveWidth(10),
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginRight: 10,
-            }}>
-            <Icon
-              name={item.icon}
-              size={responsiveWidth(6)}
-              color={colors.white}
-            />
-          </View>
+          <AppColorPicker icon={item.icon} color={item.color} />
           <View>
             <Text numberOfLines={2} style={{letterSpacing: 1}}>
               {item.name}

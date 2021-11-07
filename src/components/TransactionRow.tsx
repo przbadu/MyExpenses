@@ -32,7 +32,6 @@ let TransactionRow = ({
             color={category.color!}
             icon={category.icon}
             size={responsiveWidth(10)}
-            containerStyles={{marginBottom: 0}}
           />
           <View style={styles.textContainer}>
             <Text numberOfLines={2} style={{...fonts.medium}}>
