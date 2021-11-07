@@ -1,31 +1,29 @@
+import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {ItemRow} from '../../components';
-import {deleteWallet, walletsWithAmount} from '../../database/helpers';
+import {
+  deleteWallet,
+  observeWallets,
+  walletsWithAmount,
+} from '../../database/helpers';
 import {Wallet} from '../../database/models';
 import {responsiveHeight} from '../../lib';
 
-let ListWallets = ({navigation}: {navigation: any}) => {
+let ListWallets = ({
+  navigation,
+  wallets,
+}: {
+  navigation: any;
+  wallets: Wallet[];
+}) => {
   const {colors} = useTheme();
-  const [wallets, setWallets] = React.useState<Wallet[]>([]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchWallets();
-    }, []),
-  );
 
   const handleDelete = async (wallet: Wallet) => {
     await deleteWallet(wallet);
-    await fetchWallets();
   };
-
-  async function fetchWallets() {
-    const _wallets = await walletsWithAmount();
-    setWallets(_wallets);
-  }
 
   return (
     <>
@@ -66,5 +64,9 @@ let ListWallets = ({navigation}: {navigation: any}) => {
     </>
   );
 };
+
+ListWallets = withObservables(['route'], ({route}) => ({
+  wallets: observeWallets(),
+}))(ListWallets);
 
 export {ListWallets};

@@ -2,13 +2,15 @@ import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {useTheme, Text, Avatar, Surface} from 'react-native-paper';
+import {useTheme, Text, Surface} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TransactionAmountText} from '.';
 import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
+import {responsiveWidth} from '../lib';
 import {CurrencyContext, CurrencyContextProps} from '../store/context';
+import {AppColorPicker} from './AppColorPicker';
 
-const _TransactionRow = ({
+let TransactionRow = ({
   transaction,
   category,
   wallet,
@@ -17,7 +19,7 @@ const _TransactionRow = ({
   transaction: TransactionProps;
   category: CategoryProps;
   wallet: WalletProps;
-  onPress: () => void;
+  onPress?: () => void;
 }) => {
   const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const {colors, fonts} = useTheme();
@@ -26,35 +28,19 @@ const _TransactionRow = ({
     <TouchableOpacity onPress={onPress}>
       <Surface style={{...styles.container}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View
-            style={{
-              marginRight: 10,
-              backgroundColor: category.color,
-              padding: 5,
-              borderRadius: 4,
-            }}>
-            <Text style={{color: colors.white}}>
-              {dayjs(transaction.transactionAt).format('MMM')}
-            </Text>
-            <Text style={{color: colors.white}}>
-              {dayjs(transaction.transactionAt).format('DD')}
-            </Text>
-          </View>
+          <AppColorPicker
+            color={category.color!}
+            icon={category.icon}
+            size={responsiveWidth(10)}
+            containerStyles={{marginBottom: 0}}
+          />
           <View style={styles.textContainer}>
-            {category && (
-              <Text
-                numberOfLines={2}
-                style={{
-                  letterSpacing: 1,
-                }}>
-                {category.name}
-              </Text>
-            )}
-            <Text numberOfLines={2} style={{...fonts.light}}>
+            <Text numberOfLines={2} style={{...fonts.medium}}>
               {transaction.notes}
             </Text>
             <Text
               style={{...fonts.medium, fontSize: 11, color: colors.disabled}}>
+              {dayjs(transaction.transactionAt).format('MMM DD')} -{' '}
               {transaction.time}
             </Text>
           </View>
@@ -95,10 +81,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const enhance = withObservables(['transaction'], ({transaction}) => ({
+TransactionRow = withObservables(['transaction'], ({transaction}) => ({
   transaction,
   category: transaction.category,
   wallet: transaction.wallet,
-}));
-const TransactionRow = enhance(_TransactionRow);
+}))(TransactionRow);
+
 export {TransactionRow};

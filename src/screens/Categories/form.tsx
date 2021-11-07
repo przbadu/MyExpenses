@@ -8,8 +8,7 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import {AppTextInput} from '../../components';
-import AppColorPicker from '../../components/AppColorPicker';
+import {AppTextInput, AppColorPicker} from '../../components';
 import {saveCategory, updateCategory} from '../../database/helpers';
 import {Category} from '../../database/models';
 import {categoryIcons, generateColors, responsiveHeight} from '../../lib';
@@ -27,8 +26,8 @@ const Form = ({
   const [randomColors, setRandomColors] =
     React.useState<string[]>(initialColors);
   const [name, setName] = React.useState<string>('');
-  const [color, setColor] = React.useState<string>();
-  const [icon, setIcon] = React.useState<string>();
+  const [color, setColor] = React.useState<string>(initialColors[0]);
+  const [icon, setIcon] = React.useState<string>('shape');
   const [errors, setErrors] = React.useState<{name: string | undefined}>({
     name: undefined,
   });
@@ -36,6 +35,9 @@ const Form = ({
   React.useEffect(() => {
     if (category) {
       setName(category.name);
+      setColor(category.color);
+      setIcon(category.icon);
+      setRandomColors([...randomColors, category.color]);
     }
   }, [category]);
 
@@ -43,10 +45,10 @@ const Form = ({
     if (!name.length) {
       setErrors({...errors, name: 'Name is required'});
     } else {
-      if (category) await updateCategory(category, {name, color});
-      else await saveCategory({name, color});
+      if (category) await updateCategory(category, {name, color, icon});
+      else await saveCategory({name, color, icon});
       setName('');
-      setIcon('');
+      setIcon('shape');
       setErrors({name: undefined});
       goBack();
     }

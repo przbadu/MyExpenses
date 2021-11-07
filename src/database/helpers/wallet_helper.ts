@@ -13,6 +13,7 @@ export const walletsWithAmount = () => {
       wallets.id,
       name,
       color,
+      icon,
       (select sum(amount) from transactions where transaction_type = 'Income' and wallet_id = wallets.id) totalIncome,
       (select sum(amount) from transactions where transaction_type = 'Expense' and wallet_id = wallets.id) totalExpense,
       count(*) as count
@@ -29,19 +30,23 @@ export const saveWallet = async ({
   name,
   isDefault = false,
   color,
+  icon = 'cash',
+  balanceAmount,
 }: WalletProps) => {
   await database.write(async () => {
     await wallets.create(entry => {
       entry.name = name;
       entry.isDefault = isDefault;
       entry.color = color;
+      entry.icon = icon;
+      entry.balanceAmount = balanceAmount;
     });
   });
 };
 
 export const updateWallet = async (
   wallet: Wallet,
-  {name, color}: WalletProps,
+  {name, color, icon = 'cash', balanceAmount}: WalletProps,
 ) => {
   await database.write(async () => {
     console.log('wallet', wallet);
@@ -49,6 +54,8 @@ export const updateWallet = async (
     await _wallet.update(entry => {
       entry.name = name;
       entry.color = color;
+      entry.icon = icon;
+      entry.balanceAmount = balanceAmount;
     });
   });
 };
@@ -62,10 +69,16 @@ export const deleteWallet = async (wallet: Wallet) => {
 
 // Generate default seed data for new setup
 export const setupDefaultWallet = async () => {
-  await saveWallet({name: 'Cash', isDefault: true, color: generateColor()});
-  await saveWallet({name: 'Net Banking', color: generateColor()});
-  await saveWallet({name: 'ATM', color: generateColor()});
-  await saveWallet({name: 'Credit Card', color: generateColor()});
-  await saveWallet({name: 'Debit Card', color: generateColor()});
-  await saveWallet({name: 'Cheque', color: generateColor()});
+  await saveWallet({
+    name: 'Cash',
+    isDefault: true,
+    color: generateColor(),
+    icon: 'cash',
+  });
+  await saveWallet({name: 'Bank', color: generateColor(), icon: 'bank'});
+  await saveWallet({
+    name: 'Credit Card',
+    color: generateColor(),
+    icon: 'credit-card',
+  });
 };

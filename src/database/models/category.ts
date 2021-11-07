@@ -11,6 +11,7 @@ export interface CategoryProps {
   createdAt?: Date;
   name: string;
   color?: string;
+  icon?: string;
   transactions?: TransactionProps[];
 }
 
@@ -24,7 +25,8 @@ class Category extends Model {
 
   // attributes
   @field('name') name: string | any;
-  @field('color') color: String | any;
+  @field('color') color: string | any;
+  @field('icon') icon: string | any;
   @readonly @date('created_at') createdAt: Date | any;
   @readonly @date('updated_at') updatedAt: Date | any;
 

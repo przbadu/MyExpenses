@@ -10,6 +10,7 @@ export interface WalletProps {
   id?: string | number;
   name: string;
   color?: string;
+  icon?: string;
   createdAt?: Date;
   updatedAt?: Date;
   isDefault?: boolean;
@@ -28,6 +29,7 @@ class Wallet extends Model {
   // attributes
   @field('name') name: String | any;
   @field('color') color: String | any;
+  @field('icon') icon: string | any;
   @field('balance_amount') balanceAmount: Number | any;
   @field('is_default') isDefault: Boolean | any;
   @field('is_archived') isArchived: Boolean | any;

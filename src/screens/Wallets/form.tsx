@@ -9,11 +9,10 @@ import {
   useTheme,
 } from 'react-native-paper';
 
-import {AppTextInput} from '../../components';
-import AppColorPicker from '../../components/AppColorPicker';
+import {AppTextInput, AppColorPicker} from '../../components';
 import {saveWallet, updateWallet} from '../../database/helpers';
 import {Wallet} from '../../database/models';
-import {generateColor, generateColors, walletIcons} from '../../lib';
+import {generateColors, responsiveHeight, walletIcons} from '../../lib';
 
 let initialColors: string[] = generateColors();
 
@@ -28,15 +27,19 @@ const Form = ({
   const [randomColors, setRandomColors] =
     React.useState<string[]>(initialColors);
   const [name, setName] = React.useState<string>('');
-  const [color, setColor] = React.useState<string>();
-  const [icon, setIcon] = React.useState<string>();
-  const [errors, setErrors] = React.useState<{name: string | undefined}>({
-    name: undefined,
-  });
+  const [balanceAmount, setBalanceAmount] = React.useState(0);
+  const [color, setColor] = React.useState<string>(initialColors[0]);
+  const [icon, setIcon] = React.useState<string>('cash');
+  const [errors, setErrors] =
+    React.useState<{name?: string; amount?: string}>();
 
   React.useEffect(() => {
     if (wallet) {
       setName(wallet.name);
+      setColor(wallet.color);
+      setIcon(wallet.icon);
+      setBalanceAmount(wallet.balanceAmount);
+      setRandomColors([...randomColors, wallet.color]);
     }
   }, [wallet]);
 
@@ -44,10 +47,11 @@ const Form = ({
     if (!name.length) {
       setErrors({...errors, name: 'Name is required'});
     } else {
-      if (wallet) await updateWallet(wallet, {name, color});
-      else await saveWallet({name, color});
+      if (wallet)
+        await updateWallet(wallet, {name, color, icon, balanceAmount});
+      else await saveWallet({name, color, icon, balanceAmount});
       setName('');
-      setIcon('');
+      setIcon('cash');
       setErrors({name: undefined});
       goBack();
     }
@@ -61,14 +65,20 @@ const Form = ({
   }
 
   return (
-    <ScrollView style={{marginBottom: 20, marginTop: 10}}>
-      <Card>
-        <Card.Content style={{marginBottom: 20}}>
+    <ScrollView>
+      <Card style={{marginBottom: responsiveHeight(10), marginTop: 10}}>
+        <Card.Content>
           <AppTextInput
             placeholder="Enter wallet name"
             value={name}
             onChangeText={text => setName(text)}
-            error={errors.name}
+            error={errors?.name}
+          />
+          <AppTextInput
+            placeholder="Enter opening balance"
+            value={balanceAmount.toString()}
+            onChangeText={text => setBalanceAmount(Number(text))}
+            error={errors?.amount}
           />
 
           <View style={{marginTop: 20}}>

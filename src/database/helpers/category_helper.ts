@@ -27,6 +27,7 @@ export const categoryWithTransactionInfo = () => {
       categories.id,
       categories.name,
       categories.color,
+      categories.icon,
       (select sum(amount) from transactions where transaction_type = 'Income' and category_id = categories.id) totalIncome,
       (select sum(amount) from transactions where transaction_type = 'Expense'  and category_id = categories.id) totalExpense,
       count(*) as count
@@ -40,23 +41,29 @@ export const categoryWithTransactionInfo = () => {
   return categories.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };
 
-export const saveCategory = async ({name, color}: CategoryProps) => {
+export const saveCategory = async ({
+  name,
+  color,
+  icon = 'shape',
+}: CategoryProps) => {
   await database.write(async () => {
     await categories.create(entry => {
       entry.name = name;
       entry.color = color;
+      entry.icon = icon;
     });
   });
 };
 
 export const updateCategory = async (
   category: Category,
-  {name, color}: CategoryProps,
+  {name, color, icon = 'shape'}: CategoryProps,
 ) => {
   await database.write(async () => {
     await category.update(entry => {
       entry.name = name;
       entry.color = color;
+      entry.icon = icon;
     });
   });
 };
@@ -68,10 +75,26 @@ export const deleteCategory = async (category: Category) => {
 };
 
 export const setupDefaultCategories = async () => {
-  await saveCategory({name: 'Electricity', color: generateColor()});
-  await saveCategory({name: 'Food', color: generateColor()});
-  await saveCategory({name: 'Medical', color: generateColor()});
-  await saveCategory({name: 'Travel', color: generateColor()});
-  await saveCategory({name: 'Shopping', color: generateColor()});
-  await saveCategory({name: 'Others', color: generateColor()});
+  await saveCategory({
+    name: 'Electricity',
+    color: generateColor(),
+    icon: 'lightbulb-on-outline',
+  });
+  await saveCategory({name: 'Food', color: generateColor(), icon: 'food'});
+  await saveCategory({
+    name: 'Hospital',
+    color: generateColor(),
+    icon: 'hospital',
+  });
+  await saveCategory({
+    name: 'Travel',
+    color: generateColor(),
+    icon: 'train-car',
+  });
+  await saveCategory({
+    name: 'Shopping',
+    color: generateColor(),
+    icon: 'shopping',
+  });
+  await saveCategory({name: 'Others', color: generateColor(), icon: 'shape'});
 };

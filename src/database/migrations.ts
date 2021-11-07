@@ -58,5 +58,18 @@ export default schemaMigrations({
         }),
       ],
     },
+    {
+      toVersion: 6,
+      steps: [
+        addColumns({
+          table: Wallet.table,
+          columns: [{name: 'icon', type: 'string'}],
+        }),
+        addColumns({
+          table: Category.table,
+          columns: [{name: 'icon', type: 'string'}],
+        }),
+      ],
+    },
   ],
 });

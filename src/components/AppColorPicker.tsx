@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, ColorValue} from 'react-native';
+import {View, TouchableOpacity, ColorValue, ViewStyle} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {responsiveWidth} from '../lib';
 
@@ -7,32 +7,41 @@ const AppColorPicker = ({
   color,
   selected,
   icon,
+  size = responsiveWidth(12),
+  containerStyles = {},
   onPress,
 }: {
   color: ColorValue;
   selected?: boolean;
   icon?: string;
+  size?: number;
+  containerStyles?: ViewStyle;
   onPress?: () => void;
-}) => {
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <View
-        style={{
-          backgroundColor: color,
-          width: responsiveWidth(12),
-          height: responsiveWidth(12),
-          borderRadius: responsiveWidth(20),
-          marginRight: 20,
-          marginBottom: 10,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        {(selected || icon) && (
-          <Icon name={icon || 'check'} color="#ffffff" size={24} />
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
+}) => (
+  <TouchableOpacity onPress={onPress}>
+    <View
+      style={{
+        backgroundColor: color,
+        width: size,
+        height: size,
+        borderRadius: size,
+        marginRight: 20,
+        marginBottom: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...containerStyles,
+      }}>
+      {selected || icon ? (
+        <Icon
+          name={icon?.toString().length ? icon : 'check'}
+          color="#ffffff"
+          size={24}
+        />
+      ) : (
+        <View />
+      )}
+    </View>
+  </TouchableOpacity>
+);
 
-export default AppColorPicker;
+export {AppColorPicker};
