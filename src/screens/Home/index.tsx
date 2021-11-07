@@ -1,17 +1,21 @@
+import {JSXElement} from '@babel/types';
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
-import React from 'react';
+import React, {useContext} from 'react';
 import {FlatList, ScrollView, View} from 'react-native';
 import {
   ActivityIndicator,
   Appbar,
   Button,
   Caption,
-  IconButton,
+  Headline,
   Subheading,
   Surface,
+  Text,
   useTheme,
 } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {AppChip, CategoryRow, SummaryCard} from '../../components';
 import {
   categoryWithTransactionInfo,
@@ -21,10 +25,19 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {responsiveHeight} from '../../lib';
+import {
+  hexToRGBA,
+  numberToCurrency,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../lib';
+import {CurrencyContext} from '../../store/context';
 import {AppLineChart} from './AppLineChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
+  const {currency} = useContext(CurrencyContext);
+  const {colors, dark, fonts} = useTheme();
+
   const [filter, setFilter] = React.useState<lineChartFilterProps>('m');
   const [totalIncome, setTotalIncome] = React.useState(0);
   const [totalExpense, setTotalExpense] = React.useState(0);
@@ -42,7 +55,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setFilter('m');
+      setFilter('y');
       fetchReports();
     }, []),
   );
@@ -151,16 +164,64 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     );
   }
 
+  function renderCard(income: boolean, amount: number) {
+    const mainColor = income ? colors.success : '#FF0000';
+    const bg = dark ? hexToRGBA(mainColor, 0.2) : hexToRGBA(mainColor, 0.1);
+    const fg = dark ? hexToRGBA('#FFFFFF', 0.6) : mainColor;
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+          flex: 1,
+          marginRight: 10,
+          backgroundColor: bg,
+          padding: 20,
+          borderRadius: 15,
+        }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 10,
+          }}>
+          <Icon
+            name={income ? 'arrow-down' : 'arrow-up'}
+            color={fg}
+            size={20}
+          />
+          <Icon name="cash" color={fg} size={26} />
+        </View>
+        <View>
+          <Text style={{color: fg, ...fonts.medium}}>
+            {income ? 'INCOME' : 'EXPENSE'}
+          </Text>
+          <Text
+            style={{
+              color: fg,
+              ...fonts.medium,
+              fontSize: 16,
+            }}>
+            {numberToCurrency(amount, currency)}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   function renderListHeaderComponent() {
     return (
       <>
-        {renderHeading('cash flow (All)')}
-        <SummaryCard
-          expense={totalExpense}
-          income={totalIncome}
-          balance={balance}
-          containerStyles={{marginHorizontal: 10, marginTop: 10}}
-        />
+        <View style={{alignItems: 'center', marginTop: 10}}>
+          <Text>YOUR BALANCE</Text>
+          <Headline>{numberToCurrency(balance, currency)}</Headline>
+          <View style={{flexDirection: 'row', margin: 10}}>
+            {renderCard(true, totalIncome)}
+            {renderCard(false, totalExpense)}
+          </View>
+        </View>
 
         {renderHeading('Report')}
         <Surface style={{marginHorizontal: 10, marginTop: 10}}>

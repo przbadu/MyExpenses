@@ -25,7 +25,7 @@ const AppColorPicker = ({
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
-          backgroundColor: dark ? color : hexToRGBA(color, 0.2),
+          backgroundColor: dark ? hexToRGBA(color, 0.6) : hexToRGBA(color, 0.2),
           width: size,
           height: size,
           borderRadius: 15,
@@ -37,7 +37,7 @@ const AppColorPicker = ({
         {selected || icon ? (
           <Icon
             name={icon?.toString().length ? icon : 'check'}
-            color={dark ? '#FFFFFF' : (color as string)}
+            color={dark ? hexToRGBA('#FFFFFF', 0.7) : (color as string)}
             size={24}
           />
         ) : (
