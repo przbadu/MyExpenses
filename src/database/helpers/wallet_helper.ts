@@ -49,7 +49,6 @@ export const updateWallet = async (
   {name, color, icon = 'cash', balanceAmount}: WalletProps,
 ) => {
   await database.write(async () => {
-    console.log('wallet', wallet);
     const _wallet = await wallets.find(wallet.id);
     await _wallet.update(entry => {
       entry.name = name;

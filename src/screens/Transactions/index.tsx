@@ -132,7 +132,7 @@ const _Transactions: React.FC<{
   function transactionGroupedByMonth(trans: Transaction[] | any) {
     let result = trans
       .sort((a: Transaction, b: Transaction) =>
-        a.transactionAt! < b.transactionAt! ? 1 : -1,
+        new Date(a.transactionAt) < new Date(b.transactionAt) ? 1 : -1,
       )
       .reduce((groupedTransaction: any, transaction: Transaction): object => {
         const month = dayjs(transaction.transactionAt).format('YYYY MMM');

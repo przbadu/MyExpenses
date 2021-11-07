@@ -24,8 +24,6 @@ const ItemRow = ({
   const [confirm, setConfirm] = React.useState(false);
   const balance = item.balanceAmount;
 
-  console.log('item', item);
-
   return (
     <TouchableOpacity onPress={() => onEdit(item)}>
       <ConfirmDialog
@@ -34,7 +32,6 @@ const ItemRow = ({
         label="You are deleting selected item which cannot be recovered after deletion. Are you sure to continue?"
         onCancel={() => setConfirm(false)}
         onConfirm={() => {
-          console.log('item', item);
           onDelete(item);
           setConfirm(false);
         }}

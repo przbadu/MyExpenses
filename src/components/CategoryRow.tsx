@@ -50,7 +50,7 @@ const CategoryRow = ({
             </Text>
           </View>
 
-          <View>
+          <View style={{alignItems: 'flex-end'}}>
             <Text style={{color: colors.notification}}>
               {numberToCurrency(Number(category.totalExpense), currency)}
             </Text>
@@ -60,12 +60,12 @@ const CategoryRow = ({
               </Text>
             )}
           </View>
-          <Icon
+          {/* <Icon
             name="chevron-right"
             size={16}
             style={{marginLeft: 10}}
             color={colors.text}
-          />
+          /> */}
         </View>
       </Surface>
     </TouchableOpacity>
