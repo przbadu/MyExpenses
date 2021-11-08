@@ -1,8 +1,9 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
+import {wallets as dbWallets} from '.';
 import {DefaultTimeFormat, generateColor} from '../../lib';
 import {database} from '../index';
-import {Category, Transaction, Wallet} from '../models';
+import {Category, Transaction, TransactionTypeEnum, Wallet} from '../models';
 
 // This method will find category or wallet for given names
 const getRecordBy = async (
@@ -123,12 +124,22 @@ export const bulkImportTransaction = async (data: any[]) => {
     Transaction.table,
   );
 
-  let batchTransactions = [];
+  let batchTransactions: any[] = [];
+  let walletBalance: any[] = [];
   for (const row of transactionsToCreate) {
     const wallet = wallets.find(wallet => wallet.name === row['Wallet']);
     const category = categories.find(
       category => category.name === row['Category'],
     );
+
+    // prepare wallet Balances
+    if (wallet) {
+      walletBalance.push({
+        id: wallet?.id,
+        amount: row['Amount'],
+        type: row['Type'],
+      });
+    }
 
     batchTransactions.push(
       await prepareNewTransaction(row, wallet as Wallet, category as Category),
@@ -142,6 +153,15 @@ export const bulkImportTransaction = async (data: any[]) => {
       category => category.name === row['Category'],
     );
 
+    // prepare wallet Balances
+    if (wallet) {
+      walletBalance.push({
+        id: wallet.id,
+        amount: row['Amount'],
+        type: row['Type'],
+      });
+    }
+
     batchTransactions.push(
       await prepareUpdateTransaction(
         row,
@@ -154,5 +174,18 @@ export const bulkImportTransaction = async (data: any[]) => {
 
   database.write(async () => {
     await database.batch(...batchTransactions);
+
+    // group wallet id and update all wallet amounts
+    walletBalance.map(async _wallet => {
+      const wallet = (await dbWallets.find(_wallet['id'])) as Wallet;
+      let balance = wallet.balanceAmount;
+      const amount = Number(_wallet['amount']);
+      const type = _wallet['type'].toString().toLowerCase();
+      type === 'expense' ? (balance -= amount) : (balance += amount);
+
+      await wallet?.update(() => {
+        wallet.balanceAmount = balance;
+      });
+    });
   });
 };
