@@ -18,7 +18,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({
   containerStyles = {},
   iconColor,
 }) => {
-  const {colors} = useTheme();
+  const {colors, fonts} = useTheme();
   const textColor = focused ? colors.accent : colors.disabled;
 
   return (
@@ -28,7 +28,11 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({
         style={styles.icon}
         color={iconColor ? iconColor : textColor}
       />
-      {label && <Text style={{color: textColor}}>{label}</Text>}
+      {label && (
+        <Text style={{color: textColor, ...fonts.medium, fontSize: 12}}>
+          {label}
+        </Text>
+      )}
     </View>
   );
 };
@@ -40,7 +44,7 @@ const styles = StyleSheet.create({
     width: 220,
   },
   icon: {
-    fontSize: 30,
+    fontSize: 26,
   },
 });
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {hexToRGBA} from '../lib';
 
 const SwitchButtonContent: React.FC<{
   icon: string;
@@ -11,7 +12,9 @@ const SwitchButtonContent: React.FC<{
   const {colors, dark} = useTheme();
 
   const darkActiveBG = active ? colors.lightBlue : colors.background;
-  const lightActiveBG = active ? colors.lightBlue : colors.background;
+  const lightActiveBG = active
+    ? hexToRGBA(colors.lightBlue, 0.6)
+    : colors.background;
 
   return (
     <View

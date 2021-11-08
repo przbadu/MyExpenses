@@ -86,13 +86,12 @@ export const TabNavigation = () => {
               focused={focused}
               iconColor={colors.white}
               containerStyles={{
-                width: 62,
-                height: 62,
+                width: 48,
+                height: 48,
                 borderRadius: 62,
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: colors.primary,
-                marginBottom: 60,
               }}
             />
           ),
@@ -128,7 +127,5 @@ const styles = StyleSheet.create({
     right: 0,
     elevation: 4,
     height: 80,
-    // borderTopEndRadius: 10,
-    // borderTopLeftRadius: 10,
   },
 });

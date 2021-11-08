@@ -1,10 +1,9 @@
 import {StyleSheet} from 'react-native';
+import {responsiveHeight} from '../../lib';
 
 export const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginTop: 20,
-    marginBottom: 100,
+    marginBottom: responsiveHeight(10),
   },
   input: {
     marginBottom: 15,

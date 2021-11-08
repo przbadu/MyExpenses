@@ -147,7 +147,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
             }
           />
         </View>
-        <View style={{flex: 1}}>
+        {/* <View style={{flex: 1}}>
           <AppTimePicker
             label="Time"
             showSoftInputOnFocus={false}
@@ -159,7 +159,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               })
             }
           />
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -215,17 +215,19 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
               renderContent={() => <CategoryList onSelect={selectCategory} />}
             />
 
-            <AppSelect
-              label="Wallet"
-              placeholder="Select Wallet"
-              value={walletText!}
-              error={errors.walletId}
-              open={showWalletModal}
-              onOpen={() => setShowWalletModal(true)}
-              onClose={() => setShowWalletModal(false)}
-              left={<TextInput.Icon name="bank" />}
-              renderContent={() => <WalletList onSelect={selectWallet} />}
-            />
+            {!transactionId && (
+              <AppSelect
+                label="Wallet"
+                placeholder="Select Wallet"
+                value={walletText!}
+                error={errors.walletId}
+                open={showWalletModal}
+                onOpen={() => setShowWalletModal(true)}
+                onClose={() => setShowWalletModal(false)}
+                left={<TextInput.Icon name="bank" />}
+                renderContent={() => <WalletList onSelect={selectWallet} />}
+              />
+            )}
 
             <Button
               icon="database-plus"

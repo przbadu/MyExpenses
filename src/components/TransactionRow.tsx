@@ -55,7 +55,7 @@ let TransactionRow = ({
               {wallet.name}
             </Text>
           </View>
-          <Icon name="chevron-right" size={16} color={colors.text} />
+          {/* <Icon name="chevron-right" size={16} color={colors.text} /> */}
         </View>
       </Surface>
     </TouchableOpacity>
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   amountContainer: {
     paddingRight: 10,
+    alignItems: 'flex-end',
   },
 });
 

@@ -6,6 +6,7 @@ import {
   DefaultTheme as NavigationDefaultTheme,
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
+import {hexToRGBA} from '.';
 
 export const COLORS = {
   white: '#FFFFFF',
@@ -45,7 +46,7 @@ export const lightTheme = {
     accent: COLORS.secondary,
     success: '#007E3C',
     white: '#FFFFFF',
-    lightBlue: '#abc95f',
+    lightBlue: COLORS.primary,
   },
 };
 

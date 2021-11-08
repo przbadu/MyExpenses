@@ -1,11 +1,13 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
+import {wallets} from '.';
 import {database} from '../index';
 import {
   Category,
   Transaction,
   TransactionProps,
   TransactionTypeEnum,
+  Wallet,
 } from '../models';
 const now = new Date();
 
@@ -127,15 +129,25 @@ export const saveTransaction = async ({
     categoryId = (await uncategorizedId())[0];
   }
   await database.write(async () => {
+    const wallet = (await wallets.find(walletId as string)) as Wallet;
+    let balance = wallet.balanceAmount;
+    transactionType == TransactionTypeEnum.expense
+      ? (balance -= Number(amount))
+      : (balance += Number(amount));
+
     await transactions.create(entry => {
       entry.amount = Number(amount);
       entry.notes = notes;
       entry.category.id = categoryId;
       entry.wallet.id = walletId;
+      entry.wallet.balanceAmount = balance;
       entry.isPaid = isPaid;
       entry.transactionAt = transactionAt;
       entry.time = time;
       entry.transactionType = transactionType;
+    });
+    await wallet.update(() => {
+      wallet.balanceAmount = balance;
     });
   });
 };
@@ -168,23 +180,39 @@ export const updateTransaction = async (
     } as TransactionProps);
   } else {
     await database.write(async () => {
+      const wallet = (await wallets.find(walletId as string)) as Wallet;
+      let balance = wallet.balanceAmount;
+      transactionType == TransactionTypeEnum.expense
+        ? (balance -= Number(amount))
+        : (balance += Number(amount));
       await transaction.update(() => {
         transaction.amount = Number(amount);
         transaction.notes = notes;
         transaction.category.id = categoryId;
-        transaction.wallet.id = walletId;
+        // transaction.wallet.id = walletId; # don't allow wallet update
         transaction.isPaid = isPaid;
         transaction.transactionAt = transactionAt;
         transaction.time = time;
         transaction.transactionType = transactionType;
+      });
+      await wallet.update(() => {
+        wallet.balanceAmount = balance;
       });
     });
   }
 };
 
 export const deleteTransaction = async (id: string) => {
-  const transaction = await transactions.find(id);
+  const transaction = (await transactions.find(id)) as Transaction;
   await database.write(async () => {
+    const wallet = await transaction.wallet;
+    let balance = wallet.balanceAmount;
+    transaction.transactionType == TransactionTypeEnum.expense
+      ? (balance += transaction.amount)
+      : (balance -= transaction.amount);
+    await wallet.update(() => {
+      wallet.balanceAmount = balance;
+    });
     await transaction.destroyPermanently();
   });
 };
