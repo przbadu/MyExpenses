@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {SectionList, View} from 'react-native';
 import {Appbar, Headline, Subheading, useTheme} from 'react-native-paper';
-import {SummaryCard, TransactionRow} from '../../components';
+import {SummaryHeader, TransactionRow} from '../../components';
 import {
   filterTransactionByProps,
   filterTransactions,
@@ -13,7 +13,7 @@ import {
 import {TransactionProps, TransactionTypeEnum} from '../../database/models';
 
 // Transaction component
-const _CategoryTransaction: React.FC<{
+let CategoryTransaction: React.FC<{
   navigation: any;
   route: any;
   transactions: TransactionProps[];
@@ -85,7 +85,7 @@ const _CategoryTransaction: React.FC<{
 
   function renderHeader() {
     return (
-      <Appbar.Header>
+      <Appbar.Header style={{elevation: 0}}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title={categoryName} color={colors.white} />
       </Appbar.Header>
@@ -94,7 +94,7 @@ const _CategoryTransaction: React.FC<{
 
   function renderSectionList() {
     return (
-      <View style={{flex: 1, marginBottom: 10, marginHorizontal: 10}}>
+      <View style={{flex: 1, marginHorizontal: 10}}>
         <SectionList
           sections={groupedTransactions}
           renderItem={({item}: {item: TransactionProps}) => (
@@ -134,18 +134,18 @@ const _CategoryTransaction: React.FC<{
   return (
     <>
       {renderHeader()}
-      <SummaryCard
-        income={summary?.income || 0}
-        expense={summary?.expense || 0}
-        containerStyles={{marginHorizontal: 10, marginVertical: 20}}
+      <SummaryHeader
+        income={+summary?.income!}
+        expense={+summary?.expense!}
+        balance={+(summary?.income! + summary?.expense!)}
       />
       {renderSectionList()}
     </>
   );
 };
 
-const CategoryTransaction = withObservables([], () => ({
+CategoryTransaction = withObservables([], () => ({
   transactions: observeTransactions(),
-}))(_CategoryTransaction);
+}))(CategoryTransaction);
 
 export {CategoryTransaction};

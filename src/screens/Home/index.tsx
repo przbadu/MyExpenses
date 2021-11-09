@@ -1,14 +1,11 @@
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
-import dayjs from 'dayjs';
 import React, {useContext} from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
 import {
   ActivityIndicator,
   Appbar,
   Caption,
-  Colors,
-  Headline,
   Subheading,
   Surface,
   Text,
@@ -16,7 +13,7 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {AppChip, CategoryRow} from '../../components';
+import {AppChip, SummaryHeader, CategoryRow} from '../../components';
 import {
   categoryWithTransactionInfo,
   lineChartData,
@@ -25,18 +22,11 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {
-  darkTheme,
-  hexToRGBA,
-  numberToCurrency,
-  responsiveHeight,
-} from '../../lib';
-import {CurrencyContext} from '../../store/context';
+import {hexToRGBA, responsiveHeight} from '../../lib';
 import {AppLineChart} from './AppLineChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
-  const {currency} = useContext(CurrencyContext);
-  const {colors, dark, fonts} = useTheme();
+  const {colors, dark} = useTheme();
 
   const [filter, setFilter] = React.useState<lineChartFilterProps>('m');
   const [totalIncome, setTotalIncome] = React.useState(0);
@@ -177,83 +167,15 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     );
   }
 
-  function renderCard(income: boolean, amount: number) {
-    const fg = income ? colors.success : colors.notification;
-
-    return (
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-          flex: 1,
-          marginRight: 10,
-          padding: 10,
-        }}>
-        <Text>{income ? 'INCOME' : 'EXPENSE'}</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Icon
-            name={income ? 'arrow-down' : 'arrow-up'}
-            color={fg}
-            size={20}
-            style={{marginRight: 10}}
-          />
-          <Text
-            style={{
-              color: fg,
-              ...fonts.medium,
-              fontSize: 16,
-            }}>
-            {numberToCurrency(amount, currency)}
-          </Text>
-        </View>
-      </View>
-    );
-  }
-
-  function renderIncomeExpense() {
-    return (
-      <>
-        <Surface
-          style={{
-            backgroundColor: dark
-              ? hexToRGBA(colors.onSurface, 0.11)
-              : colors.primary,
-            alignItems: 'center',
-            paddingVertical: 10,
-            paddingBottom: 60,
-          }}>
-          <Text
-            style={{
-              color: Colors.green400,
-            }}>
-            Available Balance
-          </Text>
-          <Headline style={{color: colors.white}}>
-            {numberToCurrency(balance, currency)}
-          </Headline>
-          <Text theme={darkTheme}>{dayjs().format('YYYY MMM, DD')}</Text>
-        </Surface>
-
-        <Surface
-          style={{
-            flexDirection: 'row',
-            margin: 10,
-            marginTop: -40,
-            padding: 10,
-            borderRadius: 10,
-            elevation: 4,
-          }}>
-          {renderCard(true, totalIncome)}
-          {renderCard(false, totalExpense)}
-        </Surface>
-      </>
-    );
-  }
-
   function renderListHeaderComponent() {
     return (
       <>
-        {renderIncomeExpense()}
+        <SummaryHeader
+          balance={balance}
+          income={totalIncome}
+          expense={totalExpense}
+        />
+
         <View
           style={{
             marginHorizontal: 10,

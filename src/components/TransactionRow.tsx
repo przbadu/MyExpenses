@@ -3,11 +3,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {useTheme, Text, Surface} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {TransactionAmountText} from '.';
 import {CategoryProps, TransactionProps, WalletProps} from '../database/models';
 import {responsiveWidth} from '../lib';
-import {CurrencyContext, CurrencyContextProps} from '../store/context';
 import {AppColorPicker} from './AppColorPicker';
 
 let TransactionRow = ({
@@ -17,11 +15,10 @@ let TransactionRow = ({
   onPress,
 }: {
   transaction: TransactionProps;
-  category: CategoryProps;
-  wallet: WalletProps;
+  category?: CategoryProps;
+  wallet?: WalletProps;
   onPress?: () => void;
 }) => {
-  const {currency} = React.useContext<CurrencyContextProps>(CurrencyContext);
   const {colors, fonts} = useTheme();
 
   return (
@@ -29,8 +26,8 @@ let TransactionRow = ({
       <Surface style={{...styles.container}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <AppColorPicker
-            color={category.color!}
-            icon={category.icon}
+            color={category?.color!}
+            icon={category?.icon}
             size={responsiveWidth(10)}
           />
           <View style={styles.textContainer}>
@@ -48,11 +45,10 @@ let TransactionRow = ({
           <View style={styles.amountContainer}>
             <TransactionAmountText
               amount={transaction.amount}
-              currency={currency}
               type={transaction.transactionType!}
             />
             <Text style={{...fonts.light, textAlign: 'right'}}>
-              {wallet.name}
+              {wallet?.name}
             </Text>
           </View>
           {/* <Icon name="chevron-right" size={16} color={colors.text} /> */}

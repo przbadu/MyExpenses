@@ -18,7 +18,12 @@ import {
   Surface,
   useTheme,
 } from 'react-native-paper';
-import {AppChip, AppModal, SummaryCard, TransactionRow} from '../../components';
+import {
+  AppChip,
+  AppModal,
+  SummaryHeader,
+  TransactionRow,
+} from '../../components';
 import {
   bulkImportTransaction,
   filterTransactionByProps,
@@ -32,7 +37,7 @@ import {CurrencyContext} from '../../store/context';
 import TransactionFilters from './TransactionFilters';
 
 // Transaction component
-const _Transactions: React.FC<{
+let Transactions: React.FC<{
   transactions: Transaction[];
   navigation: any;
 }> = ({transactions, navigation}) => {
@@ -214,7 +219,7 @@ const _Transactions: React.FC<{
 
   function renderHeader() {
     return (
-      <Appbar.Header>
+      <Appbar.Header style={{elevation: 0}}>
         <Appbar.Content title="TRANSACTIONS" color={colors.white} />
         <Appbar.Action
           icon="calendar-blank-outline"
@@ -359,12 +364,12 @@ const _Transactions: React.FC<{
   return (
     <>
       {renderHeader()}
-      {renderFilterHeader()}
-      <SummaryCard
-        income={summary?.income || 0}
-        expense={summary?.expense || 0}
-        containerStyles={{marginHorizontal: 10, marginVertical: 20}}
+      <SummaryHeader
+        income={+summary?.income!}
+        expense={+summary?.expense!}
+        balance={+(summary?.income! - summary?.expense!)}
       />
+      {renderFilterHeader()}
       {renderSectionList()}
       {renderFilters()}
 
@@ -382,8 +387,8 @@ const _Transactions: React.FC<{
   );
 };
 
-const Transactions = withObservables([], () => ({
+Transactions = withObservables([], () => ({
   transactions: observeTransactions(),
-}))(_Transactions);
+}))(Transactions);
 
 export {Transactions};
