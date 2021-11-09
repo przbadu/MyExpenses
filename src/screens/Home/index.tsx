@@ -1,11 +1,13 @@
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
+import dayjs from 'dayjs';
 import React, {useContext} from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
 import {
   ActivityIndicator,
   Appbar,
   Caption,
+  Colors,
   Headline,
   Subheading,
   Surface,
@@ -23,7 +25,12 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {hexToRGBA, numberToCurrency, responsiveHeight} from '../../lib';
+import {
+  darkTheme,
+  hexToRGBA,
+  numberToCurrency,
+  responsiveHeight,
+} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 import {AppLineChart} from './AppLineChart';
 
@@ -141,16 +148,28 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
           alignItems: 'center',
         }}>
         <View style={{flexDirection: 'row', marginBottom: 5}}>
-          <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
+          <AppChip
+            surface
+            selected={filter === 'w'}
+            onPress={() => setFilter('w')}>
             Week
           </AppChip>
-          <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
+          <AppChip
+            surface
+            selected={filter === 'm'}
+            onPress={() => setFilter('m')}>
             Month
           </AppChip>
-          <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
+          <AppChip
+            surface
+            selected={filter === 'q'}
+            onPress={() => setFilter('q')}>
             Quarter
           </AppChip>
-          <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
+          <AppChip
+            surface
+            selected={filter === 'y'}
+            onPress={() => setFilter('y')}>
             Year
           </AppChip>
         </View>
@@ -159,39 +178,25 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   }
 
   function renderCard(income: boolean, amount: number) {
-    const mainColor = income ? colors.success : '#FF0000';
-    const bg = dark ? hexToRGBA(mainColor, 0.2) : hexToRGBA(mainColor, 0.1);
-    const fg = dark ? hexToRGBA('#FFFFFF', 0.6) : mainColor;
+    const fg = income ? colors.success : colors.notification;
 
     return (
       <View
         style={{
-          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-evenly',
           flex: 1,
           marginRight: 10,
-          backgroundColor: bg,
           padding: 10,
-          borderRadius: 15,
         }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 10,
-          }}>
+        <Text>{income ? 'INCOME' : 'EXPENSE'}</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Icon
             name={income ? 'arrow-down' : 'arrow-up'}
             color={fg}
-            size={16}
+            size={20}
+            style={{marginRight: 10}}
           />
-          <Icon name="cash" color={fg} size={26} />
-        </View>
-        <View>
-          <Text style={{color: fg, ...fonts.light}}>
-            {income ? 'INCOME' : 'EXPENSE'}
-          </Text>
           <Text
             style={{
               color: fg,
@@ -205,26 +210,58 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     );
   }
 
-  function renderListHeaderComponent() {
+  function renderIncomeExpense() {
     return (
       <>
         <Surface
           style={{
+            backgroundColor: dark
+              ? hexToRGBA(colors.onSurface, 0.11)
+              : colors.primary,
             alignItems: 'center',
             paddingVertical: 10,
-            marginHorizontal: 10,
-            marginTop: 10,
+            paddingBottom: 60,
           }}>
-          <Text>YOUR BALANCE</Text>
-          <Headline>{numberToCurrency(balance, currency)}</Headline>
-          <View style={{flexDirection: 'row', margin: 10}}>
-            {renderCard(true, totalIncome)}
-            {renderCard(false, totalExpense)}
-          </View>
+          <Text
+            style={{
+              color: Colors.green400,
+            }}>
+            Available Balance
+          </Text>
+          <Headline style={{color: colors.white}}>
+            {numberToCurrency(balance, currency)}
+          </Headline>
+          <Text theme={darkTheme}>{dayjs().format('YYYY MMM, DD')}</Text>
         </Surface>
 
-        {renderHeading('Report')}
-        <Surface style={{marginHorizontal: 10, marginTop: 10}}>
+        <Surface
+          style={{
+            flexDirection: 'row',
+            margin: 10,
+            marginTop: -40,
+            padding: 10,
+            borderRadius: 10,
+            elevation: 4,
+          }}>
+          {renderCard(true, totalIncome)}
+          {renderCard(false, totalExpense)}
+        </Surface>
+      </>
+    );
+  }
+
+  function renderListHeaderComponent() {
+    return (
+      <>
+        {renderIncomeExpense()}
+        <View
+          style={{
+            marginHorizontal: 10,
+            marginVertical: 10,
+          }}>
+          {renderFilters()}
+        </View>
+        <Surface style={{marginHorizontal: 10}}>
           {loading ? (
             <View
               style={{
@@ -327,11 +364,6 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         <Appbar.Content title="STATS" />
         <Appbar.Action icon="chart-pie" onPress={() => {}} />
       </Appbar.Header>
-
-      <Surface
-        style={{backgroundColor: dark ? colors.surface : colors.primary}}>
-        {renderFilters()}
-      </Surface>
 
       {renderCharts()}
     </>
