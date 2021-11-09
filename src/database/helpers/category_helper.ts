@@ -1,5 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
-import {generateColor} from '../../lib';
+import dayjs from 'dayjs';
+import {formatDateColumn, lineChartFilterProps} from '.';
+import {DefaultDateFormat, generateColor} from '../../lib';
 import {database} from '../index';
 import {Category, CategoryProps} from '../models';
 
@@ -21,7 +23,30 @@ export const categoryWithExpenseInfo = () => {
   return categories.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };
 
-export const categoryWithTransactionInfo = () => {
+export const categoryWithTransactionInfo = (
+  filter: lineChartFilterProps | null = null,
+) => {
+  const _dateFormat = 'YYYY-MM-DD';
+  let where = '';
+  let startTime;
+  const endTime = dayjs().format(_dateFormat);
+
+  if (filter === 'w') {
+    startTime = dayjs().startOf('week').format(_dateFormat);
+  } else if (filter === 'm') {
+    startTime = dayjs().startOf('month').format(_dateFormat);
+  } else if (filter === 'q') {
+    startTime = dayjs().startOf('quarter').format(_dateFormat);
+  } else if (filter === 'y') {
+    startTime = dayjs().startOf('year').format(_dateFormat);
+  }
+
+  if (startTime && endTime) {
+    where = ` WHERE ${formatDateColumn(
+      '%Y-%m-%d',
+    )} >= "${startTime}" AND ${formatDateColumn('%Y-%m-%d')} <= "${endTime}"`;
+  }
+
   const query = `
     select
       categories.id,
@@ -33,6 +58,7 @@ export const categoryWithTransactionInfo = () => {
       count(*) as count
     from transactions
     INNER JOIN categories on categories.id = transactions.category_id
+    ${where}
     group by category_id
     order by totalExpense DESC, totalIncome DESC, count DESC;
   `;

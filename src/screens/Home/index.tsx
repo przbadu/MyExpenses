@@ -1,12 +1,10 @@
-import {JSXElement} from '@babel/types';
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import React, {useContext} from 'react';
-import {FlatList, ScrollView, View} from 'react-native';
+import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
 import {
   ActivityIndicator,
   Appbar,
-  Button,
   Caption,
   Headline,
   Subheading,
@@ -16,7 +14,7 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {AppChip, CategoryRow, SummaryCard} from '../../components';
+import {AppChip, CategoryRow} from '../../components';
 import {
   categoryWithTransactionInfo,
   lineChartData,
@@ -25,12 +23,7 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {
-  hexToRGBA,
-  numberToCurrency,
-  responsiveHeight,
-  responsiveWidth,
-} from '../../lib';
+import {hexToRGBA, numberToCurrency, responsiveHeight} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 import {AppLineChart} from './AppLineChart';
 
@@ -55,13 +48,14 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      setFilter('y');
+      setFilter('m');
       fetchReports();
     }, []),
   );
 
   React.useEffect(() => {
     fetchChartData();
+    fetchReports();
   }, [filter]);
 
   React.useEffect(() => {
@@ -120,7 +114,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   };
 
   const fetchCategories = async () => {
-    const _categories = await categoryWithTransactionInfo();
+    const _categories = await categoryWithTransactionInfo(filter);
     setCategories(_categories);
   };
 
@@ -148,16 +142,16 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         }}>
         <View style={{flexDirection: 'row', marginBottom: 5}}>
           <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
-            This Week
+            Week
           </AppChip>
           <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
-            This Month
+            Month
           </AppChip>
           <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
-            This Quarter
+            Quarter
           </AppChip>
           <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
-            This Year
+            Year
           </AppChip>
         </View>
       </ScrollView>
@@ -178,7 +172,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
           flex: 1,
           marginRight: 10,
           backgroundColor: bg,
-          padding: 20,
+          padding: 10,
           borderRadius: 15,
         }}>
         <View
@@ -190,12 +184,12 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
           <Icon
             name={income ? 'arrow-down' : 'arrow-up'}
             color={fg}
-            size={20}
+            size={16}
           />
           <Icon name="cash" color={fg} size={26} />
         </View>
         <View>
-          <Text style={{color: fg, ...fonts.medium}}>
+          <Text style={{color: fg, ...fonts.light}}>
             {income ? 'INCOME' : 'EXPENSE'}
           </Text>
           <Text
@@ -214,18 +208,23 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   function renderListHeaderComponent() {
     return (
       <>
-        <View style={{alignItems: 'center', marginTop: 10}}>
+        <Surface
+          style={{
+            alignItems: 'center',
+            paddingVertical: 10,
+            marginHorizontal: 10,
+            marginTop: 10,
+          }}>
           <Text>YOUR BALANCE</Text>
           <Headline>{numberToCurrency(balance, currency)}</Headline>
           <View style={{flexDirection: 'row', margin: 10}}>
             {renderCard(true, totalIncome)}
             {renderCard(false, totalExpense)}
           </View>
-        </View>
+        </Surface>
 
         {renderHeading('Report')}
         <Surface style={{marginHorizontal: 10, marginTop: 10}}>
-          {renderFilters()}
           {loading ? (
             <View
               style={{
@@ -253,12 +252,29 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
             alignItems: 'center',
           }}>
           {renderHeading('Categories')}
-          <View style={{flexDirection: 'row', marginTop: 20}}>
-            <Button
-              icon="plus"
-              onPress={() => navigation.navigate('AddCategory')}>
-              Add Category
-            </Button>
+          <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 10}}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AddCategory')}
+              style={{
+                flexDirection: 'row',
+                backgroundColor: dark
+                  ? hexToRGBA(colors.onSurface, 0.2)
+                  : hexToRGBA(colors.primary, 0.1),
+                borderRadius: 10,
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                marginRight: 10,
+                alignItems: 'center',
+              }}>
+              <Icon
+                name="plus"
+                size={16}
+                color={dark ? colors.text : colors.primary}
+              />
+              <Text style={{color: dark ? colors.text : colors.primary}}>
+                Category
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </>
@@ -307,10 +323,15 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
 
   return (
     <>
-      <Appbar.Header>
+      <Appbar.Header style={{elevation: 0}}>
         <Appbar.Content title="STATS" />
         <Appbar.Action icon="chart-pie" onPress={() => {}} />
       </Appbar.Header>
+
+      <Surface
+        style={{backgroundColor: dark ? colors.surface : colors.primary}}>
+        {renderFilters()}
+      </Surface>
 
       {renderCharts()}
     </>

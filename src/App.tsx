@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
+import {ActivityIndicator} from 'react-native-paper';
 import {initialSetup} from './database/helpers';
 import {AppNavigator} from './navigation';
 import {SplashScreen} from './screens';
@@ -22,7 +23,9 @@ const App = () => {
   return (
     <ThemeProvider>
       <CurrencyProvider>
-        <AppNavigator />
+        <Suspense fallback={<ActivityIndicator />}>
+          <AppNavigator />
+        </Suspense>
       </CurrencyProvider>
     </ThemeProvider>
   );
