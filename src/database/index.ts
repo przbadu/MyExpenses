@@ -15,3 +15,16 @@ export const database = new Database({
   adapter,
   modelClasses: [Wallet, Category, Transaction, Saving, SavingAmount],
 });
+
+// connecting other databases: https://github.com/panz3r/react-native-flipper-databases
+if (__DEV__) {
+  // Import connectDatabases function and required DBDrivers
+  const {
+    connectDatabases,
+    WatermelonDB,
+  } = require('react-native-flipper-databases');
+
+  connectDatabases([
+    new WatermelonDB(database), // Pass in database definition
+  ]);
+}
