@@ -1,22 +1,26 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
-import {Avatar, Text} from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import {AppColorPicker} from '../../components';
 import {observeCategories} from '../../database/helpers';
 import {CategoryProps} from '../../database/models';
-import {responsiveHeight, responsiveWidth} from '../../lib';
+import {responsiveHeight} from '../../lib';
 
 interface CategoryListProps {
   onSelect: (item: CategoryProps) => void;
   categories: CategoryProps[];
 }
-const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
+let CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
   const renderItem = ({item}: {item: CategoryProps}) => (
     <TouchableWithoutFeedback onPress={() => onSelect(item)}>
       <View
         style={{flexDirection: 'row', alignItems: 'center', marginBottom: 15}}>
-        <AppColorPicker icon={item.icon} color={item.color!} />
+        <AppColorPicker
+          icon={item.icon}
+          color={item.color!}
+          onPress={() => onSelect(item)}
+        />
         <Text style={{marginBottom: 10, marginTop: 10}}>{item.name}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -37,8 +41,8 @@ const CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
   );
 };
 
-const enhance = withObservables([], () => ({
+CategoryList = withObservables([], () => ({
   categories: observeCategories(),
-}));
+}))(CategoryList);
 
-export default enhance(CategoryList);
+export default CategoryList;

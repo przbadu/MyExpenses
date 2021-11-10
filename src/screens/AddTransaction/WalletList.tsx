@@ -26,7 +26,11 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
         }}>
         <View
           style={{flexDirection: 'row', alignItems: 'center', maxWidth: '40%'}}>
-          <AppColorPicker icon={item.icon} color={item.color!} />
+          <AppColorPicker
+            icon={item.icon}
+            color={item.color!}
+            onPress={() => onSelect(item)}
+          />
           <Text>{item.name}</Text>
         </View>
         <View style={{maxWidth: '60%'}}>
