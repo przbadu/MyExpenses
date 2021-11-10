@@ -54,7 +54,7 @@ export const lineChartData = (
     ' GROUP BY date' +
     ' ORDER BY date';
 
-  console.log('query', query);
+  console.log('ineChartData: ', query);
 
   return transactions
     .query(Q.unsafeSqlQuery(query, [transactionType]))
@@ -75,7 +75,7 @@ export const lineChartIncomeData = (filter: lineChartFilterProps) => {
     ' GROUP BY date' +
     ' ORDER BY date';
 
-  console.log('query', query);
+  console.log('lineChartIncomeData: ', query);
 
   return transactions.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };

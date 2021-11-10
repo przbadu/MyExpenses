@@ -19,7 +19,6 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   const [value, setValue] = React.useState<string>('');
   const [selected, setSelected] = React.useState<itemProps[]>([]);
   const [data, setData] = React.useState<itemProps[]>([]);
-  const [selectAll, setSelectAll] = React.useState(false);
 
   // Initial page load
   React.useEffect(() => {
@@ -42,12 +41,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   // selected texts
   React.useEffect(() => {
     updateLabelText();
-  }, [selected]);
-
-  // select all
-  React.useEffect(() => {
-    setSelected(selectAll ? options : []);
-  }, [selectAll]);
+  }, [selected, selectedValues]);
 
   function checkedStatus(item: itemProps) {
     const ids = selected.map(i => i.id);

@@ -19,7 +19,7 @@ export const categoryWithExpenseInfo = () => {
     order by sum DESC, count DESC;
   `;
 
-  console.log('query', query);
+  console.log('categoryWithExpenseInfo: ', query);
   return categories.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };
 
@@ -63,7 +63,7 @@ export const categoryWithTransactionInfo = (
     order by totalExpense DESC, totalIncome DESC, count DESC;
   `;
 
-  console.log('query', query);
+  console.log('categoryWithTransactionInfo', query);
   return categories.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };
 

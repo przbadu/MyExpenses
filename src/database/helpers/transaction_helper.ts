@@ -91,7 +91,7 @@ export const uncategorizedId = () =>
 export const transactionCount = (category_id: number | string | undefined) => {
   const query = `SELECT COUNT(*) AS count FROM transactions WHERE category_id = ? AND _status IS NOT 'deleted'`;
 
-  console.log('query', query, category_id);
+  console.log('transactionCount: ', query, category_id);
   return transactions
     .query(Q.unsafeSqlQuery(query, [category_id]))
     .observeCount();
@@ -100,7 +100,7 @@ export const transactionCount = (category_id: number | string | undefined) => {
 export const transactionSum = (category_id: number | string | undefined) => {
   const query = `SELECT SUM(amount) AS sum FROM transactions WHERE category_id = ? AND _status IS NOT 'deleted'`;
 
-  console.log('query', query, category_id);
+  console.log('transactionSum: ', query, category_id);
   return transactions.query(Q.unsafeSqlQuery(query, [category_id])).observe();
 };
 

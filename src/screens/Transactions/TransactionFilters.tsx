@@ -5,17 +5,32 @@ import {ScrollView, View} from 'react-native';
 import {Button} from 'react-native-paper';
 import {AppDatePicker, AppMultiSelect} from '../../components';
 import {DefaultDateFormat, responsiveHeight} from '../../lib';
-import {observeCategories, observeWallets} from '../../database/helpers';
+import {
+  filterTransactionByProps,
+  observeCategories,
+  observeWallets,
+} from '../../database/helpers';
 import {CategoryProps, WalletProps} from '../../database/models';
-import {useForm} from './useFilterForm';
 
-const _TransactionFilters: React.FC<{
+let TransactionFilters: React.FC<{
   onFilter: Function;
-  categories: CategoryProps[];
-  wallets: WalletProps[];
-}> = ({onFilter, categories, wallets}) => {
-  const {form, submitting, handleFormChange, setSubmitting} = useForm();
-
+  categories?: CategoryProps[];
+  wallets?: WalletProps[];
+  form: filterTransactionByProps;
+  submitting: boolean;
+  handleFormChange: Function;
+  setSubmitting: Function;
+  clearFilter: () => void;
+}> = ({
+  form,
+  submitting,
+  categories,
+  wallets,
+  setSubmitting,
+  handleFormChange,
+  onFilter,
+  clearFilter,
+}) => {
   function prepareData(data: CategoryProps[] | WalletProps[]) {
     return data.map(item => ({id: item.id, name: item.name}));
   }
@@ -65,7 +80,7 @@ const _TransactionFilters: React.FC<{
 
       <AppMultiSelect
         label="Wallets"
-        options={prepareData(wallets)}
+        options={prepareData(wallets!)}
         style={{marginBottom: 10}}
         onSelected={handleWalletSelection}
         selectedValues={form.walletIds}
@@ -73,7 +88,7 @@ const _TransactionFilters: React.FC<{
 
       <AppMultiSelect
         label="Categories"
-        options={prepareData(categories)}
+        options={prepareData(categories!)}
         style={{marginBottom: 10}}
         onSelected={handleCategorySelection}
         selectedValues={form.categoryIds}
@@ -90,15 +105,16 @@ const _TransactionFilters: React.FC<{
         }}>
         {submitting ? 'Please Wait...' : 'Apply Filter'}
       </Button>
+      <Button mode="outlined" onPress={clearFilter}>
+        Clear Filter
+      </Button>
     </ScrollView>
   );
 };
 
-const enhance = withObservables([], () => ({
+TransactionFilters = withObservables([], () => ({
   categories: observeCategories(),
   wallets: observeWallets(),
-}));
-
-const TransactionFilters = enhance(_TransactionFilters);
+}))(TransactionFilters);
 
 export default TransactionFilters;

@@ -32,6 +32,7 @@ import {Transaction, TransactionTypeEnum} from '../../database/models';
 import {DefaultDateFormat, numberToCurrency} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 import TransactionFilters from './TransactionFilters';
+import {useForm} from './useFilterForm';
 
 // Transaction component
 let Transactions: React.FC<{
@@ -54,6 +55,7 @@ let Transactions: React.FC<{
   const {navigate} = navigation;
   const {colors} = useTheme();
   const [showFilter, setShowFilter] = React.useState(false);
+  const useFormProps = useForm();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -70,6 +72,7 @@ let Transactions: React.FC<{
   const fetchSummary = async (
     filterBy: filterTransactionByProps | null = null,
   ) => {
+    console.log('filterby', filterBy);
     const res: {transaction_type: TransactionTypeEnum; sum_amount: number}[] =
       await transactionTypeSummary(filterBy);
     const _income = res.filter(
@@ -249,7 +252,21 @@ let Transactions: React.FC<{
         heading="Filter Transactions"
         visible={showFilter}
         renderContent={() => (
-          <TransactionFilters onFilter={filterTransactionBy} />
+          <TransactionFilters
+            onFilter={() => {
+              setSelectedFilterChip('custom');
+              filterTransactionBy(useFormProps.form);
+            }}
+            form={useFormProps.form}
+            handleFormChange={useFormProps.handleFormChange}
+            submitting={useFormProps.submitting}
+            setSubmitting={useFormProps.setSubmitting}
+            clearFilter={() => {
+              useFormProps.clearFilter();
+              periodicTransactionFilter('m');
+              setShowFilter(false);
+            }}
+          />
         )}
       />
     );
@@ -289,15 +306,15 @@ let Transactions: React.FC<{
     return (
       <View style={{marginBottom: 10, marginLeft: 10}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {selectedFilterChip !== 'm' && (
-            <AppChip
-              surface
-              icon="filter-remove"
-              onPress={() => {
-                periodicTransactionFilter('m');
-              }}
-            />
-          )}
+          <AppChip
+            surface
+            selected={selectedFilterChip === 'custom'}
+            icon={selectedFilterChip === 'custom' ? 'filter-remove' : 'filter'}
+            onPress={() => {
+              setShowFilter(true);
+            }}>
+            Filter
+          </AppChip>
           <AppChip
             surface
             selected={selectedFilterChip === 'd'}
@@ -321,16 +338,6 @@ let Transactions: React.FC<{
             selected={selectedFilterChip === 'y'}
             onPress={() => periodicTransactionFilter('y')}>
             Year
-          </AppChip>
-          <AppChip
-            surface
-            selected={selectedFilterChip === 'custom'}
-            icon="filter"
-            onPress={() => {
-              setSelectedFilterChip('custom');
-              setShowFilter(true);
-            }}>
-            Filter
           </AppChip>
         </ScrollView>
       </View>
@@ -374,9 +381,5 @@ let Transactions: React.FC<{
     </>
   );
 };
-
-// Transactions = withObservables([], () => ({
-//   transactions: observeTransactions(),
-// }))(Transactions);
 
 export {Transactions};

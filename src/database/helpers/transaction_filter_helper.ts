@@ -103,6 +103,8 @@ export function transactionTypeSummary(
   query += ` _status IS NOT 'deleted'`;
   query += ' group by transaction_type';
   query += ' order by transaction_type DESC';
+
+  console.log('transactionTypeSummary: ', query);
   return transactions.query(Q.unsafeSqlQuery(query, args)).unsafeFetchRaw();
 }
 
@@ -131,7 +133,7 @@ export function filterTransactions(
     );
   }
   // filter by category ids
-  if (filterBy?.categoryIds) {
+  if (filterBy?.categoryIds && filterBy.categoryIds.length > 0) {
     let categoryIdsQuery: any = [];
     filterBy.categoryIds.map(id =>
       categoryIdsQuery.push(Q.where('category_id', id)),
@@ -139,7 +141,7 @@ export function filterTransactions(
     useQuery.push(Q.or(...categoryIdsQuery));
   }
   // filter by wallet ids
-  if (filterBy?.walletIds) {
+  if (filterBy?.walletIds && filterBy.walletIds.length > 0) {
     let walletIdsQuery: any = [];
     filterBy.walletIds.map(id => walletIdsQuery.push(Q.where('wallet_id', id)));
     useQuery.push(Q.or(...walletIdsQuery));

@@ -3,7 +3,7 @@ import React from 'react';
 import {filterTransactionByProps} from '../../database/helpers';
 
 const initialFormState = {
-  startDate: new Date(+dayjs().startOf('m')),
+  startDate: new Date(+dayjs().startOf('month')),
   endDate: new Date(),
   walletIds: undefined,
   categoryIds: undefined,
@@ -26,9 +26,9 @@ export const useForm = () => {
     setForm(formData);
   };
 
-  function resetFilter() {
+  function clearFilter() {
     setForm({...form, ...initialFormState});
   }
 
-  return {form, submitting, handleFormChange, setSubmitting, resetFilter};
+  return {form, submitting, handleFormChange, setSubmitting, clearFilter};
 };
