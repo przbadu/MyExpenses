@@ -279,7 +279,7 @@ let Transactions: React.FC<{
           )}
           ListEmptyComponent={renderEmptyResult()}
           refreshing={loading}
-          // onRefresh={refreshData}
+          onRefresh={refreshData}
         />
       </View>
     );
