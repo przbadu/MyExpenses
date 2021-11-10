@@ -1,9 +1,9 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Appbar, Card, Switch} from 'react-native-paper';
+import {StyleSheet} from 'react-native';
+import {ActivityIndicator, Appbar, Card, Switch} from 'react-native-paper';
 
-import {AppModal, AppSwitch, MenuItem} from '../../components';
+import {AppModal, AppSnackbar, AppSwitch, MenuItem} from '../../components';
 import {responsiveHeight} from '../../lib';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {Category, WalletProps} from '../../database/models';
@@ -14,6 +14,7 @@ import {
   CurrencyContext,
 } from '../../store/context';
 import {CurrencyList} from './CurrencyList';
+import {resetDB} from '../../database';
 
 let Settings = ({
   navigation,
@@ -28,6 +29,9 @@ let Settings = ({
   const {theme, toggleTheme} = useContext<ThemeContentProps>(ThemeContext);
   const {currency, updateCurrency} =
     useContext<CurrencyContextProps>(CurrencyContext);
+  const [loading, setLoading] = React.useState(false);
+  const [snackbar, setSnackbar] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState('');
 
   // render currency dropdown
   const renderCurrencySelect = () => (
@@ -81,8 +85,27 @@ let Settings = ({
           />
 
           {renderCurrencySelect()}
+
+          <MenuItem
+            label="Clear Data"
+            icon="trash-can"
+            onPress={async () => {
+              setLoading(true);
+              await resetDB();
+              setLoading(false);
+              setSnackbarMsg('Data cleared successfully!');
+              setSnackbar(true);
+            }}
+          />
         </Card.Content>
       </Card>
+
+      <AppSnackbar
+        visible={snackbar}
+        onDismiss={() => setSnackbar(false)}
+        message={snackbarMsg}
+      />
+      <ActivityIndicator animating={loading} />
     </>
   );
 };

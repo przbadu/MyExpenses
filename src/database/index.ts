@@ -16,6 +16,21 @@ export const database = new Database({
   modelClasses: [Wallet, Category, Transaction, Saving, SavingAmount],
 });
 
+export const resetDB = async () =>
+  await database.write(async () => {
+    await database.collections.get(Wallet.table).query().markAllAsDeleted();
+    await database.collections.get(Category.table).query().markAllAsDeleted();
+    await database.collections
+      .get(Transaction.table)
+      .query()
+      .markAllAsDeleted();
+    await database.collections.get(Saving.table).query().markAllAsDeleted();
+    await database.collections
+      .get(SavingAmount.table)
+      .query()
+      .markAllAsDeleted();
+  });
+
 // connecting other databases: https://github.com/panz3r/react-native-flipper-databases
 if (__DEV__) {
   // Import connectDatabases function and required DBDrivers
