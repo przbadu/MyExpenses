@@ -14,8 +14,6 @@ import {saveWallet, updateWallet} from '../../database/helpers';
 import {Wallet} from '../../database/models';
 import {generateColors, responsiveHeight, walletIcons} from '../../lib';
 
-let initialColors: string[] = generateColors();
-
 const Form = ({
   wallet,
   navigation,
@@ -23,6 +21,7 @@ const Form = ({
   wallet?: Wallet | undefined;
   navigation: any;
 }) => {
+  let initialColors: string[] = generateColors();
   const {colors} = useTheme();
   const [randomColors, setRandomColors] =
     React.useState<string[]>(initialColors);

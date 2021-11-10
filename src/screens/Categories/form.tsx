@@ -13,8 +13,6 @@ import {saveCategory, updateCategory} from '../../database/helpers';
 import {Category} from '../../database/models';
 import {categoryIcons, generateColors, responsiveHeight} from '../../lib';
 
-let initialColors: string[] = generateColors();
-
 const Form = ({
   navigation,
   category,
@@ -22,6 +20,7 @@ const Form = ({
   navigation: any;
   category?: Category | undefined;
 }) => {
+  let initialColors: string[] = generateColors();
   const {colors} = useTheme();
   const [randomColors, setRandomColors] =
     React.useState<string[]>(initialColors);
