@@ -1,4 +1,3 @@
-import withObservables from '@nozbe/with-observables';
 import {useFocusEffect} from '@react-navigation/core';
 import CSV from 'csvtojson';
 import dayjs from 'dayjs';
@@ -15,7 +14,6 @@ import {
   Paragraph,
   Portal,
   Subheading,
-  Surface,
   useTheme,
 } from 'react-native-paper';
 import {
@@ -28,7 +26,6 @@ import {
   bulkImportTransaction,
   filterTransactionByProps,
   filterTransactions,
-  observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
@@ -38,20 +35,16 @@ import TransactionFilters from './TransactionFilters';
 
 // Transaction component
 let Transactions: React.FC<{
-  transactions: Transaction[];
   navigation: any;
-}> = ({transactions, navigation}) => {
+}> = ({navigation}) => {
   const [summary, setSummary] =
     React.useState<{income: number; expense: number}>();
-  const [ungroupedTransactions, setUngroupedTransactions] = React.useState<
-    Transaction[]
-  >([]);
   const [groupedTransactions, setGroupedTransactions] = React.useState<
     Transaction[]
   >([]);
   const [selectedFilterChip, setSelectedFilterChip] = React.useState<
-    '7days' | '1month' | '6months' | '1year' | 'custom' | undefined
-  >('1year');
+    'd' | 'w' | 'm' | 'y' | 'custom'
+  >('m');
   const [showMoreMenu, setShowMoreMenu] = React.useState(false);
   const {currency} = React.useContext(CurrencyContext);
   const [showAlert, setShowAlert] = React.useState(false);
@@ -65,17 +58,12 @@ let Transactions: React.FC<{
   useFocusEffect(
     React.useCallback(() => {
       refreshData();
-    }, [transactions]),
+    }, []),
   );
-
-  React.useEffect(() => {
-    refreshData();
-  }, [selectedFilterChip]);
 
   async function refreshData() {
     setLoading(true);
-    await fetchSummary();
-    await transactionGroupedByMonth(transactions);
+    await periodicTransactionFilter(selectedFilterChip);
     setLoading(false);
   }
 
@@ -109,27 +97,28 @@ let Transactions: React.FC<{
   };
 
   const periodicTransactionFilter = async (
-    filter: '7days' | '1month' | '6months' | '1year' | 'custom',
+    filter: 'd' | 'w' | 'm' | 'y' | 'custom',
   ) => {
-    const endDate: Date = new Date();
+    const endDate: Date = new Date(+dayjs().endOf('day'));
     let startDate;
 
-    if (filter === '7days') {
-      setSelectedFilterChip('7days');
-      startDate = new Date(+dayjs().subtract(7, 'days').startOf('day'));
-    } else if (filter === '1month') {
-      setSelectedFilterChip('1month');
-      startDate = new Date(+dayjs().subtract(1, 'month').startOf('day'));
-    } else if (filter === '6months') {
-      setSelectedFilterChip('6months');
-      startDate = new Date(+dayjs().subtract(6, 'months').startOf('day'));
+    if (filter === 'd') {
+      setSelectedFilterChip('d');
+      startDate = new Date(+dayjs().startOf('day'));
+    } else if (filter === 'w') {
+      setSelectedFilterChip('w');
+      startDate = new Date(+dayjs().startOf('week'));
+    } else if (filter === 'm') {
+      setSelectedFilterChip('m');
+      startDate = new Date(+dayjs().startOf('month'));
     } else {
-      setSelectedFilterChip('1year');
-      startDate = new Date(+dayjs().subtract(1, 'year').startOf('day'));
+      setSelectedFilterChip('y');
+      startDate = new Date(+dayjs().startOf('year'));
     }
 
     await fetchSummary({startDate, endDate});
-    const _transactions = await filterTransactions({startDate, endDate});
+    let _transactions;
+    _transactions = await filterTransactions({startDate, endDate});
     transactionGroupedByMonth(_transactions);
   };
 
@@ -149,7 +138,6 @@ let Transactions: React.FC<{
 
     result = Object.keys(result).map(key => ({title: key, data: result[key]}));
     setGroupedTransactions(result);
-    setUngroupedTransactions(trans);
   }
 
   const importCSV = async () => {
@@ -289,8 +277,9 @@ let Transactions: React.FC<{
               {title}
             </Subheading>
           )}
+          ListEmptyComponent={renderEmptyResult()}
           refreshing={loading}
-          onRefresh={refreshData}
+          // onRefresh={refreshData}
         />
       </View>
     );
@@ -298,42 +287,43 @@ let Transactions: React.FC<{
 
   function renderFilterHeader() {
     return (
-      <Surface
-        style={{
-          flexDirection: 'row',
-          paddingVertical: 5,
-          paddingHorizontal: 10,
-        }}>
+      <View style={{marginBottom: 10, marginLeft: 10}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {selectedFilterChip !== '1year' && (
+          {selectedFilterChip !== 'm' && (
             <AppChip
+              surface
               icon="filter-remove"
               onPress={() => {
-                periodicTransactionFilter('1year');
+                periodicTransactionFilter('m');
               }}
             />
           )}
           <AppChip
-            selected={selectedFilterChip === '7days'}
-            onPress={() => periodicTransactionFilter('7days')}>
-            7D
+            surface
+            selected={selectedFilterChip === 'd'}
+            onPress={() => periodicTransactionFilter('d')}>
+            Today
           </AppChip>
           <AppChip
-            selected={selectedFilterChip === '1month'}
-            onPress={() => periodicTransactionFilter('1month')}>
-            1M
+            surface
+            selected={selectedFilterChip === 'w'}
+            onPress={() => periodicTransactionFilter('w')}>
+            Week
           </AppChip>
           <AppChip
-            selected={selectedFilterChip === '6months'}
-            onPress={() => periodicTransactionFilter('6months')}>
-            6M
+            surface
+            selected={selectedFilterChip === 'm'}
+            onPress={() => periodicTransactionFilter('m')}>
+            Month
           </AppChip>
           <AppChip
-            selected={selectedFilterChip === '1year'}
-            onPress={() => periodicTransactionFilter('1year')}>
-            1Y
+            surface
+            selected={selectedFilterChip === 'y'}
+            onPress={() => periodicTransactionFilter('y')}>
+            Year
           </AppChip>
           <AppChip
+            surface
             selected={selectedFilterChip === 'custom'}
             icon="filter"
             onPress={() => {
@@ -343,23 +333,21 @@ let Transactions: React.FC<{
             Filter
           </AppChip>
         </ScrollView>
-      </Surface>
+      </View>
     );
   }
 
-  if (groupedTransactions.length <= 0)
+  function renderEmptyResult() {
     return (
-      <>
-        {renderHeader()}
-        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-          <Caption>No Data Found</Caption>
-          <Button icon="filter" onPress={() => setShowFilter(true)}>
-            Update Filter
-          </Button>
-        </View>
-        {renderFilters()}
-      </>
+      <View
+        style={{alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
+        <Caption>
+          No Data Found!! you can try a different filter or add some
+          transactions
+        </Caption>
+      </View>
     );
+  }
 
   return (
     <>
@@ -387,8 +375,8 @@ let Transactions: React.FC<{
   );
 };
 
-Transactions = withObservables([], () => ({
-  transactions: observeTransactions(),
-}))(Transactions);
+// Transactions = withObservables([], () => ({
+//   transactions: observeTransactions(),
+// }))(Transactions);
 
 export {Transactions};

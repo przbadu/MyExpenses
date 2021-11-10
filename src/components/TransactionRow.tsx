@@ -36,8 +36,7 @@ let TransactionRow = ({
             </Text>
             <Text
               style={{...fonts.medium, fontSize: 11, color: colors.disabled}}>
-              {dayjs(transaction.transactionAt).format('MMM DD')} -{' '}
-              {transaction.time}
+              {dayjs(transaction.transactionAt).format('MMM DD - HH:MM A')}
             </Text>
           </View>
         </View>

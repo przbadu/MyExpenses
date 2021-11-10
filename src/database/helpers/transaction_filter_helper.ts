@@ -121,7 +121,7 @@ export function filterTransactions(
   let useQuery = [];
   // Filter by transaction date
   if (filterBy?.startDate && filterBy.endDate) {
-    const startTime = +dayjs(filterBy.startDate).startOf('month');
+    const startTime = +dayjs(filterBy.startDate);
     const endTime = +dayjs(filterBy.endDate);
     useQuery.push(
       Q.and(

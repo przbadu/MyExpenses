@@ -10,12 +10,14 @@ interface SummaryHeaderProps {
   balance: number;
   income: number;
   expense: number;
+  balanceDate?: string;
 }
 
 const SummaryHeader: React.FC<SummaryHeaderProps> = ({
   balance,
   income,
   expense,
+  balanceDate,
 }) => {
   const {colors, fonts, dark} = useTheme();
   const {currency} = useContext(CurrencyContext);
@@ -73,9 +75,11 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({
         <Headline style={{color: colors.white}}>
           {numberToCurrency(balance, currency)}
         </Headline>
-        <Text style={{color: colors.white}}>
-          {dayjs().format('YYYY MMM, DD')}
-        </Text>
+        {balanceDate && (
+          <Text style={{color: colors.white}}>
+            {dayjs().format('YYYY MMM, DD')}
+          </Text>
+        )}
       </Surface>
 
       <Surface
