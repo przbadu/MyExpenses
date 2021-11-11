@@ -1,4 +1,11 @@
-# 0.0.1
+# Changelogs
+
+## 0.0.2
+- Add app icon
+- Add app splash screen
+- Adjust application StatusBar to adapt theme color
+
+## 0.0.1
 - stats page with line chart and list of popular categories, ability to apply periodic filter
 - Transactions listing page with summary and ability to apply filters
 - Add transaction screen with ability to create income/expense transaction, and user can also select Wallet and Category
