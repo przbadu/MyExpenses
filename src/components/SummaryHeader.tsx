@@ -66,12 +66,7 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({
           paddingVertical: 10,
           paddingBottom: 60,
         }}>
-        <Text
-          style={{
-            color: Colors.green400,
-          }}>
-          Available Balance
-        </Text>
+        <Text style={{color: colors.white}}>Available Balance</Text>
         <Headline style={{color: colors.white}}>
           {numberToCurrency(balance, currency)}
         </Headline>
