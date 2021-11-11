@@ -1,7 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {Provider as PaperProvider} from 'react-native-paper';
+import {hexToRGBA} from '../lib';
 import {
   CalendarTransactions,
   CategoryTransaction,
@@ -19,6 +21,11 @@ export const AppNavigator = () => {
 
   return (
     <>
+      <StatusBar
+        backgroundColor={
+          theme.dark ? hexToRGBA('#000000', 0.84) : theme.colors.primary
+        }
+      />
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>
           <Stack.Navigator

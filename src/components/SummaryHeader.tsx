@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import React, {useContext} from 'react';
 import {View} from 'react-native';
-import {Colors, Headline, Text, Surface, useTheme} from 'react-native-paper';
+import {Headline, Text, Surface, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {hexToRGBA, numberToCurrency} from '../lib';
 import {CurrencyContext} from '../store/context';
