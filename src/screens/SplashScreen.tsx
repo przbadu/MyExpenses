@@ -17,18 +17,12 @@ const SplashScreen = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.background,
+        backgroundColor: colors.primary,
       }}>
-      <Surface
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          elevation: 2,
-          padding: 10,
-        }}>
-        <ActivityIndicator animating={true} color={Colors.red500} />
-        <Text style={{marginTop: 10}}>preparing your data, please wait...</Text>
-      </Surface>
+      <ActivityIndicator animating={true} color={colors.accent} />
+      <Text style={{marginTop: 10, color: colors.white}}>
+        preparing your data, please wait...
+      </Text>
     </View>
   );
 };

@@ -1,8 +1,9 @@
 import React, {Suspense, useEffect, useState} from 'react';
 import {ActivityIndicator} from 'react-native-paper';
+import SplashScreen from 'react-native-splash-screen';
 import {initialSetup} from './database/helpers';
 import {AppNavigator} from './navigation';
-import {SplashScreen} from './screens';
+import {SplashScreen as AppSplashScreen} from './screens';
 // global states
 import {CurrencyProvider, ThemeProvider} from './store/context';
 
@@ -16,9 +17,10 @@ const App = () => {
   const defaultSetup = async () => {
     await initialSetup();
     setLoading(false);
+    SplashScreen.hide();
   };
 
-  if (loading) return <SplashScreen />;
+  if (loading) return <AppSplashScreen />;
 
   return (
     <ThemeProvider>
