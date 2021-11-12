@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Appbar,
   Caption,
+  Colors,
   Subheading,
   Surface,
   Text,
@@ -85,6 +86,8 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     setLoading(true);
     const incomeData = await lineChartData(filter, 'Income');
     const expenseData = await lineChartData(filter, 'Expense');
+    console.log('fetchChartData: Income', incomeData);
+    console.log('fetchChartData: Expense', expenseData);
     setIncomeChartData(incomeData);
     setExpenseChartData(expenseData);
     setLoading(false);
@@ -130,7 +133,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         name: category.name,
         color: category.color,
         total: +category.totalIncome + +category.totalExpense,
-        legendFontColor: colors.text,
+        legendFontColor: dark ? colors.text : Colors.grey900,
         legendFontSize: 12,
       });
     });

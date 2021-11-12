@@ -21,12 +21,10 @@ const AppLineChart = ({
   incomeChartData,
   expenseChartData,
   filter,
-  loading,
 }: {
   filter: lineChartFilterProps;
   incomeChartData: {amount: number; date: string}[];
   expenseChartData: {amount: number; date: string}[];
-  loading: boolean;
 }) => {
   const {currency} = React.useContext(CurrencyContext);
   const {colors} = useTheme();
@@ -72,7 +70,7 @@ const AppLineChart = ({
   }
 
   function getLabelAndValues() {
-    let labels = [];
+    let labels: any[] = [];
     let incomeData = [];
     let expenseData = [];
     if (filter === 'y') {
@@ -143,7 +141,7 @@ const AppLineChart = ({
       // yAxisLabel="$"
       yAxisSuffix={siSymbol}
       yAxisInterval={1} // optional, defaults to 1
-      chartConfig={chartConfig(colors)}
+      chartConfig={{...chartConfig(colors)}}
       decorator={() => (tooltipPos.visible ? renderTooltip(siSymbol) : null)}
       onDataPointClick={data => {
         let isSamePoint = tooltipPos.x === data.x && tooltipPos.y === data.y;

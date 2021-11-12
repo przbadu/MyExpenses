@@ -22,8 +22,10 @@ const AppPieChart: React.FC<{data: AppPieChartDataProps[]}> = ({data}) => {
       data={data}
       width={screenWidth}
       height={220}
-      chartConfig={{...chartConfig(colors), strokeWidth: 0}}
+      chartConfig={{...chartConfig(colors)}}
       accessor={'total'}
+      backgroundColor={colors.surface}
+      paddingLeft={'0'}
       absolute
     />
   );

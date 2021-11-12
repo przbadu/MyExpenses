@@ -6,7 +6,7 @@ export const chartConfig = (colors: ReactNativePaper.ThemeColors) => ({
   color: () => colors.success,
   labelColor: () => colors.text,
   style: {borderRadius: 16},
-  strokeWidth: '1',
+  strokeWidth: 1,
   propsForDots: {
     r: '4',
     strokeWidth: '1',
