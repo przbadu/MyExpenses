@@ -8,6 +8,7 @@ export * from './AppDatePicker';
 export * from './AppTimePicker';
 export * from './AppColorPicker';
 export * from './AppSnackbar';
+export * from './AppToggleButton';
 export * from './SummaryHeader';
 export * from './CategoryRow';
 export * from './ItemRow';

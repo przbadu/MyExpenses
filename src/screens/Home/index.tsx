@@ -9,11 +9,17 @@ import {
   Subheading,
   Surface,
   Text,
+  ToggleButton,
   useTheme,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {AppChip, SummaryHeader, CategoryRow} from '../../components';
+import {
+  AppChip,
+  SummaryHeader,
+  CategoryRow,
+  AppToggleButton,
+} from '../../components';
 import {
   categoryWithTransactionInfo,
   lineChartData,
@@ -22,7 +28,7 @@ import {
   transactionTypeSummary,
 } from '../../database/helpers';
 import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {hexToRGBA, responsiveHeight} from '../../lib';
+import {hexToRGBA, responsiveHeight, responsiveWidth} from '../../lib';
 import {AppLineChart} from './AppLineChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
@@ -32,6 +38,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   const [totalIncome, setTotalIncome] = React.useState(0);
   const [totalExpense, setTotalExpense] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
+  const [chartType, setChartType] = React.useState<'line' | 'pie'>('line');
   const [categories, setCategories] = React.useState<[]>([]);
   const [incomeChartData, setIncomeChartData] = React.useState<
     {amount: number; date: string}[]
@@ -125,45 +132,47 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
 
   function renderFilters() {
     return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
+      <View
         style={{
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-        }}
-        contentContainerStyle={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <View style={{flexDirection: 'row', marginBottom: 5}}>
-          <AppChip
-            surface
-            selected={filter === 'w'}
-            onPress={() => setFilter('w')}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <AppChip selected={filter === 'w'} onPress={() => setFilter('w')}>
             Week
           </AppChip>
-          <AppChip
-            surface
-            selected={filter === 'm'}
-            onPress={() => setFilter('m')}>
+          <AppChip selected={filter === 'm'} onPress={() => setFilter('m')}>
             Month
           </AppChip>
-          <AppChip
-            surface
-            selected={filter === 'q'}
-            onPress={() => setFilter('q')}>
+          <AppChip selected={filter === 'q'} onPress={() => setFilter('q')}>
             Quarter
           </AppChip>
-          <AppChip
-            surface
-            selected={filter === 'y'}
-            onPress={() => setFilter('y')}>
+          <AppChip selected={filter === 'y'} onPress={() => setFilter('y')}>
             Year
           </AppChip>
-        </View>
-      </ScrollView>
+        </ScrollView>
+
+        <Surface style={{flexDirection: 'row', marginLeft: responsiveWidth(5)}}>
+          <AppToggleButton
+            icon="chart-timeline-variant"
+            onPress={() => setChartType('line')}
+            active={chartType == 'line'}
+          />
+          <AppToggleButton
+            icon="chart-arc"
+            onPress={() => setChartType('pie')}
+            active={chartType == 'pie'}
+          />
+        </Surface>
+      </View>
     );
   }
 
