@@ -1,7 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
-import {formatDateColumn, transactions} from '.';
+import {filterTransactionByProps, formatDateColumn, transactions} from '.';
 
 dayjs.extend(quarterOfYear);
 

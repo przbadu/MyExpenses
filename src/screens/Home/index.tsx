@@ -30,6 +30,7 @@ import {
 import {Transaction, TransactionTypeEnum} from '../../database/models';
 import {hexToRGBA, responsiveHeight, responsiveWidth} from '../../lib';
 import {AppLineChart} from './AppLineChart';
+import {AppPieChart, AppPieChartDataProps} from './AppPieChart';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
   const {colors, dark} = useTheme();
@@ -40,6 +41,9 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   const [balance, setBalance] = React.useState(0);
   const [chartType, setChartType] = React.useState<'line' | 'pie'>('line');
   const [categories, setCategories] = React.useState<[]>([]);
+  const [pieChartData, setPieChartData] = React.useState<
+    AppPieChartDataProps[]
+  >([]);
   const [incomeChartData, setIncomeChartData] = React.useState<
     {amount: number; date: string}[]
   >([]);
@@ -120,6 +124,18 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   const fetchCategories = async () => {
     const _categories = await categoryWithTransactionInfo(filter);
     setCategories(_categories);
+    let _data: AppPieChartDataProps[] = [];
+    _categories.map((category: any) => {
+      _data.push({
+        name: category.name,
+        color: category.color,
+        total: +category.totalIncome + +category.totalExpense,
+        legendFontColor: colors.text,
+        legendFontSize: 12,
+      });
+    });
+    setPieChartData(_data);
+    console.log('data', _data);
   };
 
   function renderHeading(heading: string) {
@@ -160,20 +176,38 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
           </AppChip>
         </ScrollView>
 
-        <Surface style={{flexDirection: 'row', marginLeft: responsiveWidth(5)}}>
-          <AppToggleButton
-            icon="chart-timeline-variant"
-            onPress={() => setChartType('line')}
-            active={chartType == 'line'}
-          />
-          <AppToggleButton
-            icon="chart-arc"
-            onPress={() => setChartType('pie')}
-            active={chartType == 'pie'}
-          />
-        </Surface>
+        {pieChartData.length > 0 && (
+          <Surface
+            style={{flexDirection: 'row', marginLeft: responsiveWidth(5)}}>
+            <AppToggleButton
+              icon="chart-timeline-variant"
+              onPress={() => setChartType('line')}
+              active={chartType == 'line'}
+            />
+            <AppToggleButton
+              icon="chart-arc"
+              onPress={() => setChartType('pie')}
+              active={chartType == 'pie'}
+            />
+          </Surface>
+        )}
       </View>
     );
+  }
+
+  function renderLinePieChart() {
+    if (chartType == 'line') {
+      return (
+        <AppLineChart
+          expenseChartData={expenseChartData}
+          incomeChartData={incomeChartData}
+          filter={filter}
+          loading={loading}
+        />
+      );
+    } else {
+      return <AppPieChart data={pieChartData} />;
+    }
   }
 
   function renderListHeaderComponent() {
@@ -203,12 +237,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
               <ActivityIndicator animating style={{marginBottom: 10}} />
             </View>
           ) : (
-            <AppLineChart
-              expenseChartData={expenseChartData}
-              incomeChartData={incomeChartData}
-              filter={filter}
-              loading={loading}
-            />
+            renderLinePieChart()
           )}
         </Surface>
 
