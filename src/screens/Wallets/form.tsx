@@ -75,7 +75,7 @@ const Form = ({
           />
           <AppTextInput
             placeholder="Enter opening balance"
-            value={balanceAmount.toString()}
+            value={balanceAmount ? balanceAmount.toString() : '0'}
             onChangeText={text => setBalanceAmount(Number(text))}
             error={errors?.amount}
           />
@@ -101,9 +101,9 @@ const Form = ({
                 marginTop: 10,
                 flex: 1,
               }}>
-              {randomColors.map(c => (
+              {randomColors.map((c, i) => (
                 <AppColorPicker
-                  key={c}
+                  key={`color-${c}-${i}`}
                   selected={color === c}
                   color={c}
                   onPress={() => setColor(c)}
