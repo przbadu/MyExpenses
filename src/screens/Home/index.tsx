@@ -129,7 +129,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
       _data.push({
         name: category.name,
         color: category.color,
-        total: +category.total,
+        total: parseInt(category.total),
         legendFontColor: dark ? colors.text : Colors.grey900,
         legendFontSize: 12,
       });
