@@ -125,7 +125,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     const _categories = await categoryWithTransactionInfo(filter);
     setCategories(_categories);
     let _data: AppPieChartDataProps[] = [];
-    _categories.slice(0, 10).map((category: any) => {
+    _categories.slice(0, 8).map((category: any) => {
       _data.push({
         name: category.name,
         color: category.color,
