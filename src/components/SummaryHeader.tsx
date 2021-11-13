@@ -11,6 +11,7 @@ interface SummaryHeaderProps {
   income: number;
   expense: number;
   balanceDate?: string;
+  filterable?: boolean;
 }
 
 const SummaryHeader: React.FC<SummaryHeaderProps> = ({
@@ -18,6 +19,7 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({
   income,
   expense,
   balanceDate,
+  filterable,
 }) => {
   const {colors, fonts, dark} = useTheme();
   const {currency} = useContext(CurrencyContext);
@@ -66,7 +68,9 @@ const SummaryHeader: React.FC<SummaryHeaderProps> = ({
           paddingVertical: 10,
           paddingBottom: 60,
         }}>
-        <Text style={{color: colors.white}}>Available Balance</Text>
+        <Text style={{color: colors.white}}>
+          {filterable ? 'BALANCE' : 'AVAILABLE BALANCE'}
+        </Text>
         <Headline style={{color: colors.white}}>
           {numberToCurrency(balance, currency)}
         </Headline>

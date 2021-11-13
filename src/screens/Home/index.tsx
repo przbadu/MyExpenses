@@ -1,6 +1,6 @@
 import withObservables from '@nozbe/with-observables';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
-import React, {useContext} from 'react';
+import React from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
 import {
   ActivityIndicator,
@@ -10,7 +10,6 @@ import {
   Subheading,
   Surface,
   Text,
-  ToggleButton,
   useTheme,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -86,8 +85,6 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     setLoading(true);
     const incomeData = await lineChartData(filter, 'Income');
     const expenseData = await lineChartData(filter, 'Expense');
-    console.log('fetchChartData: Income', incomeData);
-    console.log('fetchChartData: Expense', expenseData);
     setIncomeChartData(incomeData);
     setExpenseChartData(expenseData);
     setLoading(false);

@@ -360,6 +360,7 @@ let Transactions: React.FC<{
     <>
       {renderHeader()}
       <SummaryHeader
+        filterable
         income={+summary?.income!}
         expense={+summary?.expense!}
         balance={+(summary?.income! - summary?.expense!)}
