@@ -125,11 +125,11 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
     const _categories = await categoryWithTransactionInfo(filter);
     setCategories(_categories);
     let _data: AppPieChartDataProps[] = [];
-    _categories.map((category: any) => {
+    _categories.slice(0, 10).map((category: any) => {
       _data.push({
         name: category.name,
         color: category.color,
-        total: +category.totalIncome + +category.totalExpense,
+        total: +category.total,
         legendFontColor: dark ? colors.text : Colors.grey900,
         legendFontSize: 12,
       });

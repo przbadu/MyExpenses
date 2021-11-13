@@ -55,12 +55,13 @@ export const categoryWithTransactionInfo = (
       categories.icon,
       (select sum(amount) from transactions where transaction_type = 'Income' and category_id = categories.id) totalIncome,
       (select sum(amount) from transactions where transaction_type = 'Expense'  and category_id = categories.id) totalExpense,
+      sum(amount) as total,
       count(*) as count
     from transactions
     INNER JOIN categories on categories.id = transactions.category_id
     ${where}
     group by category_id
-    order by totalExpense DESC, totalIncome DESC, count DESC;
+    order by total DESC, count DESC;
   `;
 
   console.log('categoryWithTransactionInfo', query);
