@@ -130,7 +130,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
         name: category.name,
         color: category.color,
         total: parseInt(category.total),
-        legendFontColor: dark ? colors.text : Colors.grey900,
+        legendFontColor: dark ? colors.text : Colors.black,
         legendFontSize: 12,
       });
     });
