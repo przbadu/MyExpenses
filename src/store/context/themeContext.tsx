@@ -14,8 +14,14 @@ export const ThemeContext = React.createContext<ThemeContentProps>({
   changeTheme: async () => {},
 });
 
-export const ThemeProvider = ({children}: any) => {
-  const [theme, setTheme] = React.useState<themeMode>('system');
+export const ThemeProvider = ({
+  initialTheme,
+  children,
+}: {
+  initialTheme: themeMode;
+  children: JSX.Element;
+}) => {
+  const [theme, setTheme] = React.useState<themeMode>(initialTheme);
 
   React.useEffect(() => {
     setup();
