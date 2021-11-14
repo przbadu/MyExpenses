@@ -92,10 +92,9 @@ let Transactions: React.FC<{
   };
 
   const filterTransactionBy = async (filterBy: filterTransactionByProps) => {
-    const filter = filterBy;
     setShowFilter(false);
     await fetchSummary(filterBy);
-    const _transactions = await filterTransactions(filter);
+    const _transactions = await filterTransactions(filterBy);
     transactionGroupedByMonth(_transactions);
   };
 
@@ -120,8 +119,7 @@ let Transactions: React.FC<{
     }
 
     await fetchSummary({startDate, endDate});
-    let _transactions;
-    _transactions = await filterTransactions({startDate, endDate});
+    const _transactions = await filterTransactions({startDate, endDate});
     transactionGroupedByMonth(_transactions);
   };
 
@@ -181,7 +179,12 @@ let Transactions: React.FC<{
   };
 
   const exportCSV = async () => {
+    setLoading(true);
     let csvContent = `Id,Date,Time,Amount,Type,Category,Wallet,Notes\n`;
+
+    const transactions = (await filterTransactions(
+      useFormProps.form,
+    )) as Transaction[];
 
     for await (const trans of transactions) {
       const date = dayjs(trans.transactionAt).format(DefaultDateFormat);
@@ -201,11 +204,14 @@ let Transactions: React.FC<{
     try {
       await RNFS.writeFile(path, csvContent);
       await RNFS.moveFile(path, downloadPath);
+      setAlertContent(`Transactions ${path} exported successfully`);
+      setShowAlert(true);
     } catch (error) {
       setAlertContent(`Error writing CSV data: ${error}`);
       setShowAlert(true);
     }
     setShowMoreMenu(false);
+    setLoading(false);
   };
 
   function renderHeader() {
