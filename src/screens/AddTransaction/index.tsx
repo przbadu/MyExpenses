@@ -1,8 +1,8 @@
 import {useFocusEffect} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {Appbar, Button, Card, TextInput} from 'react-native-paper';
+import {ScrollView, StatusBar, View} from 'react-native';
+import {Appbar, Button, Card, TextInput, useTheme} from 'react-native-paper';
 import {
   AppDatePicker,
   AppSelect,
@@ -43,6 +43,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
   const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
   const notesRef = useRef(null);
+  const {dark, colors} = useTheme();
 
   const selectCategory = (item: CategoryProps) => {
     setCategoryText(item.name);
@@ -58,10 +59,7 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   // before leaving screen
   useFocusEffect(
     React.useCallback(() => {
-      // things todo on add transaction focused event
       return () => {
-        // things to do on add transaction blur event
-        navigation.setParams({transactionId: null});
         resetForm();
         resetErrors();
         setWalletText(null);
@@ -128,45 +126,30 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
 
   function renderTransactionDateTime() {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View style={{flex: 1.4, marginRight: 5}}>
-          <AppDatePicker
-            label="Date"
-            showSoftInputOnFocus={false}
-            value={dayjs(form.transactionAt).format(DefaultDateFormat)}
-            date={form.transactionAt}
-            onConfirm={(date: Date) =>
-              handleFormChange({
-                ...form,
-                transactionAt: date || form.transactionAt,
-              })
-            }
-          />
-        </View>
-        {/* <View style={{flex: 1}}>
-          <AppTimePicker
-            label="Time"
-            showSoftInputOnFocus={false}
-            value={form.time}
-            onConfirm={(date: Date) =>
-              handleFormChange({
-                ...form,
-                time: dayjs(date).format(DefaultTimeFormat),
-              })
-            }
-          />
-        </View> */}
+      <View style={{flex: 1.4, marginRight: 5}}>
+        <AppDatePicker
+          label="Date"
+          showSoftInputOnFocus={false}
+          value={dayjs(form.transactionAt).format(DefaultDateFormat)}
+          date={form.transactionAt}
+          onConfirm={(date: Date) =>
+            handleFormChange({
+              ...form,
+              transactionAt: date || form.transactionAt,
+            })
+          }
+        />
       </View>
     );
   }
 
   return (
     <>
+      <StatusBar backgroundColor={dark ? colors.surface : colors.primary} />
       <Appbar.Header>
+        {transactionId ? (
+          <Appbar.BackAction onPress={() => navigation.goBack()} />
+        ) : null}
         <Appbar.Content
           title={transactionId ? 'EDIT TRANSACTION' : 'ADD TRANSACTION'}
         />

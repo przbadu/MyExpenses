@@ -5,6 +5,7 @@ import {StatusBar, Appearance} from 'react-native';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {darkTheme, hexToRGBA, lightTheme} from '../lib';
 import {
+  AddTransaction,
   CalendarTransactions,
   CategoryTransaction,
   TransactionDetail,
@@ -44,6 +45,7 @@ export const AppNavigator = () => {
               name="CategoryTransactions"
               component={CategoryTransaction}
             />
+            <Stack.Screen name="EditTransaction" component={AddTransaction} />
             <Stack.Screen
               name="TransactionDetail"
               component={TransactionDetail}

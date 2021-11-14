@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {Alert, ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {
   Appbar,
-  Button,
   Headline,
   Subheading,
   Surface,
@@ -18,14 +17,8 @@ import {
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import {
-  hexToRGBA,
-  numberToCurrency,
-  responsiveHeight,
-  responsiveWidth,
-} from '../../lib';
+import {hexToRGBA, numberToCurrency, responsiveHeight} from '../../lib';
 import {CurrencyContext} from '../../store/context';
-import {AppColorPicker} from '../../components';
 
 const TransactionDetail = ({navigation, route}: any) => {
   const {colors, dark} = useTheme();
@@ -71,6 +64,31 @@ const TransactionDetail = ({navigation, route}: any) => {
     );
   };
 
+  function renderRow(
+    label: string,
+    value: any,
+    heading: boolean = false,
+    isExpense: boolean = true,
+  ) {
+    return (
+      <View style={{...styles.row, marginVertical: 10}}>
+        <Subheading style={{flex: 1}}>{label}</Subheading>
+        <Text style={{marginRight: 10}}>:</Text>
+
+        <View style={{flex: 2}}>
+          {heading ? (
+            <Subheading
+              style={{color: isExpense ? colors.notification : colors.success}}>
+              {value}
+            </Subheading>
+          ) : (
+            <Text>{value}</Text>
+          )}
+        </View>
+      </View>
+    );
+  }
+
   const _color =
     transaction?.transactionType === TransactionTypeEnum.income
       ? colors.success
@@ -79,13 +97,15 @@ const TransactionDetail = ({navigation, route}: any) => {
 
   return (
     <>
-      <StatusBar backgroundColor={mainColor} />
+      <StatusBar backgroundColor={mainColor || colors.primary} />
       <Appbar.Header style={{elevation: 0, backgroundColor: mainColor}}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Transaction Detail" />
         <Appbar.Action
           icon="pencil-outline"
-          onPress={() => navigation.navigate('AddTransaction', {transactionId})}
+          onPress={() =>
+            navigation.navigate('EditTransaction', {transactionId})
+          }
         />
         <Appbar.Action icon="trash-can-outline" onPress={handleDelete} />
       </Appbar.Header>
@@ -106,55 +126,11 @@ const TransactionDetail = ({navigation, route}: any) => {
       </Surface>
 
       <Surface style={styles.detailsContainer}>
-        <View>
-          <Text>Type</Text>
-          <Text style={{fontWeight: 'bold'}}>
-            {transaction?.transactionType}
-          </Text>
-        </View>
-        <View>
-          <Text>Category</Text>
-          <Text style={{fontWeight: 'bold'}}>{category?.name}</Text>
-        </View>
-        <View>
-          <Text>Wallet</Text>
-          <Text style={{fontWeight: 'bold'}}>{wallet?.name}</Text>
-        </View>
+        {renderRow('Type', transaction?.transactionType)}
+        {renderRow('Category', category?.name)}
+        {renderRow('Wallet', wallet?.name)}
+        {renderRow('Notes', transaction?.notes)}
       </Surface>
-
-      <Surface
-        style={{
-          marginHorizontal: 10,
-          marginTop: 20,
-          padding: 10,
-          paddingHorizontal: 20,
-        }}>
-        <Headline>Notes:</Headline>
-        <Text>{transaction?.notes}</Text>
-      </Surface>
-
-      <View style={{marginTop: 20, marginHorizontal: 10}}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Button
-            mode="contained"
-            onPress={() =>
-              navigation.navigate('AddTransaction', {transactionId})
-            }
-            icon="pencil-outline"
-            style={{width: 100, marginRight: 10}}>
-            Edit
-          </Button>
-
-          <Button
-            mode="contained"
-            onPress={handleDelete}
-            icon="trash-can-outline"
-            color={colors.notification}
-            style={{width: 100, marginRight: 10}}>
-            Delete
-          </Button>
-        </ScrollView>
-      </View>
     </>
   );
 };
@@ -165,9 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   detailsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
     marginHorizontal: 10,
     borderRadius: 10,
     marginTop: -responsiveHeight(5),

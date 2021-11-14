@@ -12,22 +12,9 @@ import {
   Settings,
   Transactions,
 } from '../screens';
-import {AddCategory, EditCategory, ListCategories} from '../screens/Categories';
-import {AddWallet, EditWallet, ListWallets} from '../screens/Wallets';
 
 const Tab = createBottomTabNavigator();
-const SettingStack = createNativeStackNavigator();
 const SavingStack = createNativeStackNavigator();
-
-function SettingsStackScreen() {
-  return (
-    <SettingStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="Settings"></SettingStack.Navigator>
-  );
-}
 
 function SavingsStackScreen() {
   return (

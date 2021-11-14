@@ -81,7 +81,7 @@ export const useForm = (transactionId: string | undefined) => {
       handleFormChange({...initialFormState});
       setSubmitting(false);
 
-      if (transactionId) navigation.navigate('Transactions');
+      if (transactionId) navigation.goBack();
       else navigation.navigate('Transactions');
     }
     setSubmitting(false);
