@@ -93,12 +93,13 @@ const TransactionDetail = ({navigation, route}: any) => {
     transaction?.transactionType === TransactionTypeEnum.income
       ? colors.success
       : colors.notification;
-  const mainColor = dark ? hexToRGBA(_color, 0.11) : _color;
+  const statusbarColor = dark ? hexToRGBA('#000000', 0.84) : _color;
 
   return (
     <>
-      <StatusBar backgroundColor={mainColor || colors.primary} />
-      <Appbar.Header style={{elevation: 0, backgroundColor: mainColor}}>
+      <StatusBar backgroundColor={statusbarColor} />
+      <Appbar.Header
+        style={dark ? {elevation: 0} : {elevation: 0, backgroundColor: _color}}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Transaction Detail" />
         <Appbar.Action
@@ -112,15 +113,15 @@ const TransactionDetail = ({navigation, route}: any) => {
 
       <Surface
         style={{
-          backgroundColor: mainColor,
+          backgroundColor: dark ? hexToRGBA(colors.onSurface, 0.11) : _color,
           alignItems: 'center',
           paddingVertical: 10,
           paddingBottom: 60,
         }}>
-        <Headline style={{color: colors.white}}>
+        <Headline style={{color: dark ? _color : colors.white}}>
           {numberToCurrency(+transaction?.amount!, currency)}
         </Headline>
-        <Text style={{color: colors.white, marginTop: 10}}>
+        <Text style={{color: dark ? _color : colors.white, marginTop: 10}}>
           {dayjs(transaction?.transactionAt).format('YYYY-MM-DD HH:MM A')}
         </Text>
       </Surface>
