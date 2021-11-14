@@ -1,9 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Appearance} from 'react-native';
 import {Provider as PaperProvider} from 'react-native-paper';
-import {hexToRGBA} from '../lib';
+import {darkTheme, hexToRGBA, lightTheme} from '../lib';
 import {
   CalendarTransactions,
   CategoryTransaction,
@@ -18,16 +18,20 @@ const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
   const {theme} = React.useContext(ThemeContext);
+  let appTheme = Appearance.getColorScheme() == 'dark' ? darkTheme : lightTheme;
+
+  if (theme === 'light') appTheme = lightTheme;
+  else if (theme === 'dark') appTheme = darkTheme;
 
   return (
     <>
       <StatusBar
         backgroundColor={
-          theme.dark ? hexToRGBA('#000000', 0.84) : theme.colors.primary
+          appTheme.dark ? hexToRGBA('#000000', 0.84) : appTheme.colors.primary
         }
       />
-      <PaperProvider theme={theme}>
-        <NavigationContainer theme={theme}>
+      <PaperProvider theme={appTheme}>
+        <NavigationContainer theme={appTheme}>
           <Stack.Navigator
             initialRouteName="Dashboard"
             screenOptions={{headerShown: false}}>

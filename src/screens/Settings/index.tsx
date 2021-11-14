@@ -1,7 +1,8 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
-import {ActivityIndicator, Appbar, Card, Switch} from 'react-native-paper';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Appbar, Card, Text} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {AppModal, AppSnackbar, AppSwitch, MenuItem} from '../../components';
 import {responsiveHeight} from '../../lib';
@@ -26,12 +27,55 @@ let Settings = ({
   wallets: WalletProps[];
 }) => {
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
-  const {theme, toggleTheme} = useContext<ThemeContentProps>(ThemeContext);
+  const [showThemeModal, setShowThemeModal] = React.useState(false);
+
+  const {theme, changeTheme} = useContext<ThemeContentProps>(ThemeContext);
   const {currency, updateCurrency} =
     useContext<CurrencyContextProps>(CurrencyContext);
+
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
+
+  const renderThemeSelect = () => (
+    <>
+      <MenuItem
+        label="Select Theme"
+        chipLabel={theme}
+        onPress={() => setShowThemeModal(true)}
+      />
+      {showThemeModal && (
+        <AppModal
+          transparentAreaHeight={responsiveHeight(60)}
+          visible={showThemeModal}
+          onClose={() => setShowThemeModal(false)}
+          heading="Select Theme"
+          renderContent={() =>
+            ['light', 'dark', 'system'].map(t => {
+              return (
+                <TouchableOpacity
+                  key={`theme-${t}`}
+                  onPress={() => {
+                    changeTheme(t);
+                    setShowThemeModal(false);
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginHorizontal: 20,
+                    marginVertical: 10,
+                  }}>
+                  <Text>{t.toString().toUpperCase()}</Text>
+                  {t === theme && <Icon name="check" size={24} />}
+                </TouchableOpacity>
+              );
+            })
+          }
+        />
+      )}
+    </>
+  );
 
   // render currency dropdown
   const renderCurrencySelect = () => (
@@ -69,9 +113,10 @@ let Settings = ({
 
       <Card style={{...styles.card, marginTop: 10}}>
         <Card.Content>
-          <AppSwitch label="Dark Theme">
-            <Switch value={theme.dark} onValueChange={toggleTheme} />
-          </AppSwitch>
+          {/* <AppSwitch label="Select Theme">
+            <Switch value={theme.dark} onValueChange={changeTheme} />
+          </AppSwitch> */}
+          {renderThemeSelect()}
 
           <MenuItem
             label="Categories"

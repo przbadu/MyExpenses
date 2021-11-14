@@ -17,7 +17,7 @@ const SplashScreen = () => {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.primary,
+        backgroundColor: '#1AA471',
       }}>
       <ActivityIndicator animating={true} color={colors.accent} />
       <Text style={{marginTop: 10, color: colors.white}}>
