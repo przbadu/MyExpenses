@@ -1,31 +1,48 @@
 import dayjs from 'dayjs';
 import React from 'react';
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import {Button, Subheading, Surface, Text, useTheme} from 'react-native-paper';
+import {Alert, ScrollView, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Appbar,
+  Button,
+  Headline,
+  Subheading,
+  Surface,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import {deleteTransaction, transactions} from '../../database/helpers';
 import {
   CategoryProps,
+  Transaction,
   TransactionProps,
   TransactionTypeEnum,
   WalletProps,
 } from '../../database/models';
-import {numberToCurrency} from '../../lib';
+import {
+  hexToRGBA,
+  numberToCurrency,
+  responsiveHeight,
+  responsiveWidth,
+} from '../../lib';
 import {CurrencyContext} from '../../store/context';
+import {AppColorPicker} from '../../components';
 
-const TransactionDetail = ({navigation, route}) => {
+const TransactionDetail = ({navigation, route}: any) => {
+  const {colors, dark} = useTheme();
   const {transactionId} = route.params;
   const {currency} = React.useContext(CurrencyContext);
   const [transaction, setTransaction] = React.useState<TransactionProps>();
   const [wallet, setWallet] = React.useState<WalletProps>();
   const [category, setCategory] = React.useState<CategoryProps>();
-  const {colors} = useTheme();
 
   React.useEffect(() => {
     fetchTransaction();
   }, [transactionId]);
 
   const fetchTransaction = async () => {
-    const _transaction = await transactions.find(transactionId);
+    const _transaction = (await transactions.find(
+      transactionId,
+    )) as Transaction;
     const _category = await _transaction.category;
     const _wallet = await _transaction.wallet;
 
@@ -54,59 +71,69 @@ const TransactionDetail = ({navigation, route}) => {
     );
   };
 
-  function renderRow(
-    label: string,
-    value: any,
-    heading: boolean = false,
-    isExpense: boolean = true,
-  ) {
-    return (
-      <View style={{...styles.row, marginVertical: 10}}>
-        <Subheading style={{flex: 1}}>{label}</Subheading>
-        <Text style={{marginRight: 10}}>:</Text>
-
-        <View style={{flex: 2}}>
-          {heading ? (
-            <Subheading
-              style={{color: isExpense ? colors.notification : colors.success}}>
-              {value}
-            </Subheading>
-          ) : (
-            <Text>{value}</Text>
-          )}
-        </View>
-      </View>
-    );
-  }
+  const _color =
+    transaction?.transactionType === TransactionTypeEnum.income
+      ? colors.success
+      : colors.notification;
+  const mainColor = dark ? hexToRGBA(_color, 0.11) : _color;
 
   return (
-    <View style={styles.container}>
-      <Surface style={styles.surface}>
-        <ScrollView>
-          {renderRow('Type', transaction?.transactionType?.toUpperCase())}
-          {renderRow('Category', category?.name)}
-          {renderRow('Wallet', wallet?.name)}
-          {renderRow('Notes', transaction?.notes)}
-          {renderRow(
-            'Date',
-            `${dayjs(transaction?.transactionAt).format('YYYY-MM-DD')} ${
-              transaction?.time
-            }`,
-          )}
-          {renderRow(
-            'Last Updated',
-            dayjs(transaction?.updatedAt).format('YYYY-MM-DD HH:mm'),
-          )}
-          {renderRow(
-            'Amount',
-            numberToCurrency(transaction?.amount, currency),
-            true,
-            transaction?.transactionType == TransactionTypeEnum.expense,
-          )}
-        </ScrollView>
+    <>
+      <StatusBar backgroundColor={mainColor} />
+      <Appbar.Header style={{elevation: 0, backgroundColor: mainColor}}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Transaction Detail" />
+        <Appbar.Action
+          icon="pencil-outline"
+          onPress={() => navigation.navigate('AddTransaction', {transactionId})}
+        />
+        <Appbar.Action icon="trash-can-outline" onPress={handleDelete} />
+      </Appbar.Header>
+
+      <Surface
+        style={{
+          backgroundColor: mainColor,
+          alignItems: 'center',
+          paddingVertical: 10,
+          paddingBottom: 60,
+        }}>
+        <Headline style={{color: colors.white}}>
+          {numberToCurrency(+transaction?.amount!, currency)}
+        </Headline>
+        <Text style={{color: colors.white, marginTop: 10}}>
+          {dayjs(transaction?.transactionAt).format('YYYY-MM-DD HH:MM A')}
+        </Text>
       </Surface>
 
-      <Surface style={{...styles.buttonSurface}}>
+      <Surface style={styles.detailsContainer}>
+        <View>
+          <Text>Type</Text>
+          <Text style={{fontWeight: 'bold'}}>
+            {transaction?.transactionType}
+          </Text>
+        </View>
+        <View>
+          <Text>Category</Text>
+          <Text style={{fontWeight: 'bold'}}>{category?.name}</Text>
+        </View>
+        <View>
+          <Text>Wallet</Text>
+          <Text style={{fontWeight: 'bold'}}>{wallet?.name}</Text>
+        </View>
+      </Surface>
+
+      <Surface
+        style={{
+          marginHorizontal: 10,
+          marginTop: 20,
+          padding: 10,
+          paddingHorizontal: 20,
+        }}>
+        <Headline>Notes:</Headline>
+        <Text>{transaction?.notes}</Text>
+      </Surface>
+
+      <View style={{marginTop: 20, marginHorizontal: 10}}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Button
             mode="contained"
@@ -126,16 +153,9 @@ const TransactionDetail = ({navigation, route}) => {
             style={{width: 100, marginRight: 10}}>
             Delete
           </Button>
-
-          <Button
-            mode="outlined"
-            icon="keyboard-backspace"
-            onPress={() => navigation.goBack()}>
-            Go Back
-          </Button>
         </ScrollView>
-      </Surface>
-    </View>
+      </View>
+    </>
   );
 };
 
@@ -144,12 +164,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  surface: {
+  detailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
     marginHorizontal: 10,
+    borderRadius: 10,
+    marginTop: -responsiveHeight(5),
     padding: 20,
   },
   buttonSurface: {
-    marginHorizontal: 10,
     padding: 20,
     flexDirection: 'row',
     marginVertical: 10,
