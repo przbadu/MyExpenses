@@ -1,10 +1,16 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
-import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
-import {ActivityIndicator, Appbar, Card, Text} from 'react-native-paper';
+import {Alert, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  ActivityIndicator,
+  Appbar,
+  Card,
+  Subheading,
+  Text,
+} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {AppModal, AppSnackbar, AppSwitch, MenuItem} from '../../components';
+import {AppModal, AppSnackbar, MenuItem} from '../../components';
 import {responsiveHeight} from '../../lib';
 import {observeCategories, observeWallets} from '../../database/helpers';
 import {Category, WalletProps} from '../../database/models';
@@ -131,43 +137,80 @@ let Settings = ({
   return (
     <>
       <Appbar.Header>
-        <Appbar.Content title="SETTING" />
+        <Appbar.Content title="SETTINGS" />
       </Appbar.Header>
 
-      <Card style={{...styles.card, marginTop: 10}}>
-        <Card.Content>
-          {/* <AppSwitch label="Select Theme">
-            <Switch value={theme.dark} onValueChange={changeTheme} />
-          </AppSwitch> */}
-          {renderThemeSelect()}
+      <ScrollView style={{flex: 1, marginBottom: responsiveHeight(8)}}>
+        <Subheading style={{marginHorizontal: 10, marginVertical: 10}}>
+          GENERAL SETTINGS
+        </Subheading>
+        <Card style={{...styles.card}}>
+          <Card.Content>
+            {renderThemeSelect()}
+            {renderCurrencySelect()}
 
-          <MenuItem
-            label="Categories"
-            chipLabel={`${categories.length}`}
-            onPress={() => navigation.navigate('ListCategories')}
-          />
-          <MenuItem
-            label="Wallets"
-            chipLabel={`${wallets.length}`}
-            onPress={() => navigation.navigate('ListWallets')}
-          />
+            <MenuItem
+              label="Categories"
+              chipLabel={`${categories.length}`}
+              onPress={() => navigation.navigate('ListCategories')}
+            />
+            <MenuItem
+              label="Wallets"
+              chipLabel={`${wallets.length}`}
+              onPress={() => navigation.navigate('ListWallets')}
+            />
+          </Card.Content>
+        </Card>
 
-          {renderCurrencySelect()}
+        <Subheading style={{marginHorizontal: 10, marginVertical: 10}}>
+          SYNCHRONIZATION
+        </Subheading>
+        <Card style={{...styles.card}}>
+          <Card.Content>
+            <MenuItem
+              label="Dropbox"
+              icon="dropbox"
+              onPress={() => navigation.navigate('ListCategories')}
+            />
+            <MenuItem
+              label="Google Drive"
+              icon="google-drive"
+              iconSize={22}
+              onPress={() => {}}
+            />
+          </Card.Content>
+        </Card>
 
-          <MenuItem
-            label="Clear Data"
-            icon="trash-can"
-            onPress={handleClearData}
-          />
-        </Card.Content>
-      </Card>
+        <Subheading style={{marginHorizontal: 10, marginVertical: 10}}>
+          DATA BACKUP
+        </Subheading>
+        <Card style={{...styles.card}}>
+          <Card.Content>
+            <MenuItem
+              label="Create data backup"
+              icon="cloud-upload-outline"
+              onPress={() => {}}
+            />
+            <MenuItem
+              label="Restore data"
+              icon="cloud-download-outline"
+              onPress={() => {}}
+            />
+            <MenuItem
+              label="Clear Data"
+              icon="trash-can"
+              onPress={handleClearData}
+            />
+          </Card.Content>
+        </Card>
 
-      <AppSnackbar
-        visible={snackbar}
-        onDismiss={() => setSnackbar(false)}
-        message={snackbarMsg}
-      />
-      <ActivityIndicator animating={loading} />
+        <AppSnackbar
+          visible={snackbar}
+          onDismiss={() => setSnackbar(false)}
+          message={snackbarMsg}
+        />
+        <ActivityIndicator animating={loading} />
+      </ScrollView>
     </>
   );
 };
