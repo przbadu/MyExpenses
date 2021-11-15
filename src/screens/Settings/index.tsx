@@ -1,6 +1,6 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import {ActivityIndicator, Appbar, Card, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -36,6 +36,29 @@ let Settings = ({
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
+
+  const handleClearData = () => {
+    Alert.alert(
+      'Permanently Delete All Data',
+      'You are permanently deleting transactions, wallets, categories, and savings and we will not be able to recover data after it is deleted, Are you sure to proceed?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Yes, I agree',
+          onPress: async () => {
+            setLoading(true);
+            await resetDB();
+            setLoading(false);
+            setSnackbarMsg('Data cleared successfully!');
+            setSnackbar(true);
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
 
   const renderThemeSelect = () => (
     <>
@@ -134,13 +157,7 @@ let Settings = ({
           <MenuItem
             label="Clear Data"
             icon="trash-can"
-            onPress={async () => {
-              setLoading(true);
-              await resetDB();
-              setLoading(false);
-              setSnackbarMsg('Data cleared successfully!');
-              setSnackbar(true);
-            }}
+            onPress={handleClearData}
           />
         </Card.Content>
       </Card>
