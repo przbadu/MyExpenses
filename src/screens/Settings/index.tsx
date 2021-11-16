@@ -1,6 +1,8 @@
 import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
 import {Alert, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import RNFS from 'react-native-fs';
+import DocumentPicker from 'react-native-document-picker';
 import {
   ActivityIndicator,
   Appbar,
@@ -22,6 +24,7 @@ import {
 } from '../../store/context';
 import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
+import dayjs from 'dayjs';
 
 let Settings = ({
   navigation,
@@ -43,7 +46,7 @@ let Settings = ({
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
 
-  const handleClearData = () => {
+  function handleClearData() {
     Alert.alert(
       'Permanently Delete All Data',
       'You are permanently deleting transactions, wallets, categories, and savings and we will not be able to recover data after it is deleted, Are you sure to proceed?',
@@ -64,7 +67,58 @@ let Settings = ({
       ],
       {cancelable: true},
     );
-  };
+  }
+
+  async function handleBackup() {
+    const dbPath = '/data/data/com.przbadu.myexpense/watermelon.db';
+    const fileName = `myexpenses-${dayjs().format('YYYY-MM-DD-hh-mm-ss-a')}.db`;
+    const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+
+    try {
+      await RNFS.copyFile(dbPath, downloadPath);
+      setSnackbarMsg(`Database backup successful: ${downloadPath}`);
+      setSnackbar(true);
+    } catch (error) {
+      setSnackbarMsg(`Error on backup process: ${error}`);
+      setSnackbar(true);
+    }
+  }
+
+  async function handleRestore() {
+    const dbPath = '/data/data/com.przbadu.myexpense/watermelondb.db';
+    const backupFile = await selectFileToUpload();
+
+    try {
+      if (backupFile) {
+        const fileContent = await RNFS.readFile(backupFile, 'ascii');
+        await RNFS.writeFile(dbPath, fileContent);
+        setSnackbarMsg('Database restored successful');
+        setSnackbar(true);
+      }
+    } catch (error) {
+      setSnackbarMsg(`Error on restore process: ${error}`);
+      setSnackbar(true);
+    }
+  }
+
+  async function selectFileToUpload() {
+    try {
+      const res = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      });
+
+      return res.uri;
+      // return await RNFS.readFile(file);
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+        setSnackbarMsg(`ImportCSV Canceld by user : ${error}`);
+        setSnackbar(true);
+      } else {
+        setSnackbarMsg(`ImportCSV Unknown error : ${error}`);
+        setSnackbar(true);
+      }
+    }
+  }
 
   const renderThemeSelect = () => (
     <>
@@ -189,12 +243,12 @@ let Settings = ({
             <MenuItem
               label="Create data backup"
               icon="cloud-upload-outline"
-              onPress={() => {}}
+              onPress={handleBackup}
             />
             <MenuItem
               label="Restore data"
               icon="cloud-download-outline"
-              onPress={() => {}}
+              onPress={handleRestore}
             />
             <MenuItem
               label="Clear Data"
