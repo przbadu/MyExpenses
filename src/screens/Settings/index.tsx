@@ -26,6 +26,8 @@ import {
 import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
 import dayjs from 'dayjs';
+import {DropboxAuthorize} from '../../sync/dropbox/DropboxAuthorize';
+import {DropboxDatabaseSync} from '../../sync/dropbox/DropboxDatabaseSync';
 
 let Settings = ({
   navigation,
@@ -36,6 +38,9 @@ let Settings = ({
   categories: Category[];
   wallets: WalletProps[];
 }) => {
+  const [hasAuthorizedWithDropbox, setHasAuthorizedWithDropbox] =
+    React.useState(false);
+  const [downloading, setDownloading] = React.useState(false);
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
   const [showThemeModal, setShowThemeModal] = React.useState(false);
 
@@ -101,6 +106,65 @@ let Settings = ({
       setSnackbarMsg(`Error on restore process: ${error}`);
       setSnackbar(true);
     }
+  }
+
+  async function connectWithDropbox() {
+    const dropboxAuth = new DropboxAuthorize();
+    const dropboxSync = new DropboxDatabaseSync();
+
+    return dropboxAuth
+      .authorize()
+      .then(() => {
+        setHasAuthorizedWithDropbox(true);
+        return dropboxSync.hasRemoteUpdate();
+      })
+      .then(remoteDatabaseIsNewer => {
+        if (remoteDatabaseIsNewer) {
+          return new Promise<void>((_resolve, reject) => {
+            // We just linked, and there is existing data on Dropbox. Prompt to overwrite it.
+            Alert.alert(
+              'Replace local database?',
+              "Would you like to overwrite the app's current database with the version on Dropbox?",
+              [
+                {
+                  text: 'Yes, replace my local DB',
+                  onPress: async () => {
+                    console.log('User chose to replace local DB.');
+                    // Download the update
+                    setDownloading(true);
+                    try {
+                      await dropboxSync.download();
+                    } catch (error) {
+                      setDownloading(false);
+                    }
+                  },
+                },
+                {
+                  text: 'No, unlink Dropbox',
+                  onPress: () => unlinkFromDropbox(),
+                },
+              ],
+              {cancelable: false},
+            );
+          });
+        } else {
+          // Nothing exists on Dropbox yet, so kick off the 1st upload
+          return dropboxSync.upload();
+        }
+      })
+      .catch(reason => {
+        Alert.alert(
+          'Error',
+          `Unable to authorize with Dropbox. Reason: ${reason}`,
+        );
+      });
+  }
+
+  function unlinkFromDropbox() {
+    console.log('Unlinking from Dropbox.');
+    new DropboxAuthorize().revokeAuthorization().then(() => {
+      setHasAuthorizedWithDropbox(false);
+    });
   }
 
   async function selectFileToUpload() {
@@ -226,7 +290,7 @@ let Settings = ({
             <MenuItem
               label="Dropbox"
               icon="dropbox"
-              onPress={() => navigation.navigate('ListCategories')}
+              onPress={connectWithDropbox}
             />
             <MenuItem
               label="Google Drive"

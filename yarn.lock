@@ -1185,6 +1185,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-plugin/-/eslint-plugin-1.1.0.tgz#e42b1bef12d2415411519fd528e64b593b1363dc"
   integrity sha512-W/J0fNYVO01tioHjvYWQ9m6RgndVtbElzYozBq1ZPrHO/iCzlqoySHl4gO/fpCl9QEFjvJfjPgtPMTMlsoq5DQ==
 
+"@react-native-community/netinfo@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-7.0.0.tgz#1da998320c99062c291248fe0788846803f1a587"
+  integrity sha512-vYqeWMBeQXV0eOjppPn81uj2PXLPAOBuBwxZrm096vDquZLUNOqV/+eX1M+rSczuVQCmYTbIZcMRmf4w18BpAg==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -7266,6 +7271,11 @@ shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
+
+shitty-qs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/shitty-qs/-/shitty-qs-1.0.1.tgz#7716a66937411e927315ed49c0fa05addf230386"
+  integrity sha1-dxamaTdBHpJzFe1JwPoFrd8jA4Y=
 
 side-channel@^1.0.4:
   version "1.0.4"

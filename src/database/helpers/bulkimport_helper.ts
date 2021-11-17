@@ -2,8 +2,9 @@ import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets as dbWallets} from '.';
 import {DefaultTimeFormat, generateColor} from '../../lib';
+import SyncAdapter from '../../sync/SyncAdapter';
 import {database} from '../index';
-import {Category, Transaction, TransactionTypeEnum, Wallet} from '../models';
+import {Category, Transaction, Wallet} from '../models';
 
 // This method will find category or wallet for given names
 const getRecordBy = async (
@@ -186,6 +187,9 @@ export const bulkImportTransaction = async (data: any[]) => {
       await wallet?.update(() => {
         wallet.balanceAmount = balance;
       });
+
+      // sync data to dropbox
+      SyncAdapter.upload();
     });
   });
 };
