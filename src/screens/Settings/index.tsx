@@ -2,6 +2,7 @@ import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
 import {Alert, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import RNFS from 'react-native-fs';
+import RNFetchBlob from 'rn-fetch-blob';
 import DocumentPicker from 'react-native-document-picker';
 import {
   ActivityIndicator,
@@ -90,8 +91,9 @@ let Settings = ({
 
     try {
       if (backupFile) {
-        const fileContent = await RNFS.readFile(backupFile, 'ascii');
-        await RNFS.writeFile(dbPath, fileContent);
+        // const fileContent = await RNFS.readFile(backupFile, 'ascii');
+        // await RNFS.writeFile(dbPath, fileContent);
+        RNFetchBlob.fs.writeFile(dbPath, backupFile, 'uri');
         setSnackbarMsg('Database restored successful');
         setSnackbar(true);
       }
@@ -257,14 +259,13 @@ let Settings = ({
             />
           </Card.Content>
         </Card>
-
-        <AppSnackbar
-          visible={snackbar}
-          onDismiss={() => setSnackbar(false)}
-          message={snackbarMsg}
-        />
-        <ActivityIndicator animating={loading} />
       </ScrollView>
+      <ActivityIndicator animating={loading} />
+      <AppSnackbar
+        visible={snackbar}
+        onDismiss={() => setSnackbar(false)}
+        message={snackbarMsg}
+      />
     </>
   );
 };
