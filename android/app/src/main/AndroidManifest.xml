@@ -24,6 +24,12 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
             <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" android:host="www.dropbox.com" />
+            <data android:scheme="https" android:host="www.dropbox.com/oauth2/authorize" />
+            <data android:scheme="com.przbadu.myexpense.oauth" android:host="oauthredirect" />
         </intent-filter>
       </activity>
     </application>
