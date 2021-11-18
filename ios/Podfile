@@ -1,7 +1,7 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'MyExpense' do
   config = use_native_modules!
@@ -13,6 +13,15 @@ target 'MyExpense' do
   )
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  # If you're using autolinking, this line might not be needed
+  pod 'WatermelonDB', :path => '../node_modules/@nozbe/watermelondb'
+
+  # NOTE: Do not remove, needed to keep WatermelonDB compiling:
+  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
+
+  # NOTE: This is required as of v0.23
+  pod 'simdjson', path: '../node_modules/@nozbe/simdjson'
 
   target 'MyExpenseTests' do
     inherit! :complete
