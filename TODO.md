@@ -23,3 +23,5 @@
 - [ ] https://github.com/crazycodeboy/react-native-splash-screen#installation
 
 - [ ] https://implementationdetails.dev/blog/2018/12/05/sync-react-native-sqlite-db-with-dropbox/
+- [ ] 
+- [ ] https://github.com/rnmods/react-native-document-picker#installation
