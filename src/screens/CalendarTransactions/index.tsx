@@ -1,17 +1,18 @@
 import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {FlatList, View} from 'react-native';
-import {Calendar} from 'react-native-calendars';
-import {IconButton, Subheading, useTheme} from 'react-native-paper';
-import {TransactionRow} from '../../components';
-import {calendarTheme} from '../../lib';
+import { FlatList, View } from 'react-native';
+import { Calendar } from 'react-native-calendars';
+import { IconButton, Subheading, useTheme } from 'react-native-paper';
+import { TransactionRow } from '../../components';
+import { calendarTheme } from '../../lib';
 import {
   filterByDailyTransactions,
   observeTransactions,
   transactionDaysForCurrentMonth,
 } from '../../database/helpers';
-import {Transaction} from '../../database/models';
+import { Transaction } from '../../database/models';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Transaction component
 const _format = 'YYYY-MM-DD';
@@ -26,10 +27,10 @@ const _CalendarTransactions = ({
 }) => {
   const [_transactions, setTransactions] = React.useState<Transaction[]>([]);
   const [markedDates, setMarkedDates] = React.useState<any>({
-    [_today]: {selected: true},
+    [_today]: { selected: true },
   });
 
-  const {colors, dark} = useTheme();
+  const { colors, dark } = useTheme();
 
   React.useEffect(() => {
     const _date = dayjs().format('YYYY-MM');
@@ -40,9 +41,9 @@ const _CalendarTransactions = ({
   const fetchCurrentMonthDots = async (date: string) => {
     const result = await transactionDaysForCurrentMonth(date);
     let _dates: any = {};
-    result.forEach((day: {transaction_at: number}) => {
+    result.forEach((day: { transaction_at: number }) => {
       const _key = dayjs(day.transaction_at).format(_format);
-      _dates[_key] = {...markedDates[_key], marked: true};
+      _dates[_key] = { ...markedDates[_key], marked: true };
     });
     setMarkedDates(_dates);
   };
@@ -58,16 +59,16 @@ const _CalendarTransactions = ({
     const _selectedDay = dayjs(day.dateString).format(_format);
 
     Object.keys(markedDates).forEach(key => {
-      _dates[key] = {...markedDates[key], selected: false};
+      _dates[key] = { ...markedDates[key], selected: false };
     });
-    _dates[_selectedDay] = {...markedDates[_selectedDay], selected: true};
+    _dates[_selectedDay] = { ...markedDates[_selectedDay], selected: true };
 
     setMarkedDates(_dates);
     fetchFilteredTransactions(_selectedDay);
   };
 
   return (
-    <>
+    <SafeAreaView>
       <View
         style={{
           flexDirection: 'row',
@@ -94,7 +95,7 @@ const _CalendarTransactions = ({
         ListHeaderComponent={
           <Calendar
             onDayPress={onDaySelect}
-            onMonthChange={({dateString}: {dateString: string}) => {
+            onMonthChange={({ dateString }: { dateString: string }) => {
               const [year, month] = dateString.split('-');
               fetchCurrentMonthDots(`${year}-${month}`);
             }}
@@ -104,8 +105,8 @@ const _CalendarTransactions = ({
             }}
           />
         }
-        renderItem={({item}) => (
-          <View style={{marginHorizontal: 5, marginTop: 15}}>
+        renderItem={({ item }) => (
+          <View style={{ marginHorizontal: 5, marginTop: 15 }}>
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}
@@ -119,7 +120,7 @@ const _CalendarTransactions = ({
         )}
         keyExtractor={(item, index) => String(item.id) + String(index)}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -127,4 +128,4 @@ const CalendarTransactions = withObservables([], () => ({
   transactions: observeTransactions(),
 }))(_CalendarTransactions);
 
-export {CalendarTransactions};
+export { CalendarTransactions };

@@ -1,9 +1,10 @@
-import React, {Suspense, useEffect, useState} from 'react';
-import {ActivityIndicator} from 'react-native-paper';
+import React, { Suspense, useEffect, useState } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
-import {initialSetup, LocalStorage} from './database/helpers';
-import {AppNavigator} from './navigation';
-import {SplashScreen as AppSplashScreen} from './screens';
+import { initialSetup, LocalStorage } from './database/helpers';
+import { AppNavigator } from './navigation';
+import { SplashScreen as AppSplashScreen } from './screens';
 // global states
 import {
   APP_THEME,

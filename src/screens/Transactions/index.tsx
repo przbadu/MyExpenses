@@ -1,8 +1,8 @@
-import {useFocusEffect} from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/core';
 import CSV from 'csvtojson';
 import dayjs from 'dayjs';
 import React from 'react';
-import {ScrollView, SectionList, View} from 'react-native';
+import { ScrollView, SectionList, View } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import {
@@ -28,18 +28,18 @@ import {
   filterTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
-import {Transaction, TransactionTypeEnum} from '../../database/models';
-import {DefaultDateFormat, numberToCurrency} from '../../lib';
-import {CurrencyContext} from '../../store/context';
+import { Transaction, TransactionTypeEnum } from '../../database/models';
+import { DefaultDateFormat, numberToCurrency } from '../../lib';
+import { CurrencyContext } from '../../store/context';
 import TransactionFilters from './TransactionFilters';
-import {useForm} from './useFilterForm';
+import { useForm } from './useFilterForm';
 
 // Transaction component
 let Transactions: React.FC<{
   navigation: any;
-}> = ({navigation}) => {
+}> = ({ navigation }) => {
   const [summary, setSummary] =
-    React.useState<{income: number; expense: number}>();
+    React.useState<{ income: number; expense: number }>();
   const [groupedTransactions, setGroupedTransactions] = React.useState<
     Transaction[]
   >([]);
@@ -47,13 +47,13 @@ let Transactions: React.FC<{
     'd' | 'w' | 'm' | 'y' | 'custom'
   >('m');
   const [showMoreMenu, setShowMoreMenu] = React.useState(false);
-  const {currency} = React.useContext(CurrencyContext);
+  const { currency } = React.useContext(CurrencyContext);
   const [showAlert, setShowAlert] = React.useState(false);
   const [alertContent, setAlertContent] = React.useState('');
   const [loading, setLoading] = React.useState(false);
 
-  const {navigate} = navigation;
-  const {colors} = useTheme();
+  const { navigate } = navigation;
+  const { colors } = useTheme();
   const [showFilter, setShowFilter] = React.useState(false);
   const useFormProps = useForm();
 
@@ -73,7 +73,7 @@ let Transactions: React.FC<{
     filterBy: filterTransactionByProps | null = null,
   ) => {
     console.log('filterby', filterBy);
-    const res: {transaction_type: TransactionTypeEnum; sum_amount: number}[] =
+    const res: { transaction_type: TransactionTypeEnum; sum_amount: number }[] =
       await transactionTypeSummary(filterBy);
     const _income = res.filter(
       s => s.transaction_type === TransactionTypeEnum.income,
@@ -118,8 +118,8 @@ let Transactions: React.FC<{
       startDate = new Date(+dayjs().startOf('year'));
     }
 
-    await fetchSummary({startDate, endDate});
-    const _transactions = await filterTransactions({startDate, endDate});
+    await fetchSummary({ startDate, endDate });
+    const _transactions = await filterTransactions({ startDate, endDate });
     transactionGroupedByMonth(_transactions);
   };
 
@@ -137,7 +137,7 @@ let Transactions: React.FC<{
         return groupedTransaction;
       }, Object.create(null));
 
-    result = Object.keys(result).map(key => ({title: key, data: result[key]}));
+    result = Object.keys(result).map(key => ({ title: key, data: result[key] }));
     setGroupedTransactions(result);
   }
 
@@ -216,7 +216,7 @@ let Transactions: React.FC<{
 
   function renderHeader() {
     return (
-      <Appbar.Header style={{elevation: 0}}>
+      <Appbar.Header style={{ elevation: 0 }}>
         <Appbar.Content title="TRANSACTIONS" color={colors.white} />
         <Appbar.Action
           icon="calendar-blank-outline"
@@ -234,7 +234,7 @@ let Transactions: React.FC<{
               color={colors.white}
             />
           }
-          style={{marginTop: 30}}>
+          style={{ marginTop: 30 }}>
           <Menu.Item
             onPress={exportCSV}
             icon="database-export"
@@ -280,23 +280,23 @@ let Transactions: React.FC<{
 
   function renderSectionList() {
     return (
-      <View style={{flex: 1, marginBottom: 80, marginHorizontal: 10}}>
+      <View style={{ flex: 1, marginBottom: 80, marginHorizontal: 10 }}>
         <SectionList
           sections={groupedTransactions}
-          renderItem={({item}: {item: Transaction}) => (
+          renderItem={({ item }: { item: Transaction }) => (
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}
               onPress={() =>
-                navigate('TransactionDetail', {transactionId: item.id})
+                navigate('TransactionDetail', { transactionId: item.id })
               }
             />
           )}
           keyExtractor={(item, index) => String(item.id) + String(index)}
-          renderSectionHeader={({section: {title}}) => (
+          renderSectionHeader={({ section: { title } }) => (
             <Subheading
               key={`year-${title}`}
-              style={{marginBottom: 10, color: colors.primary}}>
+              style={{ marginBottom: 10, color: colors.primary }}>
               {title}
             </Subheading>
           )}
@@ -310,7 +310,7 @@ let Transactions: React.FC<{
 
   function renderFilterHeader() {
     return (
-      <View style={{marginBottom: 10, marginLeft: 10}}>
+      <View style={{ marginBottom: 10, marginLeft: 10 }}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <AppChip
             surface
@@ -353,7 +353,7 @@ let Transactions: React.FC<{
   function renderEmptyResult() {
     return (
       <View
-        style={{alignItems: 'center', justifyContent: 'center', marginTop: 20}}>
+        style={{ alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
         <Caption>
           No Data Found!! you can try a different filter or add some
           transactions
@@ -389,4 +389,4 @@ let Transactions: React.FC<{
   );
 };
 
-export {Transactions};
+export { Transactions };

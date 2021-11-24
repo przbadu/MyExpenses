@@ -1,9 +1,9 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import {TabBarIcon} from '../components';
+import { StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
+import { TabBarIcon } from '../components';
 import {
   AddSaving,
   AddTransaction,
@@ -19,7 +19,7 @@ const SavingStack = createNativeStackNavigator();
 function SavingsStackScreen() {
   return (
     <SavingStack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
       initialRouteName="ListSavings">
       <SavingStack.Screen name="AddSaving" component={AddSaving} />
       <SavingStack.Screen name="ListSavings" component={ListSavings} />
@@ -28,20 +28,20 @@ function SavingsStackScreen() {
 }
 
 export const TabNavigation = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarStyle: {...styles.navigator},
+        tabBarStyle: { ...styles.navigator },
         headerShown: false,
       }}>
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               label="Stats"
               icon="chart-timeline-variant"
@@ -54,7 +54,7 @@ export const TabNavigation = () => {
         name="Transactions"
         component={Transactions}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               label="Transactions"
               icon="calendar-month-outline"
@@ -67,7 +67,7 @@ export const TabNavigation = () => {
         name="AddTransaction"
         component={AddTransaction}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               icon="plus"
               focused={focused}
@@ -88,7 +88,7 @@ export const TabNavigation = () => {
         name="Saving"
         component={SavingsStackScreen}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon label="Savings" icon="piggy-bank" focused={focused} />
           ),
         }}
@@ -97,7 +97,7 @@ export const TabNavigation = () => {
         name="MainSettings"
         component={Settings}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon label="Settings" icon="cog" focused={focused} />
           ),
         }}

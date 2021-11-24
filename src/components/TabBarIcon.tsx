@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface TabBarIconProps {
@@ -18,7 +18,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({
   containerStyles = {},
   iconColor,
 }) => {
-  const {colors, fonts} = useTheme();
+  const { colors, fonts } = useTheme();
   const textColor = focused ? colors.accent : colors.disabled;
 
   return (
@@ -29,7 +29,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({
         color={iconColor ? iconColor : textColor}
       />
       {label && (
-        <Text style={{color: textColor, ...fonts.medium, fontSize: 12}}>
+        <Text style={{ color: textColor, ...fonts.medium, fontSize: 12 }}>
           {label}
         </Text>
       )}
@@ -41,11 +41,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 220,
   },
   icon: {
     fontSize: 26,
   },
 });
 
-export {TabBarIcon};
+export { TabBarIcon };
