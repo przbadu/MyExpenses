@@ -1,8 +1,15 @@
 import React from 'react';
 import {Appbar} from 'react-native-paper';
 import {Form} from './form';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../navigation/types';
 
-const AddWallet = ({navigation}: {navigation: any}) => {
+type Props = NativeStackNavigationProp<RootStackParamList, 'AddWallet'>;
+
+const AddWallet = () => {
+  const navigation = useNavigation();
+
   return (
     <>
       <Appbar.Header>

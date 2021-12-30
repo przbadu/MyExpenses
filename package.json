@@ -30,6 +30,7 @@
     "react-native-fs": "^2.18.0",
     "react-native-modal-datetime-picker": "^11.0.0",
     "react-native-paper": "^4.9.2",
+    "react-native-restart": "^0.0.23",
     "react-native-safe-area-context": "^3.3.0",
     "react-native-screens": "^3.6.0",
     "react-native-splash-screen": "^3.2.0",

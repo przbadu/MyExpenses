@@ -1,8 +1,3 @@
-/**
- * React Native SQLite Demo
- * Copyright (c) 2018 Bruce Lefebvre <bruce@brucelefebvre.com>
- * https://github.com/blefebvre/react-native-sqlite-demo/blob/master/LICENSE
- */
 import NetInfo from '@react-native-community/netinfo';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -312,12 +307,12 @@ export class DropboxDatabaseSync implements DatabaseSync {
     const databaseBackupFilePath = this.getLocalDBBackupFilePath();
     // Is there currently a backup file already?
     return RNFS.stat(databaseBackupFilePath)
-      .then(statResult => {
+      .then((statResult: any) => {
         console.log('RNFS statResult:', statResult);
         // There is a file here already! Delete it.
         return RNFS.unlink(databaseBackupFilePath);
       })
-      .catch(reason => {
+      .catch((reason: any) => {
         if (
           reason &&
           reason.toString().includes(DROPBOX.NO_SUCH_FILE_ERROR_SUBSTRING)
