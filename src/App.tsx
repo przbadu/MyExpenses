@@ -11,6 +11,7 @@ import {
   themeMode,
   ThemeProvider,
 } from './store/context';
+import {DatabaseSynchronizer} from './sync/DatabaseSync';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -20,15 +21,21 @@ const App = () => {
     defaultSetup();
   }, []);
 
-  const defaultSetup = async () => {
+  const prepareForDatabaseUpdate = async (): Promise<void> => {
+    setLoading(true);
+    // return database.close();
+  };
+
+  async function defaultSetup() {
     // setup default data
     await initialSetup();
+    new DatabaseSynchronizer(prepareForDatabaseUpdate).syncDatabase();
     // setup theme
     const appTheme = (await LocalStorage.get(APP_THEME)) as themeMode;
     setTheme(appTheme?.length ? appTheme : 'system');
     setLoading(false);
     SplashScreen.hide();
-  };
+  }
 
   if (loading) return <AppSplashScreen />;
 

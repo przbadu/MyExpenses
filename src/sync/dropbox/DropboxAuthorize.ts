@@ -14,6 +14,10 @@ export class DropboxAuthorize implements Authorize {
 
   // Authorize with Dropbox. Uses the device's browser to work through the Dropbox
   // OAuth 2 process, eventually recording a token and account ID if successful.
+  // It should be 2 step process:
+  // 1. /oauth2/authorize - will give us auth code
+  // 2. /oauth2/token - pass client_secret and auth code to exchange for token.
+  // TODO: Fix oauth2 flow.
   public authorize(): Promise<void> {
     console.log('Authorization starting...');
     // Generate a random string for Dropbox's state param.
@@ -22,15 +26,14 @@ export class DropboxAuthorize implements Authorize {
     const stateValue = Math.random().toString();
 
     // Open the Dropbox authorization page in the device browser
-    return Linking.openURL(
-      [
-        DROPBOX.AUTHORIZE_URL,
-        '?response_type=token',
-        `&client_id=${OAUTH_CONFIG.OAUTH_CLIENT_ID}`,
-        `&redirect_uri=${OAUTH_CONFIG.OAUTH_REDIRECT_URI}`,
-        `&state=${stateValue}`,
-      ].join(''),
-    )
+    const _linkingUrl = [
+      DROPBOX.AUTHORIZE_URL,
+      '?response_type=code',
+      `&client_id=${OAUTH_CONFIG.OAUTH_CLIENT_ID}`,
+      `&redirect_uri=${OAUTH_CONFIG.OAUTH_REDIRECT_URI}`,
+      `&state=${stateValue}`,
+    ].join('');
+    return Linking.openURL(_linkingUrl)
       .catch(err =>
         console.error(
           'An error occurred trying to open the browser to authorize with Dropbox:',
@@ -113,6 +116,7 @@ export class DropboxAuthorize implements Authorize {
     console.log('Deep link event!', event);
 
     const queryStringResult = event.url.match(/\#(.*)/);
+    console.log('Query string result: ', queryStringResult);
     if (queryStringResult === null || queryStringResult.length < 2) {
       return Promise.reject(
         'Did not receive a query string as part of this deep link!',
@@ -121,6 +125,7 @@ export class DropboxAuthorize implements Authorize {
 
     const [, queryString] = queryStringResult;
     const parsedQueryString = shittyQs(queryString);
+    console.log('ParsedQueryString: ', parsedQueryString);
     if (parsedQueryString.error) {
       // There was an error!
       const errorCode = parsedQueryString.error;
@@ -134,10 +139,10 @@ export class DropboxAuthorize implements Authorize {
       );
     }
 
-    if (stateValue !== parsedQueryString.state) {
-      // This value must match! This is a security feature of Dropbox's OAuth impl
-      return Promise.reject('State parameter DID NOT MATCH!');
-    }
+    // if (stateValue !== parsedQueryString.state) {
+    //   // This value must match! This is a security feature of Dropbox's OAuth impl
+    //   return Promise.reject('State parameter DID NOT MATCH!');
+    // }
 
     // Otherwise: not an error!
     const accessToken = parsedQueryString.access_token;

@@ -305,6 +305,8 @@ export class DropboxDatabaseSync implements DatabaseSync {
 
   private copyDBToBackupFile(): Promise<void> {
     const databaseBackupFilePath = this.getLocalDBBackupFilePath();
+    console.log(databaseBackupFilePath);
+
     // Is there currently a backup file already?
     return RNFS.stat(databaseBackupFilePath)
       .then((statResult: any) => {
@@ -416,12 +418,8 @@ export class DropboxDatabaseSync implements DatabaseSync {
     });
   }
 
-  private getDatabaseName(): string {
-    return 'watermelon.db';
-  }
-
   private getDatabaseBackupName(): string {
-    return 'MyExpense_Backup.db';
+    return 'watermelon.db';
   }
 
   private getDropboxFolder(): string {
@@ -429,16 +427,10 @@ export class DropboxDatabaseSync implements DatabaseSync {
   }
 
   private getLocalDBFilePath(): string {
-    return (
-      RNFS.LibraryDirectoryPath + '/LocalDatabase/' + this.getDatabaseName()
-    );
+    return `/data/data/com.przbadu.myexpense/${this.getDatabaseBackupName()}`;
   }
 
   private getLocalDBBackupFilePath(): string {
-    return (
-      RNFS.LibraryDirectoryPath +
-      '/LocalDatabase/' +
-      this.getDatabaseBackupName()
-    );
+    return '/data/data/com.przbadu.myexpense/myexpense_bkup.db';
   }
 }

@@ -1,7 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets} from '.';
-import SyncAdapter from '../../sync/SyncAdapter';
+// import SyncAdapter from '../../sync/SyncAdapter';
 import {database} from '../index';
 import {
   Category,
@@ -151,7 +151,7 @@ export const saveTransaction = async ({
       wallet.balanceAmount = balance;
     });
   });
-  SyncAdapter.upload();
+  // SyncAdapter.upload();
 };
 
 export const updateTransaction = async (
@@ -201,7 +201,7 @@ export const updateTransaction = async (
         wallet.balanceAmount = balance;
       });
     });
-    SyncAdapter.upload();
+    // SyncAdapter.upload();
   }
 };
 
@@ -218,5 +218,5 @@ export const deleteTransaction = async (id: string) => {
     });
     await transaction.destroyPermanently();
   });
-  SyncAdapter.upload();
+  // SyncAdapter.upload();
 };

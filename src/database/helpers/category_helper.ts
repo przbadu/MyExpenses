@@ -2,7 +2,7 @@ import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {formatDateColumn, lineChartFilterProps} from '.';
 import {DefaultDateFormat, generateColor} from '../../lib';
-import SyncAdapter from '../../sync/SyncAdapter';
+// import SyncAdapter from '../../sync/SyncAdapter';
 import {database} from '../index';
 import {Category, CategoryProps} from '../models';
 
@@ -81,7 +81,7 @@ export const saveCategory = async ({
       entry.icon = icon;
     });
   });
-  SyncAdapter.upload();
+  // SyncAdapter.upload();
 };
 
 export const updateCategory = async (
@@ -95,14 +95,14 @@ export const updateCategory = async (
       entry.icon = icon;
     });
   });
-  SyncAdapter.upload();
+  // SyncAdapter.upload();
 };
 
 export const deleteCategory = async (category: Category) => {
   await database.write(async () => {
     await category.destroyPermanently();
   });
-  SyncAdapter.upload();
+  // SyncAdapter.upload();
 };
 
 export const setupDefaultCategories = async () => {

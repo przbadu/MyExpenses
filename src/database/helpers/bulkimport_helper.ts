@@ -2,7 +2,7 @@ import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets as dbWallets} from '.';
 import {DefaultTimeFormat, generateColor} from '../../lib';
-import SyncAdapter from '../../sync/SyncAdapter';
+// import SyncAdapter from '../../sync/SyncAdapter';
 import {database} from '../index';
 import {Category, Transaction, Wallet} from '../models';
 
@@ -189,7 +189,7 @@ export const bulkImportTransaction = async (data: any[]) => {
       });
 
       // sync data to dropbox
-      SyncAdapter.upload();
+      // SyncAdapter.upload();
     });
   });
 };
