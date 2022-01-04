@@ -28,6 +28,8 @@ import {resetDB} from '../../database';
 import dayjs from 'dayjs';
 import {DropboxAuthorize} from '../../sync/dropbox/DropboxAuthorize';
 import {DropboxDatabaseSync} from '../../sync/dropbox/DropboxDatabaseSync';
+import {useGoogleDrive} from '../../hooks/useGoogleDrive';
+import {GoogleAuth} from '../../sync/google_drive/GoogleAuth';
 
 let Settings = ({
   navigation,
@@ -38,9 +40,8 @@ let Settings = ({
   categories: Category[];
   wallets: WalletProps[];
 }) => {
-  const [hasAuthorizedWithDropbox, setHasAuthorizedWithDropbox] =
-    React.useState(false);
-  const [downloading, setDownloading] = React.useState(false);
+  const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);
+
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
   const [showThemeModal, setShowThemeModal] = React.useState(false);
 
@@ -51,6 +52,25 @@ let Settings = ({
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
+
+  React.useEffect(() => {
+    async () => {
+      const _isLoggedIn = await new GoogleAuth().hasUserAuthorized();
+      setIsGoogleAuthorized(_isLoggedIn);
+    };
+  }, []);
+
+  async function signInWithGoogle(): Promise<void> {
+    const googleAuth = new GoogleAuth();
+    if (await googleAuth.hasUserAuthorized()) {
+      setIsGoogleAuthorized(true);
+      return;
+    }
+
+    await googleAuth.authorize();
+    const result = await googleAuth.hasUserAuthorized();
+    setIsGoogleAuthorized(result);
+  }
 
   function handleClearData() {
     Alert.alert(
@@ -294,9 +314,9 @@ let Settings = ({
             />
             <MenuItem
               label="Google Drive"
-              icon="google-drive"
+              icon={isGoogleAuthorized ? 'check' : 'google-drive'}
               iconSize={22}
-              onPress={() => {}}
+              onPress={signInWithGoogle}
             />
           </Card.Content>
         </Card>

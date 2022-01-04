@@ -28,6 +28,7 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-document-picker": "^7.1.0",
     "react-native-fs": "^2.18.0",
+    "react-native-google-signin": "^2.1.1",
     "react-native-modal-datetime-picker": "^11.0.0",
     "react-native-paper": "^4.9.2",
     "react-native-restart": "^0.0.23",

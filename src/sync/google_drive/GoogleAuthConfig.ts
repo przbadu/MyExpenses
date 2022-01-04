@@ -1,8 +1,5 @@
 export const GOOGLE_AUTH_CONFIG = {
-  issuer: 'https://accounts.google.com',
   clientId:
-    '105567870368-msossp5nqntceojs1gh4fkdcqapu8h3s.apps.googleusercontent.com',
-  redirectUrl:
-    'com.googleusercontent.apps.GOOGLE_OAUTH_APP_GUID:/oauth2redirect/google',
-  scopes: ['openid', 'profile'],
+    '970916438992-one94vg9t27jecagh9m285dn8ik7hbvh.apps.googleusercontent.com',
+  scopes: ['https://www.googleapis.com/auth/drive.readonly'],
 };
