@@ -431,6 +431,6 @@ export class DropboxDatabaseSync implements DatabaseSync {
   }
 
   private getLocalDBBackupFilePath(): string {
-    return '/data/data/com.przbadu.myexpense/myexpense_bkup.db';
+    return `${RNFS.DownloadDirectoryPath}/myexpense.db`;
   }
 }

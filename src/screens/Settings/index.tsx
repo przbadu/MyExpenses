@@ -27,6 +27,11 @@ import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
 import dayjs from 'dayjs';
 import {GoogleAuth} from '../../sync/google_drive/GoogleAuth';
+import {useFocusEffect} from '@react-navigation/native';
+import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
+import {DropboxAuthorize} from '../../sync/dropbox/DropboxAuthorize';
+import {DatabaseSynchronizer} from '../../sync/DatabaseSync';
+import {DropboxDatabaseSync} from '../../sync/dropbox/DropboxDatabaseSync';
 
 let Settings = ({
   navigation,
@@ -37,6 +42,9 @@ let Settings = ({
   categories: Category[];
   wallets: WalletProps[];
 }) => {
+  const [hasAuthorizedWithDropbox, setHasAuthorizedWithDropbox] =
+    React.useState(false);
+  const [downloading, setDownloading] = React.useState(false);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);
 
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
@@ -50,23 +58,77 @@ let Settings = ({
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
 
-  React.useEffect(() => {
-    async () => {
-      const _isLoggedIn = await new GoogleAuth().hasUserAuthorized();
-      setIsGoogleAuthorized(_isLoggedIn);
-    };
-  }, []);
-
   async function signInWithGoogle(): Promise<void> {
     const googleAuth = new GoogleAuth();
+    const googleSync = new GoogleDriveSync();
+
     if (await googleAuth.hasUserAuthorized()) {
       setIsGoogleAuthorized(true);
-      return;
+      googleSync.upload();
+    } else {
+      await googleAuth.authorize();
+      const result = await googleAuth.hasUserAuthorized();
+      setIsGoogleAuthorized(result);
     }
+  }
 
-    await googleAuth.authorize();
-    const result = await googleAuth.hasUserAuthorized();
-    setIsGoogleAuthorized(result);
+  async function connectWithDropbox() {
+    const dropboxAuth = new DropboxAuthorize();
+    const dropboxSync = new DropboxDatabaseSync();
+
+    return dropboxAuth
+      .authorize()
+      .then(() => {
+        setHasAuthorizedWithDropbox(true);
+        return dropboxSync.hasRemoteUpdate();
+      })
+      .then(remoteDatabaseIsNewer => {
+        if (remoteDatabaseIsNewer) {
+          return new Promise<void>((_resolve, reject) => {
+            // We just linked, and there is existing data on Dropbox. Prompt to overwrite it.
+            Alert.alert(
+              'Replace local database?',
+              "Would you like to overwrite the app's current database with the version on Dropbox?",
+              [
+                {
+                  text: 'Yes, replace my local DB',
+                  onPress: async () => {
+                    console.log('User chose to replace local DB.');
+                    // Download the update
+                    setDownloading(true);
+                    try {
+                      await dropboxSync.download();
+                    } catch (error) {
+                      setDownloading(false);
+                    }
+                  },
+                },
+                {
+                  text: 'No, unlink Dropbox',
+                  onPress: () => unlinkFromDropbox(),
+                },
+              ],
+              {cancelable: false},
+            );
+          });
+        } else {
+          // Nothing exists on Dropbox yet, so kick off the 1st upload
+          return dropboxSync.upload();
+        }
+      })
+      .catch(reason => {
+        Alert.alert(
+          'Error',
+          `Unable to authorize with Dropbox. Reason: ${reason}`,
+        );
+      });
+  }
+
+  function unlinkFromDropbox() {
+    console.log('Unlinking from Dropbox.');
+    new DropboxAuthorize().revokeAuthorization().then(() => {
+      setHasAuthorizedWithDropbox(false);
+    });
   }
 
   function handleClearData() {
@@ -95,7 +157,7 @@ let Settings = ({
   async function handleBackup() {
     const dbPath = '/data/data/com.przbadu.myexpense/watermelon.db';
     const fileName = `myexpenses-${dayjs().format('YYYY-MM-DD-hh-mm-ss-a')}.db`;
-    const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
+    const downloadPath = `${RNFS.DownloadDirectoryPath}/myexpenses/${fileName}`;
 
     try {
       await RNFS.copyFile(dbPath, downloadPath);
@@ -245,7 +307,11 @@ let Settings = ({
         </Subheading>
         <Card style={{...styles.card}}>
           <Card.Content>
-            {/* <MenuItem label="Dropbox" icon="dropbox" onPress={() => {}} /> */}
+            <MenuItem
+              label="Dropbox"
+              icon={isGoogleAuthorized ? 'database-sync' : 'dropbox'}
+              onPress={connectWithDropbox}
+            />
             <MenuItem
               label="Google Drive"
               icon={isGoogleAuthorized ? 'database-sync' : 'google-drive'}
