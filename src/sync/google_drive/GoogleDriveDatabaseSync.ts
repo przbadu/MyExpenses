@@ -15,9 +15,8 @@ import {DatabaseSync} from '../DatabaseSync';
 export class GoogleDriveSync implements DatabaseSync {
   // True when a backup is already in progress
   private backupIsCurrentlyInProgress = false;
-  private localDBFilePath = `/data/data/com.przbadu.myexpense/watermelon.db`;
-  private driveDirName = 'myexpenses';
-  private backupDbName = 'my_expenses.db';
+  private localDBFilePath = '/data/data/com.przbadu.myexpense/watermelon.db';
+  private backupDbName = 'myexpenses.db';
   private gdrive: GDrive = new GDrive();
 
   async init(): Promise<void> {
@@ -51,7 +50,6 @@ export class GoogleDriveSync implements DatabaseSync {
     // Create a copy of the DB first to the backup file
     await this.copyDBToBackupFile();
 
-    console.log('[Drive backup] DB copy complete!');
     // The copy is complete, so we'll end the Promise chain here.
     // Kick off the remote backup to Dropbox.
     await this.performBackup();
@@ -77,6 +75,7 @@ export class GoogleDriveSync implements DatabaseSync {
   }
 
   // TODO: check this to fix permission issue: https://github.com/itinance/react-native-fs/issues/677
+  // this method handles the logic to keep backup file to download folder
   async copyDBToBackupFile(): Promise<void> {
     const databaseBackupFilePath = this.getLocalDBBackupFilePath();
     try {
@@ -95,44 +94,33 @@ export class GoogleDriveSync implements DatabaseSync {
         await RNFS.copyFile(this.localDBFilePath, databaseBackupFilePath);
       }
     } catch (error: any) {
-      if (error && error.toString().includes('no such file')) {
-        // there is no such file, lets backup our file, this is good
-        console.log(
-          'No file found ',
-          ' now copying backup file',
-          databaseBackupFilePath,
-        );
-        await RNFS.copyFile(this.localDBFilePath, databaseBackupFilePath);
-      } else {
-        console.log('[copyDBToBackupFile]: ' + error.message);
-      }
+      // there is no such file, lets backup our file, this is good
+      await RNFS.copyFile(this.localDBFilePath, databaseBackupFilePath);
     }
   }
 
+  // this method handles the logic to upload backup file to google drive
   async performBackup(): Promise<void> {
     try {
-      const fileMetadata = {name: 'myexpenses.db'};
-      const media = {
-        mimeType: 'application/x-sqlite3',
-        body: RNFS.readFile(this.getLocalDBBackupFilePath(), 'base64'),
+      const mimeType = 'application/x-sqlite3';
+      const fileToBackup = RNFS.readFile(this.localDBFilePath, 'base64');
+      const fileMetadata = {
+        name: 'myexpenses.db',
+        MimeTypes: mimeType,
       };
 
-      const result = await this.gdrive.files.multipartBoundary({
-        resource: fileMetadata,
-        media: media,
-        fields: 'id',
-      });
+      const result = await this.gdrive.files
+        .newMultipartUploader()
+        .setData(fileToBackup, mimeType)
+        .setRequestBody(fileMetadata)
+        .execute();
 
-      if (result) {
-        alert('Uploading Backup to google drive failed');
-        console.log('result ', result);
-        return;
-      }
+      console.log('file uploaded to Drive: ', result.id);
     } catch (error: any) {
       alert('Error: ' + error.message);
     }
 
-    console.log('uploaded successfully!!');
+    console.log('last line!!');
 
     // TODO: get uploaded timestamp from server and update it in localstorage
   }

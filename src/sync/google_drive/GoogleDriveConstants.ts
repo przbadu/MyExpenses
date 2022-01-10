@@ -7,6 +7,5 @@ export const GOOGLE_DRIVE = {
   LAST_UPDATE_STATUS_KEY: 'gdrive:lastUpdateStatus',
   UPDATE_STATUS_STARTED: 'updateStarted',
   UPDATE_STATUS_FINISHED: 'updateFinished',
-  NO_SUCH_FILE_ERROR_SUBSTRING:
-    'couldn’t be opened because there is no such file',
+  NO_SUCH_FILE_ERROR_SUBSTRING: 'File does not exists',
 };

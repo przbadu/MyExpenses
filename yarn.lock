@@ -1270,10 +1270,10 @@
   resolved "https://registry.yarnpkg.com/@realm.io/common/-/common-0.1.1.tgz#2950846cbedd14bdfdc1175d7c3119c3469547b0"
   integrity sha512-sXc7Ndhh39O9bm7/e0eeAx8keDBO83yoG7WfH04o6PqwVaIwm4T1uT0bhTO6OizP6ojhugZlVSu9HzgUVRE1Ag==
 
-"@robinbobin/react-native-google-drive-api-wrapper@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@robinbobin/react-native-google-drive-api-wrapper/-/react-native-google-drive-api-wrapper-1.0.0.tgz#7c73b3f3397b883584a84a092b38bec3050f54cb"
-  integrity sha512-wAMTpZsIqwUtZbAAVeR1+b8MO8tkYb6eYrFg1tDiYxXYwA+vWjfE9ya4BsJ1TxbiwSXzR3zPm5wy94oGTtJEmA==
+"@robinbobin/react-native-google-drive-api-wrapper@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@robinbobin/react-native-google-drive-api-wrapper/-/react-native-google-drive-api-wrapper-1.0.1.tgz#cdc8b830f04cdc548dcce086340caaed34ac0a8d"
+  integrity sha512-4rArWuebTCo78vQUXOREQ4ebIe6aqVCipqbS5YCIW1jSZRxh6ivNYVS09A6bxjBqXSDMkMlwYqZt1VlkJ9Cpng==
   dependencies:
     base64-js "^1.5.1"
     simple-common-utils "^2.3.0"

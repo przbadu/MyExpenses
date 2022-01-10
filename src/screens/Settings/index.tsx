@@ -157,7 +157,7 @@ let Settings = ({
   async function handleBackup() {
     const dbPath = '/data/data/com.przbadu.myexpense/watermelon.db';
     const fileName = `myexpenses-${dayjs().format('YYYY-MM-DD-hh-mm-ss-a')}.db`;
-    const downloadPath = `${RNFS.DownloadDirectoryPath}/myexpenses/${fileName}`;
+    const downloadPath = `${RNFS.DownloadDirectoryPath}/${fileName}`;
 
     try {
       await RNFS.copyFile(dbPath, downloadPath);
