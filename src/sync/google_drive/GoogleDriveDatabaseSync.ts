@@ -2,10 +2,10 @@ import {GoogleSignin} from 'react-native-google-signin';
 import {
   GDrive,
   MimeTypes,
+  ListQueryBuilder,
 } from '@robinbobin/react-native-google-drive-api-wrapper';
 import NetInfo from '@react-native-community/netinfo';
 import RNFS from 'react-native-fs';
-import RNFetchBlob from 'rn-fetch-blob';
 import dayjs, {Dayjs} from 'dayjs';
 
 import {LocalStorage} from '../../database/helpers';
@@ -16,7 +16,7 @@ export class GoogleDriveSync implements DatabaseSync {
   // True when a backup is already in progress
   private backupIsCurrentlyInProgress = false;
   private localDBFilePath = '/data/data/com.przbadu.myexpense/watermelon.db';
-  private backupDbName = 'myexpenses.db';
+  private backupDbName = GOOGLE_DRIVE.FILE_NAME_IDENTIFIER + '-myexpenses.db';
   private gdrive: GDrive = new GDrive();
 
   async init(): Promise<void> {
@@ -52,7 +52,7 @@ export class GoogleDriveSync implements DatabaseSync {
 
     // The copy is complete, so we'll end the Promise chain here.
     // Kick off the remote backup to Dropbox.
-    await this.performBackup();
+    await this.uploadToDrive();
     this.backupIsCurrentlyInProgress = false;
     console.log('[Dropbox backup] BACKUP COMPLETE.');
     return;
@@ -100,24 +100,55 @@ export class GoogleDriveSync implements DatabaseSync {
   }
 
   // this method handles the logic to upload backup file to google drive
-  async performBackup(): Promise<void> {
+  async uploadToDrive(): Promise<void> {
     try {
-      const mimeType = 'application/x-sqlite3';
-      const fileToBackup = RNFS.readFile(this.localDBFilePath, 'base64');
+      // const mimeType = 'application/x-sqlite3';
+      let fileId;
+      const mimeType = MimeTypes.BINARY;
+      const file64 = await RNFS.readFile(
+        this.getLocalDBBackupFilePath(),
+        'base64',
+      );
       const fileMetadata = {
-        name: 'myexpenses.db',
+        name: this.backupDbName,
         MimeTypes: mimeType,
       };
 
-      const result = await this.gdrive.files
-        .newMultipartUploader()
-        .setData(fileToBackup, mimeType)
-        .setRequestBody(fileMetadata)
-        .execute();
+      // check if file exists
+      const result = await this.gdrive.files.list({
+        q: new ListQueryBuilder()
+          .e('name', this.backupDbName)
+          .and()
+          .in('root', 'parents'),
+      });
+      if (result?.files?.length) {
+        fileId = result.files[0].id;
+      }
 
-      console.log('file uploaded to Drive: ', result.id);
+      console.log('search result: ', result);
+      console.log('file Id', fileId);
+
+      let result1;
+      if (fileId) {
+        result1 = await this.gdrive.files
+          .newMultipartUploader()
+          .setData(file64, mimeType)
+          .setIsBase64(true)
+          .setIdOfFileToUpdate(fileId)
+          .setRequestBody(fileMetadata)
+          .execute();
+      } else {
+        result1 = await this.gdrive.files
+          .newMultipartUploader()
+          .setData(file64, mimeType)
+          .setIsBase64(true)
+          .setRequestBody(fileMetadata)
+          .execute();
+      }
+
+      console.log('file uploaded to Drive: ', result1);
     } catch (error: any) {
-      alert('Error: ' + error.message);
+      alert('Error: please try again' + error.message);
     }
 
     console.log('last line!!');
