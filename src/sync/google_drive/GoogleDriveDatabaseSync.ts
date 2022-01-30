@@ -11,6 +11,7 @@ import dayjs, {Dayjs} from 'dayjs';
 import {LocalStorage} from '../../database/helpers';
 import {GOOGLE_DRIVE} from './GoogleDriveConstants';
 import {DatabaseSync} from '../DatabaseSync';
+import {FileMetadataType} from './types';
 
 export class GoogleDriveSync implements DatabaseSync {
   // True when a backup is already in progress
@@ -102,61 +103,63 @@ export class GoogleDriveSync implements DatabaseSync {
   // this method handles the logic to upload backup file to google drive
   async uploadToDrive(): Promise<void> {
     try {
-      // const mimeType = 'application/x-sqlite3';
-      let fileId;
-      const mimeType = MimeTypes.BINARY;
-      const file64 = await RNFS.readFile(
+      const fileToUpload = await RNFS.readFile(
         this.getLocalDBBackupFilePath(),
         'base64',
       );
-      const fileMetadata = {
-        name: this.backupDbName,
-        MimeTypes: mimeType,
-      };
+      const file = await this.getFileMetadata();
 
-      // check if file exists
-      const result = await this.gdrive.files.list({
-        q: new ListQueryBuilder()
-          .e('name', this.backupDbName)
-          .and()
-          .in('root', 'parents'),
-      });
-      if (result?.files?.length) {
-        fileId = result.files[0].id;
-      }
-
-      console.log('search result: ', result);
-      console.log('file Id', fileId);
-
-      let result1;
-      if (fileId) {
-        result1 = await this.gdrive.files
-          .newMultipartUploader()
-          .setData(file64, mimeType)
-          .setIsBase64(true)
-          .setIdOfFileToUpdate(fileId)
-          .setRequestBody(fileMetadata)
-          .execute();
-      } else {
-        result1 = await this.gdrive.files
-          .newMultipartUploader()
-          .setData(file64, mimeType)
-          .setIsBase64(true)
-          .setRequestBody(fileMetadata)
-          .execute();
-      }
-
-      console.log('file uploaded to Drive: ', result1);
+      // upload new file or update existing file
+      const uploader = this.gdrive.files
+        .newMultipartUploader()
+        .setData(fileToUpload, MimeTypes.BINARY)
+        .setIsBase64(true)
+        .setRequestBody({
+          name: this.backupDbName,
+          MimeTypes: MimeTypes.BINARY,
+        });
+      if (file.id) uploader.setIdOfFileToUpdate(file.id);
+      await uploader.execute();
     } catch (error: any) {
-      alert('Error: please try again' + error.message);
+      console.log('Error: please try again ' + error);
     }
-
-    console.log('last line!!');
-
-    // TODO: get uploaded timestamp from server and update it in localstorage
   }
 
   private getLocalDBBackupFilePath(): string {
     return `${RNFS.DownloadDirectoryPath}/${this.backupDbName}`;
+  }
+
+  // fetch file metadata using file id
+  private async getFileMetadataById(fileId: string): Promise<FileMetadataType> {
+    return await this.gdrive.files.getMetadata(fileId, {
+      fields: [
+        'id',
+        'name',
+        'kind',
+        'version',
+        'size',
+        'modifiedTime',
+        'createdTime',
+        'trashed',
+      ],
+    });
+  }
+
+  // if file id present, fetch file metadata using file id
+  // otherwise search for file using file name
+  private async getFileMetadata(): Promise<FileMetadataType> {
+    const result = await this.gdrive.files.list({
+      q: new ListQueryBuilder()
+        .e('name', this.backupDbName)
+        .and()
+        .e('trashed', false)
+        .and()
+        .in('root', 'parents'),
+    });
+    if (result?.files?.length) {
+      return this.getFileMetadataById(result.files[0]?.id);
+    }
+
+    return result;
   }
 }
