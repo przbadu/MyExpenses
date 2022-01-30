@@ -10,7 +10,7 @@ export interface DatabaseSync {
   upload(): Promise<void>;
   download(): Promise<void>;
   hasSynced(): Promise<boolean>;
-  hasRemoteUpdate(): Promise<boolean>;
+  hasRemoteUpdate(): Promise<{file: any; hasUpdate: boolean}>;
   hasLastUploadCompleted(): Promise<boolean>;
 }
 

@@ -7,6 +7,7 @@ import {
 import NetInfo from '@react-native-community/netinfo';
 import RNFS from 'react-native-fs';
 import dayjs, {Dayjs} from 'dayjs';
+import base64 from 'base64-js';
 
 import {LocalStorage} from '../../database/helpers';
 import {GOOGLE_DRIVE} from './GoogleDriveConstants';
@@ -64,27 +65,43 @@ export class GoogleDriveSync implements DatabaseSync {
     return;
   }
 
+  // WARNING! Overwrites the existing DB with what is contained in Dropbox.
+  // This function assumes the user has already agreed to overwrite the existing local DB.
   async download(): Promise<void> {
-    await this.init();
-    console.log(await this.hasRemoteUpdate());
+    try {
+      await this.init();
+      // download file from google drive
+      const {file, hasUpdate} = await this.hasRemoteUpdate();
+      if (hasUpdate) {
+        const content = await this.downloadFile(file?.id);
+
+        if (content) {
+          await RNFS.writeFile(this.localDBFilePath, content, 'base64');
+        } else {
+          console.log('[Drive backup] download error, no content found');
+        }
+      }
+    } catch (error) {
+      console.log('[Drive backup] download Error:', error);
+    }
   }
 
   hasSynced(): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  async hasRemoteUpdate(): Promise<boolean> {
+  async hasRemoteUpdate(): Promise<{file: any; hasUpdate: boolean}> {
     try {
       const state = await NetInfo.fetch();
       if (!state.isConnected) {
         console.log(
           "[Drive backup] no internet connection; can't check for update",
         );
-        return false;
+        return {file: null, hasUpdate: false};
       }
+
       let lastLocalBackupTimestamp: Dayjs;
       let lastDriveBackupTimestamp: Dayjs;
-
       const file = await this.getFileMetadata();
       if (file) {
         lastDriveBackupTimestamp = dayjs(file.modifiedTime);
@@ -98,22 +115,29 @@ export class GoogleDriveSync implements DatabaseSync {
             lastDriveBackupTimestamp,
           );
           console.log('[Drive backup] isBefore:', isBefore);
-          return isBefore;
+          return {file, hasUpdate: isBefore};
         }
         console.log('[Drive backup] no local storage time available:');
-        return true;
+        return {file, hasUpdate: true};
       } else {
         console.log('[Drive backup] no file found');
-        return false;
+        return {file, hasUpdate: false};
       }
     } catch (e) {
       console.log('[Drive backup] hasRemoteUpdate Error:', e);
-      return false;
+      return {file: null, hasUpdate: false};
     }
   }
 
-  hasLastUploadCompleted(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  // This function indicates if the last backup to Google Drive had completed successfully.
+  async hasLastUploadCompleted(): Promise<boolean> {
+    const lastUpdateStatus = await LocalStorage.get(
+      GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
+    );
+    return (
+      lastUpdateStatus === null ||
+      lastUpdateStatus === GOOGLE_DRIVE.UPDATE_STATUS_FINISHED
+    );
   }
 
   // TODO: check this to fix permission issue: https://github.com/itinance/react-native-fs/issues/677
@@ -171,10 +195,6 @@ export class GoogleDriveSync implements DatabaseSync {
     }
   }
 
-  private getLocalDBBackupFilePath(): string {
-    return `${RNFS.DownloadDirectoryPath}/${this.backupDbName}`;
-  }
-
   // update local file metadata
   private async updateLastUpdatedTimestamp(fileId: string): Promise<void> {
     const file = await this.getFileMetadataById(fileId);
@@ -213,9 +233,23 @@ export class GoogleDriveSync implements DatabaseSync {
         .in('root', 'parents'),
     });
     if (result?.files?.length) {
-      return this.getFileMetadataById(result.files[0]?.id);
+      return await this.getFileMetadataById(result.files[0]?.id);
     }
 
     return result;
+  }
+
+  // return downloaded file content base64
+  async downloadFile(fileId: string): Promise<any> {
+    if (fileId) {
+      const content = await this.gdrive.files.getBinary(fileId);
+      const contentBase64 = base64.fromByteArray(content);
+      return contentBase64;
+    }
+    return null;
+  }
+
+  private getLocalDBBackupFilePath(): string {
+    return `${RNFS.DownloadDirectoryPath}/${this.backupDbName}`;
   }
 }

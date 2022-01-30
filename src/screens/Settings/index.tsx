@@ -155,8 +155,16 @@ let Settings = ({
   }
 
   async function handleDownload() {
+    const googleAuth = new GoogleAuth();
     const googleSync = new GoogleDriveSync();
-    await googleSync.download();
+    if (await googleAuth.hasUserAuthorized()) {
+      setIsGoogleAuthorized(true);
+      await googleSync.download();
+    } else {
+      await googleAuth.authorize();
+      const result = await googleAuth.hasUserAuthorized();
+      setIsGoogleAuthorized(result);
+    }
   }
 
   async function handleBackup() {
@@ -181,8 +189,7 @@ let Settings = ({
     try {
       if (backupFile) {
         // const fileContent = await RNFS.readFile(backupFile, 'ascii');
-        // await RNFS.writeFile(dbPath, fileContent);
-        RNFetchBlob.fs.writeFile(dbPath, backupFile, 'uri');
+        await RNFetchBlob.fs.writeFile(dbPath, backupFile, 'base64');
         setSnackbarMsg('Database restored successful');
         setSnackbar(true);
       }
