@@ -56,6 +56,11 @@ export class GoogleDriveSync implements DatabaseSync {
     await this.uploadToDrive();
     this.backupIsCurrentlyInProgress = false;
     console.log('[Dropbox backup] BACKUP COMPLETE.');
+    // Record that a backup has completed
+    await LocalStorage.set(
+      GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
+      GOOGLE_DRIVE.UPDATE_STATUS_FINISHED,
+    );
     return;
   }
 
@@ -102,31 +107,46 @@ export class GoogleDriveSync implements DatabaseSync {
 
   // this method handles the logic to upload backup file to google drive
   async uploadToDrive(): Promise<void> {
+    let file;
     try {
       const fileToUpload = await RNFS.readFile(
         this.getLocalDBBackupFilePath(),
         'base64',
       );
-      const file = await this.getFileMetadata();
+      file = await this.getFileMetadata();
+      console.log(file);
 
       // upload new file or update existing file
       const uploader = this.gdrive.files
         .newMultipartUploader()
         .setData(fileToUpload, MimeTypes.BINARY)
         .setIsBase64(true)
+        // .setQueryParameters({keepRevisionForever: true}) // not sure if we need to do this
         .setRequestBody({
           name: this.backupDbName,
           MimeTypes: MimeTypes.BINARY,
         });
       if (file.id) uploader.setIdOfFileToUpdate(file.id);
       await uploader.execute();
+      this.updateLastUpdatedTimestamp(file.id);
     } catch (error: any) {
+      if (file) this.updateLastUpdatedTimestamp(file.id);
       console.log('Error: please try again ' + error);
     }
   }
 
   private getLocalDBBackupFilePath(): string {
     return `${RNFS.DownloadDirectoryPath}/${this.backupDbName}`;
+  }
+
+  // update local file metadata
+  private async updateLastUpdatedTimestamp(fileId: string): Promise<void> {
+    const file = await this.getFileMetadataById(fileId);
+    if (file)
+      await LocalStorage.set(
+        GOOGLE_DRIVE.MOST_RECENT_BACKUP_TIMESTAMP_KEY,
+        file.modifiedTime,
+      );
   }
 
   // fetch file metadata using file id
