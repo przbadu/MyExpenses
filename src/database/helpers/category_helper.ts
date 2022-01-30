@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {formatDateColumn, lineChartFilterProps} from '.';
 import {DefaultDateFormat, generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
-import {database} from '../index';
+import {database, googleDriveSync} from '../index';
 import {Category, CategoryProps} from '../models';
 
 export const categories = database.collections.get(Category.table);
@@ -81,7 +81,7 @@ export const saveCategory = async ({
       entry.icon = icon;
     });
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const updateCategory = async (
@@ -95,14 +95,14 @@ export const updateCategory = async (
       entry.icon = icon;
     });
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const deleteCategory = async (category: Category) => {
   await database.write(async () => {
     await category.destroyPermanently();
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const setupDefaultCategories = async () => {

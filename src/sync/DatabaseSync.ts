@@ -4,13 +4,14 @@ import RNRestart from 'react-native-restart';
 
 import {DropboxDatabaseSync} from './dropbox/DropboxDatabaseSync';
 import {DropboxAuthorize} from './dropbox/DropboxAuthorize';
-import {GoogleAuth} from './google_drive/GoogleAuth';
 
 export interface DatabaseSync {
   upload(): Promise<void>;
   download(fileId?: string): Promise<void>;
   hasSynced(): Promise<boolean>;
-  hasRemoteUpdate(): Promise<{file: any; hasUpdate: boolean}>;
+  hasRemoteUpdate(
+    alreadyAuthenticated?: boolean,
+  ): Promise<{file: any; hasUpdate: boolean}>;
   hasLastUploadCompleted(): Promise<boolean>;
 }
 

@@ -33,36 +33,40 @@ export class GoogleDriveSync implements DatabaseSync {
   // Promise is resolved once COPY is complete.
   // Backup to google drive will occur in the background later on.
   async upload(): Promise<void> {
-    await this.init();
+    try {
+      await this.init();
 
-    // If a backup is already in progress, this will currently be a no-op
-    if (this.backupIsCurrentlyInProgress === true) {
-      alert('[Dropbox backup] backup already in progress!');
+      // If a backup is already in progress, this will currently be a no-op
+      if (this.backupIsCurrentlyInProgress === true) {
+        alert('[Dropbox backup] backup already in progress!');
+        return;
+      }
+
+      this.backupIsCurrentlyInProgress = true;
+
+      // Record that a backup has started
+      await LocalStorage.set(
+        GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
+        GOOGLE_DRIVE.UPDATE_STATUS_STARTED,
+      );
+
+      // Create a copy of the DB first to the backup file
+      await this.copyDBToBackupFile();
+
+      // The copy is complete, so we'll end the Promise chain here.
+      // Kick off the remote backup to Dropbox.
+      await this.uploadToDrive();
+      this.backupIsCurrentlyInProgress = false;
+      console.log('[Dropbox backup] BACKUP COMPLETE.');
+      // Record that a backup has completed
+      await LocalStorage.set(
+        GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
+        GOOGLE_DRIVE.UPDATE_STATUS_FINISHED,
+      );
       return;
+    } catch (error) {
+      console.log('[Dropbox backup] Error:', error);
     }
-
-    this.backupIsCurrentlyInProgress = true;
-
-    // Record that a backup has started
-    await LocalStorage.set(
-      GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
-      GOOGLE_DRIVE.UPDATE_STATUS_STARTED,
-    );
-
-    // Create a copy of the DB first to the backup file
-    await this.copyDBToBackupFile();
-
-    // The copy is complete, so we'll end the Promise chain here.
-    // Kick off the remote backup to Dropbox.
-    await this.uploadToDrive();
-    this.backupIsCurrentlyInProgress = false;
-    console.log('[Dropbox backup] BACKUP COMPLETE.');
-    // Record that a backup has completed
-    await LocalStorage.set(
-      GOOGLE_DRIVE.LAST_UPDATE_STATUS_KEY,
-      GOOGLE_DRIVE.UPDATE_STATUS_FINISHED,
-    );
-    return;
   }
 
   // WARNING! Overwrites the existing DB with what is contained in Dropbox.
@@ -75,19 +79,24 @@ export class GoogleDriveSync implements DatabaseSync {
       let fileid = fileId;
       if (fileId) {
         hasUpdate = true;
+        console.log('[Drive backup] already have update with fileId');
       } else {
         const result = await this.hasRemoteUpdate();
+        console.log('[Drive backup] get update with fileId');
         hasUpdate = result.hasUpdate;
         fileid = result.file.id;
       }
-      if (hasUpdate) {
+      if (hasUpdate && fileid) {
         const content = await this.downloadFile(fileid);
 
         if (content) {
           await RNFS.writeFile(this.localDBFilePath, content, 'base64');
+          console.log('[Drive backup] download complete');
         } else {
           console.log('[Drive backup] download error, no content found');
         }
+      } else {
+        console.log('[Drive backup] no update found');
       }
     } catch (error) {
       console.log('[Drive backup] download Error:', error);
@@ -98,8 +107,13 @@ export class GoogleDriveSync implements DatabaseSync {
     throw new Error('Method not implemented.');
   }
 
-  async hasRemoteUpdate(): Promise<{file: any; hasUpdate: boolean}> {
+  async hasRemoteUpdate(
+    alreadyAuthenticated = true,
+  ): Promise<{file: any; hasUpdate: boolean}> {
     try {
+      // set google drive access token if not already set
+      if (!alreadyAuthenticated) await this.init();
+
       const state = await NetInfo.fetch();
       if (!state.isConnected) {
         console.log(

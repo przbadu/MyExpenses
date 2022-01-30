@@ -85,7 +85,7 @@ let Settings = ({
   async function handleDownload(): Promise<void> {
     const googleSync = new GoogleDriveSync();
 
-    const {file, hasUpdate} = await googleSync.hasRemoteUpdate();
+    const {file, hasUpdate} = await googleSync.hasRemoteUpdate(false);
     if (hasUpdate) {
       Alert.alert(
         'Replace local database?',
@@ -96,12 +96,7 @@ let Settings = ({
             onPress: async () => {
               console.log('User chose to replace local DB.');
               // Download the update
-              setDownloading(true);
-              try {
-                await googleSync.download(file.id);
-              } catch (error) {
-                setDownloading(false);
-              }
+              await googleSync.download(file.id);
             },
           },
           {

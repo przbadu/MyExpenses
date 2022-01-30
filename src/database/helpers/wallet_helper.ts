@@ -1,7 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import {generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
-import {database} from '../index';
+import {database, googleDriveSync} from '../index';
 import {Wallet, WalletProps} from '../models';
 
 export const wallets = database.collections.get(Wallet.table);
@@ -43,7 +43,7 @@ export const saveWallet = async ({
       entry.balanceAmount = balanceAmount;
     });
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const updateWallet = async (
@@ -59,7 +59,7 @@ export const updateWallet = async (
       entry.balanceAmount = balanceAmount;
     });
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const deleteWallet = async (wallet: Wallet) => {
@@ -67,7 +67,7 @@ export const deleteWallet = async (wallet: Wallet) => {
     const _wallet = await wallets.find(wallet.id);
     if (_wallet) await _wallet.destroyPermanently();
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 // Generate default seed data for new setup

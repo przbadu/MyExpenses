@@ -1,8 +1,9 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets} from '.';
+import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
 // import SyncAdapter from '../../sync/SyncAdapter';
-import {database} from '../index';
+import {database, googleDriveSync} from '../index';
 import {
   Category,
   Transaction,
@@ -151,7 +152,7 @@ export const saveTransaction = async ({
       wallet.balanceAmount = balance;
     });
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };
 
 export const updateTransaction = async (
@@ -201,7 +202,7 @@ export const updateTransaction = async (
         wallet.balanceAmount = balance;
       });
     });
-    // SyncAdapter.upload();
+    googleDriveSync.upload();
   }
 };
 
@@ -218,5 +219,5 @@ export const deleteTransaction = async (id: string) => {
     });
     await transaction.destroyPermanently();
   });
-  // SyncAdapter.upload();
+  googleDriveSync.upload();
 };

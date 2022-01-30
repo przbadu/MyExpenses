@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import {wallets as dbWallets} from '.';
 import {DefaultTimeFormat, generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
-import {database} from '../index';
+import {database, googleDriveSync} from '../index';
 import {Category, Transaction, Wallet} from '../models';
 
 // This method will find category or wallet for given names
@@ -187,9 +187,7 @@ export const bulkImportTransaction = async (data: any[]) => {
       await wallet?.update(() => {
         wallet.balanceAmount = balance;
       });
-
-      // sync data to dropbox
-      // SyncAdapter.upload();
+      googleDriveSync.upload();
     });
   });
 };
