@@ -64,16 +64,52 @@ export class GoogleDriveSync implements DatabaseSync {
     return;
   }
 
-  download(): Promise<void> {
-    throw new Error('Method not implemented.');
+  async download(): Promise<void> {
+    await this.init();
+    console.log(await this.hasRemoteUpdate());
   }
 
   hasSynced(): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  hasRemoteUpdate(): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async hasRemoteUpdate(): Promise<boolean> {
+    try {
+      const state = await NetInfo.fetch();
+      if (!state.isConnected) {
+        console.log(
+          "[Drive backup] no internet connection; can't check for update",
+        );
+        return false;
+      }
+      let lastLocalBackupTimestamp: Dayjs;
+      let lastDriveBackupTimestamp: Dayjs;
+
+      const file = await this.getFileMetadata();
+      if (file) {
+        lastDriveBackupTimestamp = dayjs(file.modifiedTime);
+
+        const localUpdatedTimestampStr = await LocalStorage.get(
+          GOOGLE_DRIVE.MOST_RECENT_BACKUP_TIMESTAMP_KEY,
+        );
+        if (localUpdatedTimestampStr) {
+          lastLocalBackupTimestamp = dayjs(localUpdatedTimestampStr);
+          const isBefore = lastLocalBackupTimestamp.isBefore(
+            lastDriveBackupTimestamp,
+          );
+          console.log('[Drive backup] isBefore:', isBefore);
+          return isBefore;
+        }
+        console.log('[Drive backup] no local storage time available:');
+        return true;
+      } else {
+        console.log('[Drive backup] no file found');
+        return false;
+      }
+    } catch (e) {
+      console.log('[Drive backup] hasRemoteUpdate Error:', e);
+      return false;
+    }
   }
 
   hasLastUploadCompleted(): Promise<boolean> {

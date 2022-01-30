@@ -58,7 +58,7 @@ let Settings = ({
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
 
-  async function signInWithGoogle(): Promise<void> {
+  async function signInWithGoogleAndUpload(): Promise<void> {
     const googleAuth = new GoogleAuth();
     const googleSync = new GoogleDriveSync();
 
@@ -152,6 +152,11 @@ let Settings = ({
       ],
       {cancelable: true},
     );
+  }
+
+  async function handleDownload() {
+    const googleSync = new GoogleDriveSync();
+    await googleSync.download();
   }
 
   async function handleBackup() {
@@ -316,7 +321,7 @@ let Settings = ({
               label="Google Drive"
               icon={isGoogleAuthorized ? 'database-sync' : 'google-drive'}
               iconSize={22}
-              onPress={signInWithGoogle}
+              onPress={handleDownload}
             />
           </Card.Content>
         </Card>
