@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
+import {ActivityIndicator, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const MenuItem = ({
@@ -8,12 +8,14 @@ const MenuItem = ({
   chipLabel,
   icon = 'menu-right',
   iconSize = 24,
+  loading = false,
   onPress,
 }: {
   label: string;
   chipLabel?: string;
   icon?: string;
   iconSize?: number;
+  loading?: boolean;
   onPress: () => void;
 }) => {
   const {colors} = useTheme();
@@ -27,7 +29,11 @@ const MenuItem = ({
             {chipLabel}
           </Text>
         )}
-        <Icon name={icon} color={colors.disabled} size={iconSize} />
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <Icon name={icon} color={colors.disabled} size={iconSize} />
+        )}
       </View>
     </TouchableOpacity>
   );

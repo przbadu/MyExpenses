@@ -8,7 +8,7 @@ import {GoogleAuth} from './google_drive/GoogleAuth';
 
 export interface DatabaseSync {
   upload(): Promise<void>;
-  download(): Promise<void>;
+  download(fileId?: string): Promise<void>;
   hasSynced(): Promise<boolean>;
   hasRemoteUpdate(): Promise<{file: any; hasUpdate: boolean}>;
   hasLastUploadCompleted(): Promise<boolean>;

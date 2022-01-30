@@ -67,13 +67,21 @@ export class GoogleDriveSync implements DatabaseSync {
 
   // WARNING! Overwrites the existing DB with what is contained in Dropbox.
   // This function assumes the user has already agreed to overwrite the existing local DB.
-  async download(): Promise<void> {
+  async download(fileId?: string): Promise<void> {
     try {
       await this.init();
       // download file from google drive
-      const {file, hasUpdate} = await this.hasRemoteUpdate();
+      let hasUpdate = false;
+      let fileid = fileId;
+      if (fileId) {
+        hasUpdate = true;
+      } else {
+        const result = await this.hasRemoteUpdate();
+        hasUpdate = result.hasUpdate;
+        fileid = result.file.id;
+      }
       if (hasUpdate) {
-        const content = await this.downloadFile(file?.id);
+        const content = await this.downloadFile(fileid);
 
         if (content) {
           await RNFS.writeFile(this.localDBFilePath, content, 'base64');

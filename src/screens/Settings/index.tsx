@@ -1,5 +1,5 @@
 import withObservables from '@nozbe/with-observables';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Alert, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -27,11 +27,7 @@ import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
 import dayjs from 'dayjs';
 import {GoogleAuth} from '../../sync/google_drive/GoogleAuth';
-import {useFocusEffect} from '@react-navigation/native';
 import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
-import {DropboxAuthorize} from '../../sync/dropbox/DropboxAuthorize';
-import {DatabaseSynchronizer} from '../../sync/DatabaseSync';
-import {DropboxDatabaseSync} from '../../sync/dropbox/DropboxDatabaseSync';
 
 let Settings = ({
   navigation,
@@ -42,8 +38,6 @@ let Settings = ({
   categories: Category[];
   wallets: WalletProps[];
 }) => {
-  const [hasAuthorizedWithDropbox, setHasAuthorizedWithDropbox] =
-    React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);
 
@@ -58,76 +52,75 @@ let Settings = ({
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
 
-  async function signInWithGoogleAndUpload(): Promise<void> {
-    const googleAuth = new GoogleAuth();
-    const googleSync = new GoogleDriveSync();
+  useEffect(() => {
+    new GoogleAuth().hasUserAuthorized().then(isAuthorized => {
+      setIsGoogleAuthorized(isAuthorized);
+    });
+  }, []);
 
-    if (await googleAuth.hasUserAuthorized()) {
-      setIsGoogleAuthorized(true);
-      googleSync.upload();
-    } else {
-      await googleAuth.authorize();
-      const result = await googleAuth.hasUserAuthorized();
-      setIsGoogleAuthorized(result);
+  async function signInWithGoogleAndSync(): Promise<void> {
+    const googleAuth = new GoogleAuth();
+
+    try {
+      setDownloading(true);
+      if (await googleAuth.hasUserAuthorized()) {
+        setIsGoogleAuthorized(true);
+        handleDownload();
+      } else {
+        await googleAuth.authorize();
+        const result = await googleAuth.hasUserAuthorized();
+        setIsGoogleAuthorized(result);
+        handleDownload();
+      }
+      setDownloading(false);
+    } catch (error: any) {
+      setDownloading(false);
+      Alert.alert(
+        'Error',
+        `Unable to authorize with Google Drive. Reason: ${error.message}`,
+      );
     }
   }
 
-  async function connectWithDropbox() {
-    const dropboxAuth = new DropboxAuthorize();
-    const dropboxSync = new DropboxDatabaseSync();
+  async function handleDownload(): Promise<void> {
+    const googleSync = new GoogleDriveSync();
 
-    return dropboxAuth
-      .authorize()
-      .then(() => {
-        setHasAuthorizedWithDropbox(true);
-        return dropboxSync.hasRemoteUpdate();
-      })
-      .then(remoteDatabaseIsNewer => {
-        if (remoteDatabaseIsNewer) {
-          return new Promise<void>((_resolve, reject) => {
-            // We just linked, and there is existing data on Dropbox. Prompt to overwrite it.
-            Alert.alert(
-              'Replace local database?',
-              "Would you like to overwrite the app's current database with the version on Dropbox?",
-              [
-                {
-                  text: 'Yes, replace my local DB',
-                  onPress: async () => {
-                    console.log('User chose to replace local DB.');
-                    // Download the update
-                    setDownloading(true);
-                    try {
-                      await dropboxSync.download();
-                    } catch (error) {
-                      setDownloading(false);
-                    }
-                  },
-                },
-                {
-                  text: 'No, unlink Dropbox',
-                  onPress: () => unlinkFromDropbox(),
-                },
-              ],
-              {cancelable: false},
-            );
-          });
-        } else {
-          // Nothing exists on Dropbox yet, so kick off the 1st upload
-          return dropboxSync.upload();
-        }
-      })
-      .catch(reason => {
-        Alert.alert(
-          'Error',
-          `Unable to authorize with Dropbox. Reason: ${reason}`,
-        );
-      });
+    const {file, hasUpdate} = await googleSync.hasRemoteUpdate();
+    if (hasUpdate) {
+      Alert.alert(
+        'Replace local database?',
+        "Would you like to overwrite the app's current database with the version on Dropbox?",
+        [
+          {
+            text: 'Yes, replace my local DB',
+            onPress: async () => {
+              console.log('User chose to replace local DB.');
+              // Download the update
+              setDownloading(true);
+              try {
+                await googleSync.download(file.id);
+              } catch (error) {
+                setDownloading(false);
+              }
+            },
+          },
+          {
+            text: 'No, unlink Google Drive',
+            onPress: unlinkFromGoogleDrive,
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      // Nothing exists on Dropbox yet, so kick off the 1st upload
+      googleSync.upload();
+    }
   }
 
-  function unlinkFromDropbox() {
-    console.log('Unlinking from Dropbox.');
-    new DropboxAuthorize().revokeAuthorization().then(() => {
-      setHasAuthorizedWithDropbox(false);
+  function unlinkFromGoogleDrive() {
+    console.log('Unlinking from Google Drive.');
+    new GoogleAuth().revokeAuthorization().then(() => {
+      setIsGoogleAuthorized(false);
     });
   }
 
@@ -152,19 +145,6 @@ let Settings = ({
       ],
       {cancelable: true},
     );
-  }
-
-  async function handleDownload() {
-    const googleAuth = new GoogleAuth();
-    const googleSync = new GoogleDriveSync();
-    if (await googleAuth.hasUserAuthorized()) {
-      setIsGoogleAuthorized(true);
-      await googleSync.download();
-    } else {
-      await googleAuth.authorize();
-      const result = await googleAuth.hasUserAuthorized();
-      setIsGoogleAuthorized(result);
-    }
   }
 
   async function handleBackup() {
@@ -320,15 +300,11 @@ let Settings = ({
         <Card style={{...styles.card}}>
           <Card.Content>
             <MenuItem
-              label="Dropbox"
-              icon={isGoogleAuthorized ? 'database-sync' : 'dropbox'}
-              onPress={connectWithDropbox}
-            />
-            <MenuItem
               label="Google Drive"
               icon={isGoogleAuthorized ? 'database-sync' : 'google-drive'}
               iconSize={22}
-              onPress={handleDownload}
+              loading={downloading}
+              onPress={signInWithGoogleAndSync}
             />
           </Card.Content>
         </Card>
