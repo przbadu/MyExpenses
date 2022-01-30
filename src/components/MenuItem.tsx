@@ -9,6 +9,7 @@ const MenuItem = ({
   icon = 'menu-right',
   iconSize = 24,
   loading = false,
+  children,
   onPress,
 }: {
   label: string;
@@ -16,14 +17,16 @@ const MenuItem = ({
   icon?: string;
   iconSize?: number;
   loading?: boolean;
+  children?: JSX.Element;
   onPress: () => void;
 }) => {
   const {colors} = useTheme();
 
-  return (
-    <TouchableOpacity style={styles.textMenu} onPress={onPress}>
-      <Text>{label}</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+  function renderChildren() {
+    if (children) return children;
+
+    return (
+      <>
         {chipLabel && (
           <Text style={{color: colors.disabled, textTransform: 'uppercase'}}>
             {chipLabel}
@@ -34,6 +37,15 @@ const MenuItem = ({
         ) : (
           <Icon name={icon} color={colors.disabled} size={iconSize} />
         )}
+      </>
+    );
+  }
+
+  return (
+    <TouchableOpacity style={styles.textMenu} onPress={onPress}>
+      <Text>{label}</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        {renderChildren()}
       </View>
     </TouchableOpacity>
   );

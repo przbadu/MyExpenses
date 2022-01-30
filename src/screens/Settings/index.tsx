@@ -9,6 +9,7 @@ import {
   Appbar,
   Card,
   Subheading,
+  Switch,
   Text,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,6 +41,7 @@ let Settings = ({
 }) => {
   const [downloading, setDownloading] = React.useState(false);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);
+  const [autoSyncDrive, setAutoSyncDrive] = React.useState(true);
 
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
   const [showThemeModal, setShowThemeModal] = React.useState(false);
@@ -89,7 +91,7 @@ let Settings = ({
     if (hasUpdate) {
       Alert.alert(
         'Replace local database?',
-        "Would you like to overwrite the app's current database with the version on Dropbox?",
+        "It seems like your Google Drive has latest database. Would you like to overwrite the app's current database with the version on Google Drive?",
         [
           {
             text: 'Yes, replace my local DB',
@@ -101,7 +103,7 @@ let Settings = ({
           },
           {
             text: 'No, unlink Google Drive',
-            onPress: unlinkFromGoogleDrive,
+            onPress: () => unlinkFromGoogleDrive(false),
           },
         ],
         {cancelable: false},
@@ -112,11 +114,39 @@ let Settings = ({
     }
   }
 
-  function unlinkFromGoogleDrive() {
+  function unlinkFromGoogleDrive(withPermission: boolean = false) {
     console.log('Unlinking from Google Drive.');
-    new GoogleAuth().revokeAuthorization().then(() => {
-      setIsGoogleAuthorized(false);
-    });
+    if (withPermission) {
+      Alert.alert(
+        'Unlink from Google Drive?',
+        'Are you sure you want to unlink from Google Drive?',
+        [
+          {
+            text: 'Yes, unlink',
+            onPress: async () => {
+              new GoogleAuth().revokeAuthorization().then(() => {
+                setIsGoogleAuthorized(false);
+              });
+            },
+          },
+          {
+            text: 'No, cancel',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      new GoogleAuth().revokeAuthorization().then(() => {
+        setIsGoogleAuthorized(false);
+      });
+    }
+  }
+
+  // manually upload to google drive
+  async function handleUpload() {
+    const googleSync = new GoogleDriveSync();
+    await googleSync.upload();
   }
 
   function handleClearData() {
@@ -261,6 +291,59 @@ let Settings = ({
     </>
   );
 
+  function renderSyncOptions() {
+    if (!isGoogleAuthorized) {
+      return (
+        <MenuItem
+          label={'Connect With Google Drive'}
+          icon={'google-drive'}
+          iconSize={22}
+          loading={downloading}
+          onPress={signInWithGoogleAndSync}
+        />
+      );
+    }
+
+    return (
+      <>
+        <MenuItem
+          label="Autosync backup file?"
+          onPress={() => setAutoSyncDrive(!autoSyncDrive)}>
+          <Switch
+            value={autoSyncDrive}
+            onValueChange={() => setAutoSyncDrive(!autoSyncDrive)}
+          />
+        </MenuItem>
+        {autoSyncDrive && (
+          <>
+            <MenuItem
+              label="Upload To Google Drive"
+              icon={'cloud-upload-outline'}
+              iconSize={22}
+              loading={downloading}
+              onPress={handleUpload}
+            />
+
+            <MenuItem
+              label={'Download From Google Drive'}
+              icon={'cloud-download-outline'}
+              iconSize={22}
+              loading={downloading}
+              onPress={signInWithGoogleAndSync}
+            />
+          </>
+        )}
+
+        <MenuItem
+          label="Unlink From Google Drive"
+          icon={'earth-remove'}
+          iconSize={22}
+          onPress={() => unlinkFromGoogleDrive(true)}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <Appbar.Header>
@@ -293,15 +376,7 @@ let Settings = ({
           SYNCHRONIZATION
         </Subheading>
         <Card style={{...styles.card}}>
-          <Card.Content>
-            <MenuItem
-              label="Google Drive"
-              icon={isGoogleAuthorized ? 'database-sync' : 'google-drive'}
-              iconSize={22}
-              loading={downloading}
-              onPress={signInWithGoogleAndSync}
-            />
-          </Card.Content>
+          <Card.Content>{renderSyncOptions()}</Card.Content>
         </Card>
 
         <Subheading style={{marginHorizontal: 10, marginVertical: 10}}>
@@ -311,12 +386,12 @@ let Settings = ({
           <Card.Content>
             <MenuItem
               label="Create data backup"
-              icon="cloud-upload-outline"
+              icon="database-export"
               onPress={handleBackup}
             />
             <MenuItem
               label="Restore data"
-              icon="cloud-download-outline"
+              icon="database-import"
               onPress={handleRestore}
             />
             <MenuItem
