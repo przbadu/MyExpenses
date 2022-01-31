@@ -3,33 +3,28 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import {GoogleDriveSync} from '../sync/google_drive/GoogleDriveDatabaseSync';
 import migrations from './migrations';
 // models
-import {Category, Saving, SavingAmount, Transaction, Wallet} from './models';
+import {Category, Transaction, Wallet} from './models';
 // schema
 import schema from './schema';
 
-const adapter = new SQLiteAdapter({
+const adapter: SQLiteAdapter = new SQLiteAdapter({
   schema,
   migrations,
 });
 
-export const database = new Database({
+export const database: Database = new Database({
   adapter,
-  modelClasses: [Wallet, Category, Transaction, Saving, SavingAmount],
+  modelClasses: [Wallet, Category, Transaction],
 });
 
-export const googleDriveSync = new GoogleDriveSync();
+export const googleDriveSync: GoogleDriveSync = new GoogleDriveSync();
 
-export const resetDB = async () =>
+export const resetDB = async (): Promise<void> =>
   await database.write(async () => {
     await database.collections.get(Wallet.table).query().markAllAsDeleted();
     await database.collections.get(Category.table).query().markAllAsDeleted();
     await database.collections
       .get(Transaction.table)
-      .query()
-      .markAllAsDeleted();
-    await database.collections.get(Saving.table).query().markAllAsDeleted();
-    await database.collections
-      .get(SavingAmount.table)
       .query()
       .markAllAsDeleted();
   });

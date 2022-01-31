@@ -1,11 +1,11 @@
 import {appSchema, tableSchema} from '@nozbe/watermelondb/Schema';
-import {Category, Saving, SavingAmount, Transaction, Wallet} from './models';
+import {TableName} from './tableName';
 
 export default appSchema({
-  version: 6,
+  version: 4,
   tables: [
     tableSchema({
-      name: Wallet.table,
+      name: TableName.WALLETS,
       columns: [
         {name: 'name', type: 'string'},
         {name: 'color', type: 'string'},
@@ -18,7 +18,7 @@ export default appSchema({
       ],
     }),
     tableSchema({
-      name: Category.table,
+      name: TableName.CATEGORIES,
       columns: [
         {name: 'name', type: 'string'},
         {name: 'color', type: 'string'},
@@ -28,7 +28,7 @@ export default appSchema({
       ],
     }),
     tableSchema({
-      name: Transaction.table,
+      name: TableName.TRANSACTIONS,
       columns: [
         {name: 'transaction_at', type: 'number'},
         {name: 'time', type: 'string'},
@@ -40,25 +40,6 @@ export default appSchema({
         {name: 'updated_at', type: 'number'},
         {name: 'wallet_id', type: 'string', isIndexed: true},
         {name: 'category_id', type: 'string', isIndexed: true},
-      ],
-    }),
-    tableSchema({
-      name: Saving.table,
-      columns: [
-        {name: 'title', type: 'string'},
-        {name: 'required_amount', type: 'number'},
-        {name: 'target_amount', type: 'number'},
-        {name: 'fulfilled', type: 'boolean'},
-        {name: 'onhold', type: 'boolean'},
-        {name: 'created_at', type: 'number'},
-        {name: 'updated_at', type: 'number'},
-      ],
-    }),
-    tableSchema({
-      name: SavingAmount.table,
-      columns: [
-        {name: 'amount', type: 'number'},
-        {name: 'created_at', type: 'number'},
       ],
     }),
   ],

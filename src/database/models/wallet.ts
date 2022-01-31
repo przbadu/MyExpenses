@@ -3,41 +3,35 @@ import children from '@nozbe/watermelondb/decorators/children';
 import date from '@nozbe/watermelondb/decorators/date';
 import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
-import Model from '@nozbe/watermelondb/Model';
+import Model, {Associations} from '@nozbe/watermelondb/Model';
+import Query from '@nozbe/watermelondb/Query';
 
-// wallet props
-export interface WalletProps {
-  id?: string | number;
-  name: string;
-  color?: string;
-  icon?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  isDefault?: boolean;
-  isArchived?: boolean;
-  balanceAmount?: number;
-}
+import {Transaction} from '.';
+import {TableName} from '../tableName';
 
 class Wallet extends Model {
-  static table = 'wallets';
+  static table = TableName.WALLETS;
 
   // associations
-  static associations = {
-    transactions: {type: 'has_many', foreignkey: 'wallet_id'},
+  static associations: Associations = {
+    [TableName.TRANSACTIONS]: {
+      type: 'has_many',
+      foreignKey: 'wallet_id',
+    },
   };
 
   // attributes
-  @field('name') name: String | any;
-  @field('color') color: String | any;
-  @field('icon') icon: string | any;
-  @field('balance_amount') balanceAmount: Number | any;
-  @field('is_default') isDefault: Boolean | any;
-  @field('is_archived') isArchived: Boolean | any;
-  @readonly @date('created_at') createdAt: Date | any;
-  @readonly @date('updated_at') updatedAt: Date | any;
+  @field('name') name!: String;
+  @field('color') color!: String;
+  @field('icon') icon!: string;
+  @field('balance_amount') balanceAmount!: Number;
+  @field('is_default') isDefault?: Boolean;
+  @field('is_archived') isArchived?: Boolean;
+  @readonly @date('created_at') createdAt!: Date;
+  @readonly @date('updated_at') updatedAt!: Date;
 
   // relationships
-  @children('transactions') transactions: any;
+  @children(TableName.TRANSACTIONS) transactions?: Query<Transaction>;
 
   // quickly mark wallet as archived
   @writer async markAsArchived() {
@@ -58,11 +52,6 @@ class Wallet extends Model {
     await this.update(wallet => {
       wallet.isDefault = true;
     });
-  }
-
-  // delete all transactions for wallet
-  async deleteAllTransactions() {
-    await this.transactions.destroyAllPermanently();
   }
 }
 

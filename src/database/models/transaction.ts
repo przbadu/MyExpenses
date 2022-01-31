@@ -3,8 +3,10 @@ import date from '@nozbe/watermelondb/decorators/date';
 import field from '@nozbe/watermelondb/decorators/field';
 import readonly from '@nozbe/watermelondb/decorators/readonly';
 import relation from '@nozbe/watermelondb/decorators/relation';
-import Model from '@nozbe/watermelondb/Model';
-import {CategoryProps, WalletProps} from '.';
+import Model, {Associations} from '@nozbe/watermelondb/Model';
+import Relation from '@nozbe/watermelondb/Relation';
+import {Category, Wallet} from '.';
+import {TableName} from '../tableName';
 
 // category enum, we only support income and expense type category for now
 export enum TransactionTypeEnum {
@@ -12,45 +14,29 @@ export enum TransactionTypeEnum {
   expense = 'Expense',
 }
 
-export interface TransactionProps {
-  id?: number | string;
-  amount: string | number;
-  notes: string;
-  transactionAt?: Date;
-  time?: string;
-  isPaid?: boolean;
-  transactionType?: TransactionTypeEnum;
-  createdAt?: Date;
-  updatedAt?: Date;
-  walletId?: string | number | null;
-  categoryId?: string | number | null;
-  wallet: WalletProps;
-  category: CategoryProps;
-}
-
 class Transaction extends Model {
   // table name
-  static table = 'transactions';
+  static table = TableName.TRANSACTIONS;
 
   // associations
-  static associations = {
-    categories: {type: 'belongs_to', key: 'category_id'},
-    wallets: {type: 'belongs_to', key: 'wallet_id'},
+  static associations: Associations = {
+    [TableName.CATEGORIES]: {type: 'belongs_to', key: 'category_id'},
+    [TableName.WALLETS]: {type: 'belongs_to', key: 'wallet_id'},
   };
 
   // attributes
-  @date('transaction_at') transactionAt: Date | any;
-  @field('time') time: string | any;
-  @field('notes') notes: String | any;
-  @field('amount') amount: Number | any;
-  @field('is_paid') isPaid: Boolean | any;
-  @field('transaction_type') transactionType: TransactionTypeEnum | any;
-  @readonly @date('created_at') createdAt: Date | any;
-  @readonly @date('updated_at') updatedAt: Date | any;
+  @date('transaction_at') transactionAt!: Date;
+  @field('time') time?: string;
+  @field('notes') notes!: String;
+  @field('amount') amount!: Number;
+  @field('is_paid') isPaid?: Boolean;
+  @field('transaction_type') transactionType!: TransactionTypeEnum;
+  @readonly @date('created_at') createdAt!: Date;
+  @readonly @date('updated_at') updatedAt!: Date;
 
-  // associations/relationships
-  @relation('wallets', 'wallet_id') wallet: any;
-  @relation('categories', 'category_id') category: any;
+  // relationships attributes
+  @relation(TableName.WALLETS, 'wallet_id') wallet!: Relation<Wallet>;
+  @relation(TableName.CATEGORIES, 'category_id') category!: Relation<Category>;
 
   @writer async markAsUnpaid() {
     await this.update(transaction => [(transaction.isPaid = false)]);
