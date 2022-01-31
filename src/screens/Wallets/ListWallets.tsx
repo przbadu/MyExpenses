@@ -1,24 +1,18 @@
-import withObservables from '@nozbe/with-observables';
-import {useFocusEffect} from '@react-navigation/core';
+import withObservables, {ObservableifyProps} from '@nozbe/with-observables';
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {ItemRow} from '../../components';
-import {
-  deleteWallet,
-  observeWallets,
-  walletsWithAmount,
-} from '../../database/helpers';
+import {deleteWallet, observeWallets} from '../../database/helpers';
 import {Wallet} from '../../database/models';
-import {responsiveHeight} from '../../lib';
 
-let ListWallets = ({
-  navigation,
-  wallets,
-}: {
+interface Props {
+  route: any;
   navigation: any;
   wallets: Wallet[];
-}) => {
+}
+
+let ListWallets: React.FC<Props> = ({wallets, navigation}) => {
   const {colors} = useTheme();
 
   const handleDelete = async (wallet: Wallet) => {
@@ -53,7 +47,8 @@ let ListWallets = ({
   );
 };
 
-ListWallets = withObservables(['route'], ({route}) => ({
+type InputProps = ObservableifyProps<Props, 'route'>;
+ListWallets = withObservables(['route'], ({route}: InputProps) => ({
   wallets: observeWallets(),
 }))(ListWallets);
 

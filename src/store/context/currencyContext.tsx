@@ -14,7 +14,7 @@ export const CurrencyContext = React.createContext<CurrencyContextProps>({
   updateCurrency: async () => {},
 });
 
-export const CurrencyProvider = ({children}: any) => {
+export const CurrencyProvider = ({children}: {children: React.ReactNode}) => {
   const [currency, setCurrency] = React.useState(defaultCurrency);
 
   React.useEffect(() => {

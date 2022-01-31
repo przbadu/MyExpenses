@@ -1,24 +1,24 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import { StatusBar, Appearance } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
-import { darkTheme, hexToRGBA, lightTheme } from '../lib';
+import {StatusBar, Appearance} from 'react-native';
+import {Provider as PaperProvider} from 'react-native-paper';
+import {darkTheme, hexToRGBA, lightTheme} from '../lib';
 import {
   AddTransaction,
   CalendarTransactions,
   CategoryTransaction,
   TransactionDetail,
 } from '../screens';
-import { AddCategory, EditCategory, ListCategories } from '../screens/Categories';
-import { AddWallet, EditWallet, ListWallets } from '../screens/Wallets';
-import { ThemeContext } from '../store/context/themeContext';
-import { TabNavigation } from './TabNavigation';
+import {AddCategory, EditCategory, ListCategories} from '../screens/Categories';
+import {AddWallet, EditWallet, ListWallets} from '../screens/Wallets';
+import {ThemeContext} from '../store/context/themeContext';
+import {TabNavigation} from './TabNavigation';
 
 const Stack = createNativeStackNavigator();
 
 export const AppNavigator = () => {
-  const { theme } = React.useContext(ThemeContext);
+  const {theme} = React.useContext(ThemeContext);
   let appTheme = Appearance.getColorScheme() == 'dark' ? darkTheme : lightTheme;
 
   if (theme === 'light') appTheme = lightTheme;
@@ -35,7 +35,7 @@ export const AppNavigator = () => {
         <NavigationContainer theme={appTheme}>
           <Stack.Navigator
             initialRouteName="Dashboard"
-            screenOptions={{ headerShown: false }}>
+            screenOptions={{headerShown: false}}>
             <Stack.Screen name="Dashboard" component={TabNavigation} />
             <Stack.Screen
               name="CalendarTransactions"
