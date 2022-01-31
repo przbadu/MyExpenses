@@ -9,18 +9,17 @@ export interface ThemeContentProps {
   changeTheme: (mode: themeMode) => Promise<void>;
 }
 
+interface ThemeProviderProps {
+  initialTheme: themeMode;
+  children: React.ReactNode;
+}
+
 export const ThemeContext = React.createContext<ThemeContentProps>({
   theme: 'system',
   changeTheme: async () => {},
 });
 
-export const ThemeProvider = ({
-  initialTheme,
-  children,
-}: {
-  initialTheme: themeMode;
-  children: JSX.Element;
-}) => {
+export const ThemeProvider = ({initialTheme, children}: ThemeProviderProps) => {
   const [theme, setTheme] = React.useState<themeMode>(initialTheme);
 
   React.useEffect(() => {

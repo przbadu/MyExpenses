@@ -1,5 +1,6 @@
 import {Database} from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
+import {GoogleDriveSync} from '../sync/google_drive/GoogleDriveDatabaseSync';
 import migrations from './migrations';
 // models
 import {Category, Saving, SavingAmount, Transaction, Wallet} from './models';
@@ -15,6 +16,8 @@ export const database = new Database({
   adapter,
   modelClasses: [Wallet, Category, Transaction, Saving, SavingAmount],
 });
+
+export const googleDriveSync = new GoogleDriveSync();
 
 export const resetDB = async () =>
   await database.write(async () => {

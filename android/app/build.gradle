@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -201,6 +202,11 @@ dependencies {
 
     // splash screen
     implementation project(':react-native-splash-screen')
+
+    // firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    // Google Analytics BoM, don't specify versions here.
+    implementation 'com.google.firebase:firebase-analytics'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

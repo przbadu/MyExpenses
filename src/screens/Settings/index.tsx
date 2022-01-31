@@ -1,5 +1,5 @@
 import withObservables from '@nozbe/with-observables';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Alert, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -7,8 +7,11 @@ import DocumentPicker from 'react-native-document-picker';
 import {
   ActivityIndicator,
   Appbar,
+  Avatar,
+  Caption,
   Card,
   Subheading,
+  Switch,
   Text,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,8 +29,8 @@ import {
 import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
 import dayjs from 'dayjs';
-import {DropboxAuthorize} from '../../sync/dropbox/DropboxAuthorize';
-import {DropboxDatabaseSync} from '../../sync/dropbox/DropboxDatabaseSync';
+import {GoogleAuth} from '../../sync/google_drive/GoogleAuth';
+import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
 
 let Settings = ({
   navigation,
@@ -38,9 +41,10 @@ let Settings = ({
   categories: Category[];
   wallets: WalletProps[];
 }) => {
-  const [hasAuthorizedWithDropbox, setHasAuthorizedWithDropbox] =
-    React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
+  const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);
+  const [autoSyncDrive, setAutoSyncDrive] = React.useState(true);
+
   const [showCurrencyModal, setShowCurrencyModal] = React.useState(false);
   const [showThemeModal, setShowThemeModal] = React.useState(false);
 
@@ -51,6 +55,101 @@ let Settings = ({
   const [loading, setLoading] = React.useState(false);
   const [snackbar, setSnackbar] = React.useState(false);
   const [snackbarMsg, setSnackbarMsg] = React.useState('');
+
+  useEffect(() => {
+    new GoogleAuth().hasUserAuthorized().then(isAuthorized => {
+      setIsGoogleAuthorized(isAuthorized);
+    });
+  }, []);
+
+  async function signInWithGoogleAndSync(): Promise<void> {
+    const googleAuth = new GoogleAuth();
+
+    try {
+      setDownloading(true);
+      if (await googleAuth.hasUserAuthorized()) {
+        setIsGoogleAuthorized(true);
+        handleDownload();
+      } else {
+        await googleAuth.authorize();
+        const result = await googleAuth.hasUserAuthorized();
+        setIsGoogleAuthorized(result);
+        handleDownload();
+      }
+      setDownloading(false);
+    } catch (error: any) {
+      setDownloading(false);
+      Alert.alert(
+        'Error',
+        `Unable to authorize with Google Drive. Reason: ${error.message}`,
+      );
+    }
+  }
+
+  async function handleDownload(): Promise<void> {
+    const googleSync = new GoogleDriveSync();
+
+    const {file, hasUpdate} = await googleSync.hasRemoteUpdate(false);
+    if (hasUpdate) {
+      Alert.alert(
+        'Replace local database?',
+        "It seems like your Google Drive has latest database. Would you like to overwrite the app's current database with the version on Google Drive?",
+        [
+          {
+            text: 'Yes, replace my local DB',
+            onPress: async () => {
+              console.log('User chose to replace local DB.');
+              // Download the update
+              await googleSync.download(file.id);
+            },
+          },
+          {
+            text: 'No, unlink Google Drive',
+            onPress: () => unlinkFromGoogleDrive(false),
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      // Nothing exists on Dropbox yet, so kick off the 1st upload
+      googleSync.upload();
+    }
+  }
+
+  function unlinkFromGoogleDrive(withPermission: boolean = false) {
+    console.log('Unlinking from Google Drive.');
+    if (withPermission) {
+      Alert.alert(
+        'Unlink from Google Drive?',
+        'Are you sure you want to unlink from Google Drive?',
+        [
+          {
+            text: 'Yes, unlink',
+            onPress: async () => {
+              new GoogleAuth().revokeAuthorization().then(() => {
+                setIsGoogleAuthorized(false);
+              });
+            },
+          },
+          {
+            text: 'No, cancel',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      new GoogleAuth().revokeAuthorization().then(() => {
+        setIsGoogleAuthorized(false);
+      });
+    }
+  }
+
+  // manually upload to google drive
+  async function handleUpload() {
+    const googleSync = new GoogleDriveSync();
+    await googleSync.upload();
+  }
 
   function handleClearData() {
     Alert.alert(
@@ -97,8 +196,7 @@ let Settings = ({
     try {
       if (backupFile) {
         // const fileContent = await RNFS.readFile(backupFile, 'ascii');
-        // await RNFS.writeFile(dbPath, fileContent);
-        RNFetchBlob.fs.writeFile(dbPath, backupFile, 'uri');
+        await RNFetchBlob.fs.writeFile(dbPath, backupFile, 'base64');
         setSnackbarMsg('Database restored successful');
         setSnackbar(true);
       }
@@ -106,65 +204,6 @@ let Settings = ({
       setSnackbarMsg(`Error on restore process: ${error}`);
       setSnackbar(true);
     }
-  }
-
-  async function connectWithDropbox() {
-    const dropboxAuth = new DropboxAuthorize();
-    const dropboxSync = new DropboxDatabaseSync();
-
-    return dropboxAuth
-      .authorize()
-      .then(() => {
-        setHasAuthorizedWithDropbox(true);
-        return dropboxSync.hasRemoteUpdate();
-      })
-      .then(remoteDatabaseIsNewer => {
-        if (remoteDatabaseIsNewer) {
-          return new Promise<void>((_resolve, reject) => {
-            // We just linked, and there is existing data on Dropbox. Prompt to overwrite it.
-            Alert.alert(
-              'Replace local database?',
-              "Would you like to overwrite the app's current database with the version on Dropbox?",
-              [
-                {
-                  text: 'Yes, replace my local DB',
-                  onPress: async () => {
-                    console.log('User chose to replace local DB.');
-                    // Download the update
-                    setDownloading(true);
-                    try {
-                      await dropboxSync.download();
-                    } catch (error) {
-                      setDownloading(false);
-                    }
-                  },
-                },
-                {
-                  text: 'No, unlink Dropbox',
-                  onPress: () => unlinkFromDropbox(),
-                },
-              ],
-              {cancelable: false},
-            );
-          });
-        } else {
-          // Nothing exists on Dropbox yet, so kick off the 1st upload
-          return dropboxSync.upload();
-        }
-      })
-      .catch(reason => {
-        Alert.alert(
-          'Error',
-          `Unable to authorize with Dropbox. Reason: ${reason}`,
-        );
-      });
-  }
-
-  function unlinkFromDropbox() {
-    console.log('Unlinking from Dropbox.');
-    new DropboxAuthorize().revokeAuthorization().then(() => {
-      setHasAuthorizedWithDropbox(false);
-    });
   }
 
   async function selectFileToUpload() {
@@ -254,6 +293,66 @@ let Settings = ({
     </>
   );
 
+  function renderSyncOptions() {
+    if (!isGoogleAuthorized) {
+      return (
+        <MenuItem
+          label={'Connect With Google Drive'}
+          icon={'google-drive'}
+          iconSize={22}
+          loading={downloading}
+          onPress={signInWithGoogleAndSync}
+        />
+      );
+    }
+
+    return (
+      <>
+        <MenuItem
+          label="Backup file automatically?"
+          onPress={() => setAutoSyncDrive(!autoSyncDrive)}>
+          <Switch
+            value={autoSyncDrive}
+            onValueChange={() => setAutoSyncDrive(!autoSyncDrive)}
+          />
+        </MenuItem>
+        {autoSyncDrive && (
+          <Caption>
+            If this option is enabled it will push your changes to google drive
+            after every transaction, category, wallets, etc is added, deleted or
+            updated, if you are connected to wifi or mobile data network.
+          </Caption>
+        )}
+        {!autoSyncDrive && (
+          <>
+            <MenuItem
+              label="Upload To Google Drive"
+              icon={'cloud-upload-outline'}
+              iconSize={22}
+              loading={downloading}
+              onPress={handleUpload}
+            />
+
+            <MenuItem
+              label={'Download From Google Drive'}
+              icon={'cloud-download-outline'}
+              iconSize={22}
+              loading={downloading}
+              onPress={signInWithGoogleAndSync}
+            />
+          </>
+        )}
+
+        <MenuItem
+          label="Unlink From Google Drive"
+          icon={'earth-remove'}
+          iconSize={22}
+          onPress={() => unlinkFromGoogleDrive(true)}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <Appbar.Header>
@@ -286,19 +385,7 @@ let Settings = ({
           SYNCHRONIZATION
         </Subheading>
         <Card style={{...styles.card}}>
-          <Card.Content>
-            <MenuItem
-              label="Dropbox"
-              icon="dropbox"
-              onPress={connectWithDropbox}
-            />
-            <MenuItem
-              label="Google Drive"
-              icon="google-drive"
-              iconSize={22}
-              onPress={() => {}}
-            />
-          </Card.Content>
+          <Card.Content>{renderSyncOptions()}</Card.Content>
         </Card>
 
         <Subheading style={{marginHorizontal: 10, marginVertical: 10}}>
@@ -308,12 +395,12 @@ let Settings = ({
           <Card.Content>
             <MenuItem
               label="Create data backup"
-              icon="cloud-upload-outline"
+              icon="database-export"
               onPress={handleBackup}
             />
             <MenuItem
               label="Restore data"
-              icon="cloud-download-outline"
+              icon="database-import"
               onPress={handleRestore}
             />
             <MenuItem

@@ -1,12 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {
-  ActivityIndicator,
-  Colors,
-  Surface,
-  Text,
-  useTheme,
-} from 'react-native-paper';
+import {ActivityIndicator, Text, useTheme} from 'react-native-paper';
 
 const SplashScreen = () => {
   const {colors} = useTheme();

@@ -1,8 +1,3 @@
-/**
- * React Native SQLite Demo
- * Copyright (c) 2018 Bruce Lefebvre <bruce@brucelefebvre.com>
- * https://github.com/blefebvre/react-native-sqlite-demo/blob/master/LICENSE
- */
 import NetInfo from '@react-native-community/netinfo';
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -310,14 +305,16 @@ export class DropboxDatabaseSync implements DatabaseSync {
 
   private copyDBToBackupFile(): Promise<void> {
     const databaseBackupFilePath = this.getLocalDBBackupFilePath();
+    console.log(databaseBackupFilePath);
+
     // Is there currently a backup file already?
     return RNFS.stat(databaseBackupFilePath)
-      .then(statResult => {
+      .then((statResult: any) => {
         console.log('RNFS statResult:', statResult);
         // There is a file here already! Delete it.
         return RNFS.unlink(databaseBackupFilePath);
       })
-      .catch(reason => {
+      .catch((reason: any) => {
         if (
           reason &&
           reason.toString().includes(DROPBOX.NO_SUCH_FILE_ERROR_SUBSTRING)
@@ -421,12 +418,8 @@ export class DropboxDatabaseSync implements DatabaseSync {
     });
   }
 
-  private getDatabaseName(): string {
-    return 'watermelon.db';
-  }
-
   private getDatabaseBackupName(): string {
-    return 'MyExpense_Backup.db';
+    return 'watermelon.db';
   }
 
   private getDropboxFolder(): string {
@@ -434,16 +427,10 @@ export class DropboxDatabaseSync implements DatabaseSync {
   }
 
   private getLocalDBFilePath(): string {
-    return (
-      RNFS.LibraryDirectoryPath + '/LocalDatabase/' + this.getDatabaseName()
-    );
+    return `/data/data/com.przbadu.myexpense/${this.getDatabaseBackupName()}`;
   }
 
   private getLocalDBBackupFilePath(): string {
-    return (
-      RNFS.LibraryDirectoryPath +
-      '/LocalDatabase/' +
-      this.getDatabaseBackupName()
-    );
+    return `${RNFS.DownloadDirectoryPath}/myexpense.db`;
   }
 }
