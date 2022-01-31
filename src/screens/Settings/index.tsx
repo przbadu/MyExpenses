@@ -7,6 +7,8 @@ import DocumentPicker from 'react-native-document-picker';
 import {
   ActivityIndicator,
   Appbar,
+  Avatar,
+  Caption,
   Card,
   Subheading,
   Switch,
@@ -307,7 +309,7 @@ let Settings = ({
     return (
       <>
         <MenuItem
-          label="Autosync backup file?"
+          label="Backup file automatically?"
           onPress={() => setAutoSyncDrive(!autoSyncDrive)}>
           <Switch
             value={autoSyncDrive}
@@ -315,6 +317,13 @@ let Settings = ({
           />
         </MenuItem>
         {autoSyncDrive && (
+          <Caption>
+            If this option is enabled it will push your changes to google drive
+            after every transaction, category, wallets, etc is added, deleted or
+            updated, if you are connected to wifi or mobile data network.
+          </Caption>
+        )}
+        {!autoSyncDrive && (
           <>
             <MenuItem
               label="Upload To Google Drive"
