@@ -1,4 +1,4 @@
-export const walletIcons = [
+export const walletIcons: string[] = [
   'wallet',
   'wallet-giftcard',
   'wallet-membership',
@@ -11,7 +11,7 @@ export const walletIcons = [
   'credit-card',
 ];
 
-export const categoryIcons = [
+export const categoryIcons: string[] = [
   'home',
   'bed',
   'hospital-building',

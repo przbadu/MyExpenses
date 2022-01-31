@@ -1,4 +1,4 @@
-export const numToMonthName = (number: number | string) => {
+export const numToMonthName = (number: number | string): string => {
   switch (+number) {
     case 1:
       return 'Jan';
@@ -24,10 +24,12 @@ export const numToMonthName = (number: number | string) => {
       return 'Nov';
     case 12:
       return 'Dec';
+    default:
+      return 'Jan';
   }
 };
 
-export const numToWeekName = (number: number | string) => {
+export const numToWeekName = (number: number | string): string => {
   switch (+number) {
     case 0:
       return 'Sun';
@@ -43,5 +45,7 @@ export const numToWeekName = (number: number | string) => {
       return 'Fri';
     case 6:
       return 'Sat';
+    default:
+      return 'Sun';
   }
 };

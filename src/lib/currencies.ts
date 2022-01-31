@@ -7,8 +7,10 @@ const SI_SYMBOLS = ['', 'k', 'M', 'B', 'T', 'P', 'E'];
  * @param symbol - currency symbol
  * @returns Currency formatted amount e.g: $200, NPR 1,200
  */
-export const numberToCurrency = (amount: number | string, symbol: string) =>
-  currency(amount, {symbol: `${symbol} `}).format();
+export const numberToCurrency = (
+  amount: number | string,
+  symbol: string,
+): string => currency(amount, {symbol: `${symbol} `}).format();
 
 /**
  *
@@ -21,8 +23,8 @@ export const numberToHumanize = (
   number: number,
   minDigits: number = 1,
   maxDigits: number = 1,
-) => {
-  if (number === 0) return number;
+): string => {
+  if (number === 0) return number.toString();
 
   // determines SI symbol
   const tier = Math.floor(Math.log10(Math.abs(number)) / 3);
@@ -43,14 +45,14 @@ export const numberToHumanize = (
   );
 };
 
-export function getSiSymbol(number: number) {
+export function getSiSymbol(number: number): string {
   if (number < 0) return '';
 
   const tier = Math.floor(Math.log10(Math.abs(number)) / 3);
   return SI_SYMBOLS[tier];
 }
 
-export function amountSeperator(number: number, avg: number) {
+export function amountSeperator(number: number, avg: number): number {
   if (number === 0) return number;
 
   const tier = Math.floor(Math.log10(Math.abs(avg)) / 3);
@@ -58,7 +60,7 @@ export function amountSeperator(number: number, avg: number) {
   return number / scale;
 }
 
-export const currencies = [
+export const currencies: {isoCode: string; name: string}[] = [
   {isoCode: 'AED', name: 'United Arab Emirates Dirham'},
   {isoCode: 'AFN', name: 'Afghan Afghani'},
   {isoCode: 'ALL', name: 'Albanian Lek'},
