@@ -2,7 +2,7 @@ import {Q} from '@nozbe/watermelondb';
 import {generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
-import {Wallet, WalletProps} from '../models';
+import {Wallet, Wallet} from '../models';
 
 export const wallets = database.collections.get(Wallet.table);
 
@@ -33,7 +33,7 @@ export const saveWallet = async ({
   color,
   icon = 'cash',
   balanceAmount,
-}: WalletProps) => {
+}: Wallet) => {
   await database.write(async () => {
     await wallets.create(entry => {
       entry.name = name;
@@ -48,7 +48,7 @@ export const saveWallet = async ({
 
 export const updateWallet = async (
   wallet: Wallet,
-  {name, color, icon = 'cash', balanceAmount}: WalletProps,
+  {name, color, icon = 'cash', balanceAmount}: Wallet,
 ) => {
   await database.write(async () => {
     const _wallet = await wallets.find(wallet.id);

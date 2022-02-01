@@ -10,12 +10,12 @@ import {
   observeCategories,
   observeWallets,
 } from '../../database/helpers';
-import {CategoryProps, WalletProps} from '../../database/models';
+import {Category, Wallet} from '../../database/models';
 
 let TransactionFilters: React.FC<{
   onFilter: Function;
-  categories?: CategoryProps[];
-  wallets?: WalletProps[];
+  categories?: Category[];
+  wallets?: Wallet[];
   form: filterTransactionByProps;
   submitting: boolean;
   handleFormChange: Function;
@@ -31,7 +31,7 @@ let TransactionFilters: React.FC<{
   onFilter,
   clearFilter,
 }) => {
-  function prepareData(data: CategoryProps[] | WalletProps[]) {
+  function prepareData(data: Category[] | Wallet[]) {
     return data.map(item => ({id: item.id, name: item.name}));
   }
 

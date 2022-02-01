@@ -1,6 +1,6 @@
 import {Database} from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-import {GoogleDriveSync} from '../sync/google_drive/GoogleDriveDatabaseSync';
+import {GoogleDriveSync} from './sync/google_drive/GoogleDriveDatabaseSync';
 import migrations from './migrations';
 // models
 import {Category, Transaction, Wallet} from './models';

@@ -10,18 +10,18 @@ import {
   observeTransactions,
   transactionTypeSummary,
 } from '../../database/helpers';
-import {TransactionProps, TransactionTypeEnum} from '../../database/models';
+import {Transaction, TransactionTypeEnum} from '../../database/models';
 
 // Transaction component
 let CategoryTransaction: React.FC<{
   navigation: any;
   route: any;
-  transactions: TransactionProps[];
+  transactions: Transaction[];
 }> = ({route, navigation, transactions}) => {
   const [summary, setSummary] =
     React.useState<{income: number; expense: number}>();
   const [groupedTransactions, setGroupedTransactions] = React.useState<
-    TransactionProps[]
+    Transaction[]
   >([]);
   const {categoryId, categoryName} = route.params;
   const {colors} = useTheme();
@@ -60,24 +60,18 @@ let CategoryTransaction: React.FC<{
   };
 
   // prepare transactions for SectionList, grouped by month
-  function transactionGroupedByMonth(trans: TransactionProps[] | any) {
+  function transactionGroupedByMonth(trans: Transaction[] | any) {
     let result = trans
-      .sort((a: TransactionProps, b: TransactionProps) =>
+      .sort((a: Transaction, b: Transaction) =>
         a.transactionAt! < b.transactionAt! ? 1 : -1,
       )
-      .reduce(
-        (groupedTransaction: any, transaction: TransactionProps): object => {
-          const month = dayjs(transaction.transactionAt).format('YYYY MMM');
-          groupedTransaction[month] = groupedTransaction[month] || [];
-          groupedTransaction[month] = [
-            ...groupedTransaction[month],
-            transaction,
-          ];
+      .reduce((groupedTransaction: any, transaction: Transaction): object => {
+        const month = dayjs(transaction.transactionAt).format('YYYY MMM');
+        groupedTransaction[month] = groupedTransaction[month] || [];
+        groupedTransaction[month] = [...groupedTransaction[month], transaction];
 
-          return groupedTransaction;
-        },
-        Object.create(null),
-      );
+        return groupedTransaction;
+      }, Object.create(null));
 
     result = Object.keys(result).map(key => ({title: key, data: result[key]}));
     setGroupedTransactions(result);
@@ -97,7 +91,7 @@ let CategoryTransaction: React.FC<{
       <View style={{flex: 1, marginHorizontal: 10}}>
         <SectionList
           sections={groupedTransactions}
-          renderItem={({item}: {item: TransactionProps}) => (
+          renderItem={({item}: {item: Transaction}) => (
             <TransactionRow
               transaction={item}
               key={`transaction-row-${item.id}`}

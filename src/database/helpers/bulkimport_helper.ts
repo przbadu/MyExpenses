@@ -2,7 +2,6 @@ import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets as dbWallets} from '.';
 import {DefaultTimeFormat, generateColor} from '../../lib';
-// import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
 import {Category, Transaction, Wallet} from '../models';
 

@@ -4,18 +4,18 @@ import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {AppColorPicker} from '../../components';
 import {observeWallets} from '../../database/helpers';
-import {WalletProps} from '../../database/models';
+import {Wallet} from '../../database/models';
 import {numberToCurrency, responsiveHeight} from '../../lib';
 import {CurrencyContext} from '../../store/context';
 
 interface WalletListProps {
-  onSelect: (item: WalletProps) => void;
-  wallets: WalletProps[];
+  onSelect: (item: Wallet) => void;
+  wallets: Wallet[];
 }
 const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
   const {currency} = useContext(CurrencyContext);
 
-  const renderItem = ({item}: {item: WalletProps}) => (
+  const renderItem = ({item}: {item: Wallet}) => (
     <TouchableWithoutFeedback onPress={() => onSelect(item)}>
       <View
         style={{
@@ -44,7 +44,7 @@ const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
     <FlatList
       data={wallets}
       renderItem={renderItem}
-      keyExtractor={(item: WalletProps) => String(item.id)}
+      keyExtractor={(item: Wallet) => String(item.id)}
       style={{
         paddingLeft: 20,
         paddingRight: 20,

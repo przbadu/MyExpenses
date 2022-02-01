@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppModal, AppSnackbar, MenuItem} from '../../components';
 import {responsiveHeight} from '../../lib';
 import {observeCategories, observeWallets} from '../../database/helpers';
-import {Category, WalletProps} from '../../database/models';
+import {Category, Wallet} from '../../database/models';
 import {
   ThemeContext,
   ThemeContentProps,
@@ -29,8 +29,8 @@ import {
 import {CurrencyList} from './CurrencyList';
 import {resetDB} from '../../database';
 import dayjs from 'dayjs';
-import {GoogleAuth} from '../../sync/google_drive/GoogleAuth';
-import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
+import {GoogleAuth} from '../../database/sync/google_drive/GoogleAuth';
+import {GoogleDriveSync} from '../../database/sync/google_drive/GoogleDriveDatabaseSync';
 
 let Settings = ({
   navigation,
@@ -39,7 +39,7 @@ let Settings = ({
 }: {
   navigation: any;
   categories: Category[];
-  wallets: WalletProps[];
+  wallets: Wallet[];
 }) => {
   const [downloading, setDownloading] = React.useState(false);
   const [isGoogleAuthorized, setIsGoogleAuthorized] = React.useState(false);

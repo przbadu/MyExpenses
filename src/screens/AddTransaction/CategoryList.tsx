@@ -4,15 +4,15 @@ import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {AppColorPicker} from '../../components';
 import {observeCategories} from '../../database/helpers';
-import {CategoryProps} from '../../database/models';
+import {Category} from '../../database/models';
 import {responsiveHeight} from '../../lib';
 
 interface CategoryListProps {
-  onSelect: (item: CategoryProps) => void;
-  categories: CategoryProps[];
+  onSelect: (item: Category) => void;
+  categories: Category[];
 }
 let CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
-  const renderItem = ({item}: {item: CategoryProps}) => (
+  const renderItem = ({item}: {item: Category}) => (
     <TouchableWithoutFeedback onPress={() => onSelect(item)}>
       <View
         style={{flexDirection: 'row', alignItems: 'center', marginBottom: 15}}>
@@ -30,7 +30,7 @@ let CategoryList: React.FC<CategoryListProps> = ({onSelect, categories}) => {
     <FlatList
       data={categories}
       renderItem={renderItem}
-      keyExtractor={(item: CategoryProps) => String(item.id)}
+      keyExtractor={(item: Category) => String(item.id)}
       style={{
         paddingLeft: 20,
         paddingRight: 20,

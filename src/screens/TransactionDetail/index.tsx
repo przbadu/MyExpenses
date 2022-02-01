@@ -11,11 +11,11 @@ import {
 } from 'react-native-paper';
 import {deleteTransaction, transactions} from '../../database/helpers';
 import {
-  CategoryProps,
+  Category,
   Transaction,
-  TransactionProps,
+  Transaction,
   TransactionTypeEnum,
-  WalletProps,
+  Wallet,
 } from '../../database/models';
 import {hexToRGBA, numberToCurrency, responsiveHeight} from '../../lib';
 import {CurrencyContext} from '../../store/context';
@@ -24,9 +24,9 @@ const TransactionDetail = ({navigation, route}: any) => {
   const {colors, dark} = useTheme();
   const {transactionId} = route.params;
   const {currency} = React.useContext(CurrencyContext);
-  const [transaction, setTransaction] = React.useState<TransactionProps>();
-  const [wallet, setWallet] = React.useState<WalletProps>();
-  const [category, setCategory] = React.useState<CategoryProps>();
+  const [transaction, setTransaction] = React.useState<Transaction>();
+  const [wallet, setWallet] = React.useState<Wallet>();
+  const [category, setCategory] = React.useState<Category>();
 
   React.useEffect(() => {
     fetchTransaction();

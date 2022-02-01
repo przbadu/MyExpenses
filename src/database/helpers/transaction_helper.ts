@@ -7,7 +7,7 @@ import {database, googleDriveSync} from '../index';
 import {
   Category,
   Transaction,
-  TransactionProps,
+  Transaction,
   TransactionTypeEnum,
   Wallet,
 } from '../models';
@@ -126,7 +126,7 @@ export const saveTransaction = async ({
   transactionAt = now,
   time = dayjs(now).format('HH:mm'),
   transactionType = TransactionTypeEnum.expense,
-}: TransactionProps) => {
+}: Transaction) => {
   if (!categoryId) {
     categoryId = (await uncategorizedId())[0];
   }
@@ -166,7 +166,7 @@ export const updateTransaction = async (
     transactionAt,
     time,
     transactionType,
-  }: TransactionProps,
+  }: Transaction,
 ) => {
   const transaction = (await transactions.find(id)) as Transaction;
 
@@ -180,7 +180,7 @@ export const updateTransaction = async (
       transactionAt,
       time,
       transactionType,
-    } as TransactionProps);
+    } as Transaction);
   } else {
     await database.write(async () => {
       const wallet = (await wallets.find(walletId as string)) as Wallet;

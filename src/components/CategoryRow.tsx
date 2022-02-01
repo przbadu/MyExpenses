@@ -4,10 +4,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {numberToCurrency, responsiveWidth} from '../lib';
 import {CurrencyContext} from '../store/context';
-import {CategoryProps} from '../database/models';
+import {Category} from '../database/models';
 import {AppColorPicker} from '.';
 
-interface _CategoryProps extends CategoryProps {
+interface _Category extends Category {
   count: number;
   totalIncome: number;
   totalExpense: number;
@@ -17,7 +17,7 @@ const CategoryRow = ({
   category,
   onPress,
 }: {
-  category: _CategoryProps;
+  category: _Category;
   onPress: () => void;
 }) => {
   const {currency} = React.useContext(CurrencyContext);

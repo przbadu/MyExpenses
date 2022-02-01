@@ -14,10 +14,10 @@ import {
 import {DefaultDateFormat, DefaultTimeFormat} from '../../lib';
 import {transactions} from '../../database/helpers';
 import {
-  CategoryProps,
+  Category,
   Transaction,
   TransactionTypeEnum,
-  WalletProps,
+  Wallet,
 } from '../../database/models';
 import CategoryList from './CategoryList';
 import {styles} from './styles';
@@ -45,12 +45,12 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
   const notesRef = useRef(null);
   const {dark, colors} = useTheme();
 
-  const selectCategory = (item: CategoryProps) => {
+  const selectCategory = (item: Category) => {
     setCategoryText(item.name);
     handleFormChange({...form, categoryId: item.id});
     setShowCategoryModal(false);
   };
-  const selectWallet = (item: WalletProps) => {
+  const selectWallet = (item: Wallet) => {
     setWalletText(item.name);
     handleFormChange({...form, walletId: item.id});
     setShowWalletModal(false);

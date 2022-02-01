@@ -4,7 +4,7 @@ import {formatDateColumn, lineChartFilterProps} from '.';
 import {DefaultDateFormat, generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
-import {Category, CategoryProps} from '../models';
+import {Category, Category} from '../models';
 
 export const categories = database.collections.get(Category.table);
 
@@ -69,11 +69,7 @@ export const categoryWithTransactionInfo = (
   return categories.query(Q.unsafeSqlQuery(query)).unsafeFetchRaw();
 };
 
-export const saveCategory = async ({
-  name,
-  color,
-  icon = 'shape',
-}: CategoryProps) => {
+export const saveCategory = async ({name, color, icon = 'shape'}: Category) => {
   await database.write(async () => {
     await categories.create(entry => {
       entry.name = name;
@@ -86,7 +82,7 @@ export const saveCategory = async ({
 
 export const updateCategory = async (
   category: Category,
-  {name, color, icon = 'shape'}: CategoryProps,
+  {name, color, icon = 'shape'}: Category,
 ) => {
   await database.write(async () => {
     await category.update(entry => {
