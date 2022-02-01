@@ -25,11 +25,6 @@ declare global {
       white: string;
       lightBlue: string;
     }
-    interface Theme {
-      success: string;
-      white: string;
-      lightBlue: string;
-    }
   }
 }
 
