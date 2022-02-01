@@ -26,8 +26,8 @@ import {
   lineChartFilterProps,
   observeTransactions,
   transactionTypeSummary,
-} from '../../../database/helpers';
-import {Transaction, TransactionTypeEnum} from '../../../database/models';
+} from '../../../data/helpers';
+import {Transaction, TransactionTypeEnum} from '../../../data/models';
 import {hexToRGBA, responsiveHeight, responsiveWidth} from '../../../lib';
 import {AppLineChart} from './AppLineChart';
 import {AppPieChart, AppPieChartDataProps} from './AppPieChart';

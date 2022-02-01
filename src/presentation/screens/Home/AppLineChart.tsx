@@ -4,7 +4,7 @@ import {Dimensions, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import {useTheme} from 'react-native-paper';
 import Svg, {Rect, Text as TextSVG} from 'react-native-svg';
-import {lineChartFilterProps} from '../../../database/helpers';
+import {lineChartFilterProps} from '../../../data/helpers';
 import {
   amountSeperator,
   chartConfig,

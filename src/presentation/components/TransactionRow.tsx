@@ -4,7 +4,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {TransactionAmountText} from '.';
-import {Category, Transaction, Wallet} from '../../database/models';
+import {Category, Transaction, Wallet} from '../../data/models';
 import {responsiveWidth} from '../../lib';
 import {AppColorPicker} from './AppColorPicker';
 

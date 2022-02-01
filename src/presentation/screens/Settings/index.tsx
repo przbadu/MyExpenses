@@ -18,8 +18,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {AppModal, AppSnackbar, MenuItem} from '../../components';
 import {responsiveHeight} from '../../../lib';
-import {observeCategories, observeWallets} from '../../../database/helpers';
-import {Category, Wallet} from '../../../database/models';
+import {observeCategories, observeWallets} from '../../../data/helpers';
+import {Category, Wallet} from '../../../data/models';
 import {
   ThemeContext,
   ThemeContentProps,
@@ -27,10 +27,10 @@ import {
   CurrencyContext,
 } from '../../hooks/context';
 import {CurrencyList} from './CurrencyList';
-import {resetDB} from '../../../database';
+import {resetDB} from '../../../data';
 import dayjs from 'dayjs';
-import {GoogleAuth} from '../../../database/sync/google_drive/GoogleAuth';
-import {GoogleDriveSync} from '../../../database/sync/google_drive/GoogleDriveDatabaseSync';
+import {GoogleAuth} from '../../../data/sync/google_drive/GoogleAuth';
+import {GoogleDriveSync} from '../../../data/sync/google_drive/GoogleDriveDatabaseSync';
 
 let Settings = ({
   navigation,

@@ -2,8 +2,8 @@ import {useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
 import {DefaultTimeFormat} from '../../../lib';
-import {saveTransaction, updateTransaction} from '../../../database/helpers';
-import {TransactionTypeEnum} from '../../../database/models';
+import {saveTransaction, updateTransaction} from '../../../data/helpers';
+import {TransactionTypeEnum} from '../../../data/models';
 
 const now = new Date();
 

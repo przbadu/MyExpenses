@@ -9,8 +9,8 @@ import {
   filterTransactions,
   observeTransactions,
   transactionTypeSummary,
-} from '../../../database/helpers';
-import {Transaction, TransactionTypeEnum} from '../../../database/models';
+} from '../../../data/helpers';
+import {Transaction, TransactionTypeEnum} from '../../../data/models';
 
 // Transaction component
 let CategoryTransaction: React.FC<{

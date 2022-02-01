@@ -9,13 +9,13 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import {deleteTransaction, transactions} from '../../../database/helpers';
+import {deleteTransaction, transactions} from '../../../data/helpers';
 import {
   Category,
   Transaction,
   TransactionTypeEnum,
   Wallet,
-} from '../../../database/models';
+} from '../../../data/models';
 import {hexToRGBA, numberToCurrency, responsiveHeight} from '../../../lib';
 import {CurrencyContext} from '../../hooks/context';
 

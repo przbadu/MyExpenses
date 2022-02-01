@@ -12,13 +12,13 @@ import {
   SwitchButtonContent,
 } from '../../components';
 import {DefaultDateFormat, DefaultTimeFormat} from '../../../lib';
-import {transactions} from '../../../database/helpers';
+import {transactions} from '../../../data/helpers';
 import {
   Category,
   Transaction,
   TransactionTypeEnum,
   Wallet,
-} from '../../../database/models';
+} from '../../../data/models';
 import CategoryList from './CategoryList';
 import {styles} from './styles';
 import {useForm} from './useForm';

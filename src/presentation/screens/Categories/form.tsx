@@ -9,8 +9,8 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {AppTextInput, AppColorPicker} from '../../components';
-import {saveCategory, updateCategory} from '../../../database/helpers';
-import {Category} from '../../../database/models';
+import {saveCategory, updateCategory} from '../../../data/helpers';
+import {Category} from '../../../data/models';
 import {categoryIcons, generateColors, responsiveHeight} from '../../../lib';
 
 const Form = ({

@@ -1,5 +1,5 @@
 import React from 'react';
-import {createSaving} from '../../../database/helpers';
+import {createSaving} from '../../../data/helpers';
 
 const initialState = {
   title: '',

@@ -10,8 +10,8 @@ import {
 } from 'react-native-paper';
 
 import {AppTextInput, AppColorPicker} from '../../components';
-import {saveWallet, updateWallet} from '../../../database/helpers';
-import {Wallet} from '../../../database/models';
+import {saveWallet, updateWallet} from '../../../data/helpers';
+import {Wallet} from '../../../data/models';
 import {generateColors, responsiveHeight, walletIcons} from '../../../lib';
 
 const Form = ({

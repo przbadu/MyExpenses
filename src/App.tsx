@@ -1,7 +1,7 @@
 import React, {Suspense, useEffect, useState} from 'react';
 import {ActivityIndicator} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import {initialSetup, LocalStorage} from './database/helpers';
+import {initialSetup, LocalStorage} from './data/helpers';
 import {AppNavigator} from './presentation/navigation';
 import {SplashScreen as AppSplashScreen} from './presentation/screens';
 // global states
@@ -11,7 +11,7 @@ import {
   themeMode,
   ThemeProvider,
 } from './presentation/hooks/context';
-import {DatabaseSynchronizer} from './database/sync/DatabaseSync';
+import {DatabaseSynchronizer} from './data/sync/DatabaseSync';
 
 const App = () => {
   const [loading, setLoading] = useState(true);

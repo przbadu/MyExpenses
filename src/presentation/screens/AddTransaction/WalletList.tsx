@@ -3,8 +3,8 @@ import React, {useContext} from 'react';
 import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {AppColorPicker} from '../../components';
-import {observeWallets} from '../../../database/helpers';
-import {Wallet} from '../../../database/models';
+import {observeWallets} from '../../../data/helpers';
+import {Wallet} from '../../../data/models';
 import {numberToCurrency, responsiveHeight} from '../../../lib';
 import {CurrencyContext} from '../../hooks/context';
 

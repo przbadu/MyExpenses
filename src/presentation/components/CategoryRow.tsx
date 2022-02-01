@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {numberToCurrency, responsiveWidth} from '../../lib';
 import {CurrencyContext} from '../hooks/context';
-import {Category} from '../../database/models';
+import {Category} from '../../data/models';
 import {AppColorPicker} from '.';
 
 interface _Category extends Category {

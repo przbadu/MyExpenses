@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Text, TextStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {numberToCurrency} from '../../lib';
-import {TransactionTypeEnum} from '../../database/models';
+import {TransactionTypeEnum} from '../../data/models';
 import {CurrencyContext} from '../hooks/context';
 
 const TransactionAmountText = ({

@@ -3,8 +3,8 @@ import React from 'react';
 import {FlatList} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {ItemRow} from '../../components';
-import {deleteWallet, observeWallets} from '../../../database/helpers';
-import {Wallet} from '../../../database/models';
+import {deleteWallet, observeWallets} from '../../../data/helpers';
+import {Wallet} from '../../../data/models';
 
 interface Props {
   route: any;

@@ -1,8 +1,8 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {Appbar} from 'react-native-paper';
-import {wallets} from '../../../database/helpers';
-import {Wallet} from '../../../database/models';
+import {wallets} from '../../../data/helpers';
+import {Wallet} from '../../../data/models';
 import {Form} from './form';
 
 let EditWallet = ({wallet, navigation}: {wallet: Wallet; navigation: any}) => {

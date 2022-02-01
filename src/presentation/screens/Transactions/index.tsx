@@ -27,8 +27,8 @@ import {
   filterTransactionByProps,
   filterTransactions,
   transactionTypeSummary,
-} from '../../../database/helpers';
-import {Transaction, TransactionTypeEnum} from '../../../database/models';
+} from '../../../data/helpers';
+import {Transaction, TransactionTypeEnum} from '../../../data/models';
 import {DefaultDateFormat, numberToCurrency} from '../../../lib';
 import {CurrencyContext} from '../../hooks/context';
 import TransactionFilters from './TransactionFilters';

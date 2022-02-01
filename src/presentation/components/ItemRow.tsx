@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColorPicker} from '.';
-import {Category, Wallet} from '../../database/models';
+import {Category, Wallet} from '../../data/models';
 import {numberToCurrency, responsiveWidth} from '../../lib';
 import {CurrencyContext} from '../hooks/context';
 import ConfirmDialog from './ConfirmDialog';

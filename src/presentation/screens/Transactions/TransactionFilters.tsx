@@ -9,8 +9,8 @@ import {
   filterTransactionByProps,
   observeCategories,
   observeWallets,
-} from '../../../database/helpers';
-import {Category, Wallet} from '../../../database/models';
+} from '../../../data/helpers';
+import {Category, Wallet} from '../../../data/models';
 
 let TransactionFilters: React.FC<{
   onFilter: Function;

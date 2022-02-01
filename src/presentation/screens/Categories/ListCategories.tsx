@@ -4,8 +4,8 @@ import React from 'react';
 import {FlatList, View} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {ItemRow} from '../../components';
-import {deleteCategory, observeCategories} from '../../../database/helpers';
-import {Category} from '../../../database/models';
+import {deleteCategory, observeCategories} from '../../../data/helpers';
+import {Category} from '../../../data/models';
 import {responsiveHeight} from '../../../lib';
 
 let ListCategories = ({

@@ -14,8 +14,8 @@ import {
   deleteSaving,
   observeSavingAmounts,
   observeSavings,
-} from '../../../database/helpers';
-import {Saving, SavingAmount} from '../../../database/models';
+} from '../../../data/helpers';
+import {Saving, SavingAmount} from '../../../data/models';
 import {
   numberToCurrency,
   numberToHumanize,

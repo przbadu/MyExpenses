@@ -10,8 +10,8 @@ import {
   filterByDailyTransactions,
   observeTransactions,
   transactionDaysForCurrentMonth,
-} from '../../../database/helpers';
-import {Transaction} from '../../../database/models';
+} from '../../../data/helpers';
+import {Transaction} from '../../../data/models';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 // Transaction component

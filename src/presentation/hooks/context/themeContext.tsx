@@ -1,5 +1,5 @@
 import React from 'react';
-import {LocalStorage} from '../../../database/helpers';
+import {LocalStorage} from '../../../data/helpers';
 
 export const APP_THEME = 'APP_THEME';
 

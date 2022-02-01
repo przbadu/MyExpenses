@@ -1,8 +1,8 @@
 import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {Appbar} from 'react-native-paper';
-import {categories} from '../../../database/helpers';
-import {Category} from '../../../database/models';
+import {categories} from '../../../data/helpers';
+import {Category} from '../../../data/models';
 import Form from './form';
 
 let EditCategory = ({
