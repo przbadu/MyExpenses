@@ -2,16 +2,16 @@ import React, {Suspense, useEffect, useState} from 'react';
 import {ActivityIndicator} from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import {initialSetup, LocalStorage} from './database/helpers';
-import {AppNavigator} from './navigation';
-import {SplashScreen as AppSplashScreen} from './screens';
+import {AppNavigator} from './presentation/navigation';
+import {SplashScreen as AppSplashScreen} from './presentation/screens';
 // global states
 import {
   APP_THEME,
   CurrencyProvider,
   themeMode,
   ThemeProvider,
-} from './store/context';
-import {DatabaseSynchronizer} from './sync/DatabaseSync';
+} from './presentation/hooks/context';
+import {DatabaseSynchronizer} from './database/sync/DatabaseSync';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
