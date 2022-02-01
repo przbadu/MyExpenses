@@ -3,7 +3,7 @@ import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
 import dayjs, {Dayjs} from 'dayjs';
 
-import {LocalStorage} from '../../database/helpers';
+import {LocalStorage} from '../../helpers';
 import {DROPBOX} from './DropboxConstants';
 import {DatabaseSync} from '../DatabaseSync';
 

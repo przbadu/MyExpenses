@@ -1,8 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 import {generateColor} from '../../lib';
-// import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
-import {Wallet, Wallet} from '../models';
+import {Wallet} from '../models';
 
 export const wallets = database.collections.get(Wallet.table);
 

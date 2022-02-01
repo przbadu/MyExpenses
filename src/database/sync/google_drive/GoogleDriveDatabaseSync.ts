@@ -9,7 +9,7 @@ import RNFS from 'react-native-fs';
 import dayjs, {Dayjs} from 'dayjs';
 import base64 from 'base64-js';
 
-import {LocalStorage} from '../../database/helpers';
+import {LocalStorage} from '../../helpers';
 import {GOOGLE_DRIVE} from './GoogleDriveConstants';
 import {DatabaseSync} from '../DatabaseSync';
 import {FileMetadataType} from './types';

@@ -13,7 +13,6 @@ import {deleteTransaction, transactions} from '../../../database/helpers';
 import {
   Category,
   Transaction,
-  Transaction,
   TransactionTypeEnum,
   Wallet,
 } from '../../../database/models';

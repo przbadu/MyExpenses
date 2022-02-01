@@ -4,7 +4,7 @@ import {formatDateColumn, lineChartFilterProps} from '.';
 import {DefaultDateFormat, generateColor} from '../../lib';
 // import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
-import {Category, Category} from '../models';
+import {Category} from '../models';
 
 export const categories = database.collections.get(Category.table);
 

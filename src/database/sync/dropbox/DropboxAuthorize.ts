@@ -1,6 +1,6 @@
 import {Linking} from 'react-native';
 import shittyQs from 'shitty-qs';
-import {LocalStorage} from '../../database/helpers';
+import {LocalStorage} from '../../helpers';
 
 import {DROPBOX} from './DropboxConstants';
 import {OAUTH_CONFIG} from './OAuthConfig';

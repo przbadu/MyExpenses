@@ -1,16 +1,9 @@
 import {Q} from '@nozbe/watermelondb';
 import dayjs from 'dayjs';
 import {wallets} from '.';
-import {GoogleDriveSync} from '../../sync/google_drive/GoogleDriveDatabaseSync';
 // import SyncAdapter from '../../sync/SyncAdapter';
 import {database, googleDriveSync} from '../index';
-import {
-  Category,
-  Transaction,
-  Transaction,
-  TransactionTypeEnum,
-  Wallet,
-} from '../models';
+import {Category, Transaction, TransactionTypeEnum, Wallet} from '../models';
 const now = new Date();
 
 /**
