@@ -4,7 +4,9 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import {TextInput, useTheme} from 'react-native-paper';
 import {AppTextInput} from '.';
 
-const AppDatePicker = (props: React.ComponentProps<typeof TextInput>) => {
+type Props = {} & AppTextInputProps;
+
+const AppDatePicker = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const {dark} = useTheme();
   const {onConfirm} = props;

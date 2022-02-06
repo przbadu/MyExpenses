@@ -1,27 +1,29 @@
+import {NavigationProp} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/core';
 import dayjs from 'dayjs';
 import React from 'react';
-import {DefaultTimeFormat} from '../../../lib';
-import {saveTransaction, updateTransaction} from '../../../data/helpers';
-import {TransactionTypeEnum} from '../../../data/models';
+import {DefaultTimeFormat} from '../../../../lib';
+import {saveTransaction, updateTransaction} from '../../../../data/helpers';
+import {TransactionTypeEnum} from '../../../../data/models';
+import {RootStackParamList} from '../../../navigation/types';
 
 const now = new Date();
 
 interface FormProps {
-  amount: number | string;
-  notes: string | '';
+  amount: number;
+  notes: string;
   transactionAt: Date;
-  time: string;
+  time?: string;
   transactionType: TransactionTypeEnum;
   isPaid: boolean;
-  walletId: string | number | undefined;
-  categoryId: string | number | undefined;
+  walletId?: string;
+  categoryId?: string;
 }
 
 interface ErrorProps {
-  notes: string | null;
-  categoryId: string | null;
-  walletId: string | null;
+  notes: string;
+  categoryId: string;
+  walletId: string;
 }
 
 export const initialFormState = {
@@ -59,8 +61,8 @@ export const validate = (values: FormProps) => {
   return errors;
 };
 
-export const useForm = (transactionId: string | undefined) => {
-  const navigation = useNavigation();
+export const useForm = (transactionId?: string) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [form, setForm] = React.useState<FormProps>(initialFormState);
   const [errors, setErrors] = React.useState<ErrorProps | any>({});
   const [submitting, setSubmitting] = React.useState(false);

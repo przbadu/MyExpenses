@@ -21,8 +21,8 @@ class Wallet extends Model {
   };
 
   // attributes
-  @field('name') name!: String;
-  @field('color') color!: String;
+  @field('name') name!: string;
+  @field('color') color!: string;
   @field('icon') icon!: string;
   @field('balance_amount') balanceAmount!: Number;
   @field('is_default') isDefault?: Boolean;

@@ -5,15 +5,13 @@ import {numberToCurrency} from '../../lib';
 import {TransactionTypeEnum} from '../../data/models';
 import {CurrencyContext} from '../hooks/context';
 
-const TransactionAmountText = ({
-  amount,
-  type,
-  style,
-}: {
+type Props = {
   amount: number | string;
   type: TransactionTypeEnum;
   style?: TextStyle;
-}) => {
+};
+
+const TransactionAmountText = ({amount, type, style}: Props) => {
   const {currency} = useContext(CurrencyContext);
   const {colors} = useTheme();
 

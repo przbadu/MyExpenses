@@ -27,12 +27,12 @@ class Transaction extends Model {
   // attributes
   @date('transaction_at') transactionAt!: Date;
   @field('time') time?: string;
-  @field('notes') notes!: String;
+  @field('notes') notes!: string;
   @field('amount') amount!: Number;
   @field('is_paid') isPaid?: Boolean;
   @field('transaction_type') transactionType!: TransactionTypeEnum;
-  @readonly @date('created_at') createdAt!: Date;
-  @readonly @date('updated_at') updatedAt!: Date;
+  @readonly @date('created_at') createdAt?: Date;
+  @readonly @date('updated_at') updatedAt?: Date;
 
   // relationships attributes
   @relation(TableName.WALLETS, 'wallet_id') wallet!: Relation<Wallet>;

@@ -1,4 +1,5 @@
 import withObservables from '@nozbe/with-observables';
+import {NavigationProp} from '@react-navigation/native';
 import {useFocusEffect, useNavigation} from '@react-navigation/core';
 import React from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
@@ -31,6 +32,7 @@ import {Transaction, TransactionTypeEnum} from '../../../data/models';
 import {hexToRGBA, responsiveHeight, responsiveWidth} from '../../../lib';
 import {AppLineChart} from './AppLineChart';
 import {AppPieChart, AppPieChartDataProps} from './AppPieChart';
+import {RootStackParamList} from '../../navigation/types';
 
 let Home = ({transactions}: {transactions: Transaction[]}) => {
   const {colors, dark} = useTheme();
@@ -52,7 +54,7 @@ let Home = ({transactions}: {transactions: Transaction[]}) => {
   >([]);
   const [manualRefresh, setManualRefresh] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useFocusEffect(
     React.useCallback(() => {

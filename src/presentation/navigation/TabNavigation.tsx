@@ -1,31 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {TabBarIcon} from '../components';
-import {
-  AddSaving,
-  AddTransaction,
-  Home,
-  ListSavings,
-  Settings,
-  Transactions,
-} from '../screens';
+import {AddTransaction, Home, Settings, Transactions} from '../screens';
+import {RootStackParamList} from './types';
 
-const Tab = createBottomTabNavigator();
-const SavingStack = createNativeStackNavigator();
-
-function SavingsStackScreen() {
-  return (
-    <SavingStack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName="ListSavings">
-      <SavingStack.Screen name="AddSaving" component={AddSaving} />
-      <SavingStack.Screen name="ListSavings" component={ListSavings} />
-    </SavingStack.Navigator>
-  );
-}
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 export const TabNavigation = () => {
   const {colors} = useTheme();
@@ -37,6 +18,27 @@ export const TabNavigation = () => {
         tabBarStyle: {...styles.navigator},
         headerShown: false,
       }}>
+      <Tab.Screen
+        name="AddTransaction"
+        component={AddTransaction}
+        options={{
+          tabBarIcon: ({focused}) => (
+            <TabBarIcon
+              icon="plus"
+              focused={focused}
+              iconColor={colors.white}
+              containerStyles={{
+                width: 48,
+                height: 48,
+                borderRadius: 62,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: colors.primary,
+              }}
+            />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Home"
         component={Home}
@@ -60,36 +62,6 @@ export const TabNavigation = () => {
               icon="calendar-month-outline"
               focused={focused}
             />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="AddTransaction"
-        component={AddTransaction}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <TabBarIcon
-              icon="plus"
-              focused={focused}
-              iconColor={colors.white}
-              containerStyles={{
-                width: 48,
-                height: 48,
-                borderRadius: 62,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: colors.primary,
-              }}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Saving"
-        component={SavingsStackScreen}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <TabBarIcon label="Savings" icon="piggy-bank" focused={focused} />
           ),
         }}
       />

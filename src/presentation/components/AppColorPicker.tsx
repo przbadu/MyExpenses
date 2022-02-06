@@ -1,8 +1,23 @@
 import React from 'react';
-import {View, TouchableOpacity, ColorValue, ViewStyle} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  ColorValue,
+  ViewStyle,
+  TouchableOpacityProps,
+} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {hexToRGBA, responsiveWidth} from '../../lib';
+
+type Props = {
+  color: ColorValue;
+  selected?: boolean;
+  icon?: string;
+  size?: number;
+  containerStyles?: ViewStyle;
+} & TouchableOpacityProps;
 
 const AppColorPicker = ({
   color,
@@ -11,14 +26,7 @@ const AppColorPicker = ({
   size = responsiveWidth(10),
   containerStyles = {},
   onPress,
-}: {
-  color: ColorValue;
-  selected?: boolean;
-  icon?: string;
-  size?: number;
-  containerStyles?: ViewStyle;
-  onPress?: () => void;
-}) => {
+}: Props) => {
   const {dark} = useTheme();
 
   return (

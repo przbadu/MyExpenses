@@ -3,7 +3,8 @@ import {TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {AppModal, AppTextInput} from './index';
 
-const AppSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
+type Props = typeof AppTextInput;
+const AppSelect = (props: Props) => {
   const {renderContent, open, onOpen, onClose, transparentAreaHeight} = props;
 
   return (

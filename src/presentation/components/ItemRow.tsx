@@ -1,24 +1,20 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Surface, Text, useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColorPicker} from '.';
 import {Category, Wallet} from '../../data/models';
-import {numberToCurrency, responsiveWidth} from '../../lib';
+import {numberToCurrency} from '../../lib';
 import {CurrencyContext} from '../hooks/context';
 import ConfirmDialog from './ConfirmDialog';
 
-const ItemRow = ({
-  item,
-  onEdit,
-  onDelete,
-  isWallet = false,
-}: {
+type Props = {
   item: Category | Wallet;
   onEdit: (item: Category | Wallet) => void;
   onDelete: (item: Category | Wallet) => void;
   isWallet?: boolean;
-}) => {
+};
+
+const ItemRow = ({item, onEdit, onDelete, isWallet = false}: Props) => {
   const {colors} = useTheme();
   const {currency} = React.useContext(CurrencyContext);
   const [confirm, setConfirm] = React.useState(false);

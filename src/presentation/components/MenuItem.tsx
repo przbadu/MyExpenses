@@ -3,6 +3,15 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {ActivityIndicator, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+type Props = {
+  label: string;
+  chipLabel?: string;
+  icon?: string;
+  iconSize?: number;
+  loading?: boolean;
+  children?: JSX.Element;
+} & TouchableOpacity['props'];
+
 const MenuItem = ({
   label,
   chipLabel,
@@ -11,15 +20,7 @@ const MenuItem = ({
   loading = false,
   children,
   onPress,
-}: {
-  label: string;
-  chipLabel?: string;
-  icon?: string;
-  iconSize?: number;
-  loading?: boolean;
-  children?: JSX.Element;
-  onPress: () => void;
-}) => {
+}: Props) => {
   const {colors} = useTheme();
 
   function renderChildren() {

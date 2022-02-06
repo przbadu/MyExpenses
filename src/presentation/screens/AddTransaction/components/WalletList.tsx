@@ -2,17 +2,17 @@ import withObservables from '@nozbe/with-observables';
 import React, {useContext} from 'react';
 import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {AppColorPicker} from '../../components';
-import {observeWallets} from '../../../data/helpers';
-import {Wallet} from '../../../data/models';
-import {numberToCurrency, responsiveHeight} from '../../../lib';
-import {CurrencyContext} from '../../hooks/context';
+import {AppColorPicker} from '../../../components';
+import {observeWallets} from '../../../../data/helpers';
+import {Wallet} from '../../../../data/models';
+import {numberToCurrency, responsiveHeight} from '../../../../lib';
+import {CurrencyContext} from '../../../hooks/context';
 
 interface WalletListProps {
   onSelect: (item: Wallet) => void;
   wallets: Wallet[];
 }
-const WalletList: React.FC<WalletListProps> = ({onSelect, wallets}) => {
+const WalletList = ({onSelect, wallets}: WalletListProps) => {
   const {currency} = useContext(CurrencyContext);
 
   const renderItem = ({item}: {item: Wallet}) => (

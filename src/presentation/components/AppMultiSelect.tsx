@@ -123,7 +123,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
               <AppChip
                 key={`${props.label}-item-${item.id}`}
                 selected={checkedStatus(item)}
-                style={{margin: 5}}
+                containerStyles={{margin: 5}}
                 onPress={() => handleItemSelection(item)}>
                 {item.name}
               </AppChip>

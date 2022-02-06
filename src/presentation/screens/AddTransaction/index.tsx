@@ -7,11 +7,10 @@ import {
   AppDatePicker,
   AppSelect,
   AppTextInput,
-  AppTimePicker,
   SwitchButton,
   SwitchButtonContent,
 } from '../../components';
-import {DefaultDateFormat, DefaultTimeFormat} from '../../../lib';
+import {DefaultDateFormat} from '../../../lib';
 import {transactions} from '../../../data/helpers';
 import {
   Category,
@@ -19,12 +18,18 @@ import {
   TransactionTypeEnum,
   Wallet,
 } from '../../../data/models';
-import CategoryList from './CategoryList';
+import CategoryList from './components/CategoryList';
 import {styles} from './styles';
-import {useForm} from './useForm';
-import WalletList from './WalletList';
+import {useForm} from './components/useForm';
+import WalletList from './components/WalletList';
 
-const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
+const AddTransaction = ({
+  navigation,
+  route,
+}: {
+  navigation: NavigationType;
+  route: any;
+}) => {
   const transactionId = route?.params?.transactionId;
   // useful for editing a form
   const {
@@ -36,8 +41,8 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
     resetForm,
     resetErrors,
   } = useForm(transactionId);
-  const [categoryText, setCategoryText] = useState<string | null>(null);
-  const [walletText, setWalletText] = useState<string | null>(null);
+  const [categoryText, setCategoryText] = useState<string>();
+  const [walletText, setWalletText] = useState<string>();
 
   // show/hide category/wallet modal
   const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
@@ -62,8 +67,8 @@ const AddTransaction = ({navigation, route}: {navigation: any; route: any}) => {
       return () => {
         resetForm();
         resetErrors();
-        setWalletText(null);
-        setCategoryText(null);
+        setWalletText(undefined);
+        setCategoryText(undefined);
       };
     }, []),
   );
