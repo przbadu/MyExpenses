@@ -1,12 +1,28 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-paper';
-import {AppModal, AppTextInput} from './index';
 
-type Props = typeof AppTextInput;
-const AppSelect = (props: Props) => {
-  const {renderContent, open, onOpen, onClose, transparentAreaHeight} = props;
+import AppModal from './AppModal';
+import AppTextInput from './AppTextInput';
 
+type Props = {
+  renderContent: () => React.ReactNode;
+  open: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  transparentAreaHeight: number;
+  placeholder: string;
+} & React.ComponentProps<typeof AppTextInput>;
+
+const AppSelect = ({
+  renderContent,
+  open,
+  onOpen,
+  onClose,
+  transparentAreaHeight,
+  placeholder,
+  ...rest
+}: Props) => {
   return (
     <>
       <TouchableOpacity onPress={onOpen}>
@@ -15,7 +31,7 @@ const AppSelect = (props: Props) => {
           showSoftInputOnFocus={false}
           editable={false}
           right={<TextInput.Icon name="menu-down" onPress={onOpen} />}
-          {...props}
+          {...rest}
         />
       </TouchableOpacity>
 
@@ -23,7 +39,7 @@ const AppSelect = (props: Props) => {
         <AppModal
           visible={open}
           onClose={onClose}
-          heading={props.placeholder!}
+          heading={placeholder}
           renderContent={renderContent}
           transparentAreaHeight={transparentAreaHeight}
         />
@@ -32,4 +48,4 @@ const AppSelect = (props: Props) => {
   );
 };
 
-export {AppSelect};
+export default AppSelect;

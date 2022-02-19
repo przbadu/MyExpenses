@@ -1,16 +1,15 @@
 import React from 'react';
-import {TouchableOpacityProps, ViewStyle} from 'react-native';
+import {ViewStyle} from 'react-native';
 import {Chip, useTheme} from 'react-native-paper';
 import {hexToRGBA} from '../../lib';
 
 type Props = {
-  surface?: boolean;
+  selected?: boolean;
   children: React.ReactNode;
-  selected: boolean;
-  containerStyles?: ViewStyle;
-} & TouchableOpacityProps;
+  containerStyle?: ViewStyle;
+} & React.ComponentProps<typeof Chip>;
 
-const AppChip = ({selected, containerStyles, children, ...rest}: Props) => {
+const AppChip = ({selected, children, containerStyle, ...rest}: Props) => {
   const {colors} = useTheme();
 
   return (
@@ -22,7 +21,7 @@ const AppChip = ({selected, containerStyles, children, ...rest}: Props) => {
           : hexToRGBA(colors.primary, 0.2),
         marginRight: 10,
         maxHeight: 35,
-        ...containerStyles,
+        ...containerStyle,
       }}
       {...rest}>
       {children}
@@ -30,4 +29,4 @@ const AppChip = ({selected, containerStyles, children, ...rest}: Props) => {
   );
 };
 
-export {AppChip};
+export default AppChip;

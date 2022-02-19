@@ -24,9 +24,9 @@ class Wallet extends Model {
   @field('name') name!: string;
   @field('color') color!: string;
   @field('icon') icon!: string;
-  @field('balance_amount') balanceAmount!: Number;
-  @field('is_default') isDefault?: Boolean;
-  @field('is_archived') isArchived?: Boolean;
+  @field('balance_amount') balanceAmount!: number;
+  @field('is_default') isDefault?: boolean;
+  @field('is_archived') isArchived?: boolean;
   @readonly @date('created_at') createdAt!: Date;
   @readonly @date('updated_at') updatedAt!: Date;
 

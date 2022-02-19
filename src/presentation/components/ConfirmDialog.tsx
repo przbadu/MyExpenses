@@ -1,21 +1,15 @@
 import React from 'react';
 import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
 
-interface ConfirmDialogProps {
+type Props = {
   visible: boolean;
   title: string;
   label: string;
   onCancel: () => void;
   onConfirm: () => void;
-}
+};
 
-const ConfirmDialog = ({
-  visible,
-  label,
-  title,
-  onCancel,
-  onConfirm,
-}: ConfirmDialogProps) => {
+const ConfirmDialog = ({visible, label, title, onCancel, onConfirm}: Props) => {
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={onCancel}>

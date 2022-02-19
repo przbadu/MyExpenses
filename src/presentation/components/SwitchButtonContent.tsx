@@ -4,11 +4,13 @@ import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {hexToRGBA} from '../../lib';
 
-const SwitchButtonContent: React.FC<{
+type Props = {
   icon: string;
   label: string;
   active: boolean;
-}> = ({icon, label, active}) => {
+};
+
+const SwitchButtonContent = ({icon, label, active}: Props) => {
   const {colors, dark} = useTheme();
 
   const darkActiveBG = active ? colors.lightBlue : colors.background;
@@ -51,4 +53,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {SwitchButtonContent};
+export default SwitchButtonContent;

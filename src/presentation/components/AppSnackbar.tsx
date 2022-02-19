@@ -1,13 +1,15 @@
 import React from 'react';
 import {Snackbar, Text, useTheme} from 'react-native-paper';
-import {hexToRGBA, responsiveHeight} from '../../lib';
+import {responsiveHeight} from '../../lib';
 
-const AppSnackbar: React.FC<{
+type Props = {
   visible: boolean;
-  onDismiss: () => void;
   message: string;
-}> = ({visible, message, onDismiss}) => {
-  const {colors, dark} = useTheme();
+  onDismiss: () => void;
+} & React.ComponentProps<typeof Snackbar>;
+
+const AppSnackbar = ({visible, message, onDismiss, ...rest}: Props) => {
+  const {colors} = useTheme();
 
   return (
     <Snackbar
@@ -17,10 +19,11 @@ const AppSnackbar: React.FC<{
         position: 'absolute',
         bottom: responsiveHeight(12),
         backgroundColor: colors.surface,
-      }}>
+      }}
+      {...rest}>
       <Text>{message}</Text>
     </Snackbar>
   );
 };
 
-export {AppSnackbar};
+export default AppSnackbar;

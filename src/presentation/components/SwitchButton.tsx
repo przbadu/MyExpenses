@@ -1,25 +1,20 @@
 import React from 'react';
 import {
   TouchableWithoutFeedback,
+  TouchableWithoutFeedbackProps,
   StyleSheet,
-  GestureResponderEvent,
   View,
   ViewStyle,
 } from 'react-native';
 import {useTheme} from 'react-native-paper';
 
-interface SwitchButtonProps {
-  onPress: (event: GestureResponderEvent) => void;
+type Props = {
   label?: string;
   icon?: string;
   containerStyles?: ViewStyle;
-}
+} & TouchableWithoutFeedbackProps;
 
-const SwitchButton: React.FC<SwitchButtonProps> = ({
-  onPress,
-  containerStyles,
-  children,
-}) => {
+const SwitchButton = ({containerStyles, children, onPress}: Props) => {
   const {colors} = useTheme();
 
   return (
@@ -47,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {SwitchButton};
+export default SwitchButton;

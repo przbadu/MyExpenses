@@ -2,51 +2,34 @@ import React from 'react';
 import {
   Animated,
   Dimensions,
-  GestureResponderEvent,
   Modal,
   StyleSheet,
-  TouchableOpacity,
   TouchableWithoutFeedback,
+  TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import {Text, useTheme} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from 'react-native-paper';
+
+import AppModalHeader from './AppModalHeader';
 import {responsiveHeight} from '../../lib';
 
 const winHeight = Dimensions.get('window').height;
 
-// modal header
-interface ModalHeader {
-  label: string;
-  onPress: (event: GestureResponderEvent) => void;
-}
-const ModalHeader: React.FC<ModalHeader> = ({label, onPress}) => {
-  const {colors} = useTheme();
-
-  return (
-    <View style={{...styles.headerContainer}}>
-      <Text style={styles.heading}>{label}</Text>
-      <TouchableOpacity onPress={onPress}>
-        <Icon name="close" color={colors.text} style={{fontSize: 20}} />
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-interface AppModalProps {
+type Props = {
   onClose: () => void;
   visible: boolean;
   heading: string;
   renderContent: () => React.ReactNode;
   transparentAreaHeight?: number | undefined;
-}
-const AppModal: React.FC<AppModalProps> = ({
+} & TouchableWithoutFeedbackProps;
+
+const AppModal = ({
   onClose,
   visible = false,
   heading,
   renderContent,
   transparentAreaHeight = responsiveHeight(20),
-}) => {
+}: Props) => {
   const {colors} = useTheme();
   const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
   const [showModal, setShowModal] = React.useState<boolean>(visible);
@@ -88,7 +71,7 @@ const AppModal: React.FC<AppModalProps> = ({
             backgroundColor: colors.background,
           }}>
           {/* header */}
-          <ModalHeader label={heading} onPress={() => setShowModal(false)} />
+          <AppModalHeader label={heading} onPress={() => setShowModal(false)} />
 
           {/* body */}
           {renderContent()}
@@ -120,17 +103,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-  },
-  heading: {
-    fontWeight: 'bold',
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-  },
 });
 
-export {AppModal};
+export default AppModal;

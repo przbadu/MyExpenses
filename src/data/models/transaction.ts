@@ -28,8 +28,8 @@ class Transaction extends Model {
   @date('transaction_at') transactionAt!: Date;
   @field('time') time?: string;
   @field('notes') notes!: string;
-  @field('amount') amount!: Number;
-  @field('is_paid') isPaid?: Boolean;
+  @field('amount') amount!: number;
+  @field('is_paid') isPaid?: boolean;
   @field('transaction_type') transactionType!: TransactionTypeEnum;
   @readonly @date('created_at') createdAt?: Date;
   @readonly @date('updated_at') updatedAt?: Date;

@@ -1,23 +1,16 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useTheme, Text, Surface} from 'react-native-paper';
+import {Category} from '../../data/models';
 import {numberToCurrency, responsiveWidth} from '../../lib';
 import {CurrencyContext} from '../hooks/context';
-import {Category} from '../../data/models';
-import {AppColorPicker} from '.';
-
-interface _Category extends Category {
-  count: number;
-  totalIncome: number;
-  totalExpense: number;
-}
+import AppColorPicker from './AppColorPicker';
 
 const CategoryRow = ({
   category,
   onPress,
 }: {
-  category: _Category;
+  category: Category;
   onPress: () => void;
 }) => {
   const {currency} = React.useContext(CurrencyContext);
@@ -95,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {CategoryRow};
+export default CategoryRow;

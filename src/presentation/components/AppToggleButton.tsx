@@ -1,25 +1,22 @@
 import React from 'react';
 import {ToggleButton, useTheme} from 'react-native-paper';
 
-const AppToggleButton: React.FC<{
-  icon: string;
-  onPress: () => void;
+type Props = {
   active: boolean;
-  value?: string;
-}> = ({icon, onPress, active, value}) => {
+} & React.ComponentProps<typeof ToggleButton>;
+
+const AppToggleButton = ({active, ...rest}: Props) => {
   const {colors} = useTheme();
 
   return (
     <ToggleButton
-      icon={icon}
-      onPress={onPress}
-      value={value}
       style={{
         backgroundColor: active ? colors.primary : colors.surface,
       }}
       color={active ? colors.white : colors.primary}
+      {...rest}
     />
   );
 };
 
-export {AppToggleButton};
+export default AppToggleButton;

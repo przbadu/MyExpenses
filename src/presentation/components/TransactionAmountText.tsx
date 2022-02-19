@@ -1,12 +1,13 @@
 import React, {useContext} from 'react';
 import {Text, TextStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
+
 import {numberToCurrency} from '../../lib';
 import {TransactionTypeEnum} from '../../data/models';
 import {CurrencyContext} from '../hooks/context';
 
 type Props = {
-  amount: number | string;
+  amount: number;
   type: TransactionTypeEnum;
   style?: TextStyle;
 };
@@ -31,4 +32,4 @@ const TransactionAmountText = ({amount, type, style}: Props) => {
   );
 };
 
-export {TransactionAmountText};
+export default TransactionAmountText;

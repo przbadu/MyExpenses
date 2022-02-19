@@ -1,17 +1,28 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
-import {AppChip} from './AppChip';
-import {AppTextInput} from './index';
+import AppChip from './AppChip';
+import AppTextInput from './AppTextInput';
 
 interface itemProps {
   id: number;
   name: string;
 }
 
-const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
-  const {options, onSelected, selectedValues} = props;
+type Props = {
+  options: itemProps[];
+  label: string;
+  onSelected: (selected: itemProps[]) => void;
+  selectedValues: number[];
+} & React.ComponentProps<typeof AppTextInput>;
 
+const AppMultiSelect = ({
+  options,
+  label,
+  onSelected,
+  selectedValues,
+  ...rest
+}: Props) => {
   const [placeholder, setPlaceholder] = React.useState<string | undefined>();
 
   const [open, setOpen] = React.useState(false);
@@ -25,9 +36,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
     setData(options);
 
     if (selectedValues) {
-      const _selected = options.filter((o: {id: string}) =>
-        selectedValues.includes(o.id),
-      );
+      const _selected = options.filter(opt => selectedValues.includes(opt.id));
       setSelected(_selected);
     }
   }, []);
@@ -88,7 +97,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
       setPlaceholder(`${name} and ${length} others`);
       setValue(`${name} and ${length} others`);
     } else {
-      setPlaceholder(props.label);
+      setPlaceholder(label);
       setValue('');
     }
   }
@@ -103,7 +112,7 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
         onFocus={onFocus}
         onBlur={onBlur}
         onChangeText={text => setKeyword(text)}
-        {...props}
+        {...rest}
         placeholder={placeholder}
       />
 
@@ -121,9 +130,9 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
             }}>
             {data.map((item: itemProps) => (
               <AppChip
-                key={`${props.label}-item-${item.id}`}
+                key={`${label}-item-${item.id}`}
                 selected={checkedStatus(item)}
-                containerStyles={{margin: 5}}
+                containerStyle={{margin: 5}}
                 onPress={() => handleItemSelection(item)}>
                 {item.name}
               </AppChip>
@@ -137,4 +146,4 @@ const AppMultiSelect = (props: React.ComponentProps<typeof AppTextInput>) => {
   );
 };
 
-export {AppMultiSelect};
+export default AppMultiSelect;

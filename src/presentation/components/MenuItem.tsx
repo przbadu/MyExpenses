@@ -1,5 +1,10 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  StyleSheet,
+} from 'react-native';
 import {ActivityIndicator, Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -10,7 +15,7 @@ type Props = {
   iconSize?: number;
   loading?: boolean;
   children?: JSX.Element;
-} & TouchableOpacity['props'];
+} & TouchableOpacityProps;
 
 const MenuItem = ({
   label,
@@ -61,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {MenuItem};
+export default MenuItem;

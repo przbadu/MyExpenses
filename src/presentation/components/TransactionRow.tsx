@@ -1,25 +1,25 @@
 import withObservables from '@nozbe/with-observables';
 import dayjs from 'dayjs';
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  TouchableOpacityProps,
-} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {useTheme, Text, Surface} from 'react-native-paper';
-import {TransactionAmountText} from '.';
-import {Category, Transaction, Wallet} from '../../data/models';
-import {responsiveWidth} from '../../lib';
-import {AppColorPicker} from './AppColorPicker';
 
-type Props = {
+import {responsiveWidth} from '../../lib';
+import TransactionAmountText from './TransactionAmountText';
+import AppColorPicker from './AppColorPicker';
+import {Category, Transaction, Wallet} from '../../data/models';
+
+let TransactionRow = ({
+  transaction,
+  category,
+  wallet,
+  onPress,
+}: {
   transaction: Transaction;
   category?: Category;
   wallet?: Wallet;
-} & TouchableOpacityProps;
-
-let TransactionRow = ({transaction, category, wallet, onPress}: Props) => {
+  onPress?: () => void;
+}) => {
   const {colors, fonts} = useTheme();
 
   return (
@@ -44,10 +44,13 @@ let TransactionRow = ({transaction, category, wallet, onPress}: Props) => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={styles.amountContainer}>
             <TransactionAmountText
-              amount={transaction.amount.toString()}
+              amount={transaction.amount}
               type={transaction.transactionType!}
             />
-            <Text style={{...fonts.light, textAlign: 'right'}}>
+            <Text
+              style={{...fonts.light, textAlign: 'right'}}
+              onPressIn={{}}
+              onPressOut={{}}>
               {wallet?.name}
             </Text>
           </View>
@@ -83,4 +86,4 @@ TransactionRow = withObservables(['transaction'], ({transaction}) => ({
   wallet: transaction.wallet,
 }))(TransactionRow);
 
-export {TransactionRow};
+export default TransactionRow;

@@ -2,12 +2,12 @@ import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-paper';
 
-interface AppSwitchProps {
+type Props = {
   label: string;
   children?: React.ReactNode;
-}
+};
 
-const AppSwitch: React.FC<AppSwitchProps> = ({label, children}) => {
+const AppSwitch = ({label, children}: Props) => {
   return (
     <View
       style={{
@@ -21,4 +21,4 @@ const AppSwitch: React.FC<AppSwitchProps> = ({label, children}) => {
   );
 };
 
-export {AppSwitch};
+export default AppSwitch;
