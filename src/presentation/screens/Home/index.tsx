@@ -15,12 +15,10 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {
-  AppChip,
-  SummaryHeader,
-  CategoryRow,
-  AppToggleButton,
-} from '../../components';
+import AppChip from '../../components/AppChip';
+import SummaryHeader from '../../components/SummaryHeader';
+import CategoryRow from '../../components/CategoryRow';
+import AppToggleButton from '../../components/AppToggleButton';
 import {
   categoryWithTransactionInfo,
   lineChartData,

@@ -3,13 +3,12 @@ import dayjs from 'dayjs';
 import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, StatusBar, View} from 'react-native';
 import {Appbar, Button, Card, TextInput, useTheme} from 'react-native-paper';
-import {
-  AppDatePicker,
-  AppSelect,
-  AppTextInput,
-  SwitchButton,
-  SwitchButtonContent,
-} from '../../components';
+
+import AppDatePicker from '../../components/AppDatePicker';
+import AppSelect from '../../components/AppSelect';
+import AppTextInput from '../../components/AppTextInput';
+import SwitchButton from '../../components/SwitchButton';
+import SwitchButtonContent from '../../components/SwitchButtonContent';
 import {DefaultDateFormat} from '../../../lib';
 import {transactions} from '../../../data/helpers';
 import {

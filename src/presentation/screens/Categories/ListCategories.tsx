@@ -1,12 +1,11 @@
 import withObservables from '@nozbe/with-observables';
-import {useFocusEffect} from '@react-navigation/core';
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
-import {ItemRow} from '../../components';
+
+import ItemRow from '../../components/ItemRow';
 import {deleteCategory, observeCategories} from '../../../data/helpers';
 import {Category} from '../../../data/models';
-import {responsiveHeight} from '../../../lib';
 
 let ListCategories = ({
   navigation,

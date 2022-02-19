@@ -3,7 +3,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {ScrollView, View} from 'react-native';
 import {Button} from 'react-native-paper';
-import {AppDatePicker, AppMultiSelect} from '../../components';
+
+import AppDatePicker from '../../components/AppDatePicker';
+import AppMultiSelect from '../../components/AppMultiSelect';
 import {DefaultDateFormat, responsiveHeight} from '../../../lib';
 import {
   filterTransactionByProps,

@@ -9,7 +9,8 @@ import {
   useTheme,
 } from 'react-native-paper';
 
-import {AppTextInput, AppColorPicker} from '../../components';
+import AppTextInput from '../../components/AppTextInput';
+import AppColorPicker from '../../components/AppColorPicker';
 import {saveWallet, updateWallet} from '../../../data/helpers';
 import {Wallet} from '../../../data/models';
 import {generateColors, responsiveHeight, walletIcons} from '../../../lib';

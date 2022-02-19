@@ -16,12 +16,11 @@ import {
   Subheading,
   useTheme,
 } from 'react-native-paper';
-import {
-  AppChip,
-  AppModal,
-  SummaryHeader,
-  TransactionRow,
-} from '../../components';
+
+import AppChip from '../../components/AppChip';
+import AppModal from '../../components/AppModal';
+import SummaryHeader from '../../components/SummaryHeader';
+import TransactionRow from '../../components/TransactionRow';
 import {
   bulkImportTransaction,
   filterTransactionByProps,

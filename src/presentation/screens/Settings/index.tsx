@@ -16,7 +16,9 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import {AppModal, AppSnackbar, MenuItem} from '../../components';
+import AppModal from '../../components/AppModal';
+import AppSnackbar from '../../components/AppSnackbar';
+import MenuItem from '../../components/MenuItem';
 import {responsiveHeight} from '../../../lib';
 import {observeCategories, observeWallets} from '../../../data/helpers';
 import {Category, Wallet} from '../../../data/models';

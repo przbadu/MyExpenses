@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {TabBarIcon} from '../components';
+import TabBarIcon from '../components/TabBarIcon';
 import {AddTransaction, Home, Settings, Transactions} from '../screens';
 import {RootStackParamList} from './types';
 

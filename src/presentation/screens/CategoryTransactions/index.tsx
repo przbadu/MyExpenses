@@ -3,7 +3,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import {SectionList, View} from 'react-native';
 import {Appbar, Headline, Subheading, useTheme} from 'react-native-paper';
-import {SummaryHeader, TransactionRow} from '../../components';
+
+import SummaryHeader from '../../components/SummaryHeader';
+import TransactionRow from '../../components/TransactionRow';
 import {
   filterTransactionByProps,
   filterTransactions,

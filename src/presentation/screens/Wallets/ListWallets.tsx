@@ -2,7 +2,8 @@ import withObservables, {ObservableifyProps} from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
-import {ItemRow} from '../../components';
+
+import ItemRow from '../../components/ItemRow';
 import {deleteWallet, observeWallets} from '../../../data/helpers';
 import {Wallet} from '../../../data/models';
 

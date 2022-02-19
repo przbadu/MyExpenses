@@ -15,7 +15,6 @@ const CategoryRow = ({
 }) => {
   const {currency} = React.useContext(CurrencyContext);
   const {colors, fonts} = useTheme();
-  const total = category.totalIncome - category.totalExpense;
 
   return (
     <TouchableOpacity onPress={onPress}>

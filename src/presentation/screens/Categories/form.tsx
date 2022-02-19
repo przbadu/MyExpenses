@@ -8,7 +8,9 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import {AppTextInput, AppColorPicker} from '../../components';
+
+import AppTextInput from '../../components/AppTextInput';
+import AppColorPicker from '../../components/AppColorPicker';
 import {saveCategory, updateCategory} from '../../../data/helpers';
 import {Category} from '../../../data/models';
 import {categoryIcons, generateColors, responsiveHeight} from '../../../lib';

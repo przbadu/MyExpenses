@@ -6,8 +6,8 @@ import AppColorPicker from './AppColorPicker';
 import {numberToCurrency} from '../../lib';
 import ConfirmDialog from './ConfirmDialog';
 
-import {CurrencyContext} from '../store/context';
-import {Category, Wallet} from '../database/models';
+import {CurrencyContext} from '../hooks/context';
+import {Category, Wallet} from '../../data/models';
 
 const ItemRow = ({
   item,

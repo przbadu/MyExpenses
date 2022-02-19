@@ -2,7 +2,8 @@ import withObservables from '@nozbe/with-observables';
 import React from 'react';
 import {FlatList, TouchableWithoutFeedback, View} from 'react-native';
 import {Text} from 'react-native-paper';
-import {AppColorPicker} from '../../../components';
+
+import AppColorPicker from '../../../components/AppColorPicker';
 import {observeCategories} from '../../../../data/helpers';
 import {Category} from '../../../../data/models';
 import {responsiveHeight} from '../../../../lib';
