@@ -47,10 +47,7 @@ let TransactionRow = ({
               amount={transaction.amount}
               type={transaction.transactionType!}
             />
-            <Text
-              style={{...fonts.light, textAlign: 'right'}}
-              onPressIn={{}}
-              onPressOut={{}}>
+            <Text style={{...fonts.light, textAlign: 'right'}}>
               {wallet?.name}
             </Text>
           </View>
