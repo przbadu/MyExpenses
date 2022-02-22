@@ -1,9 +1,5 @@
 module.exports = {
-  presets: [
-    'module:metro-react-native-babel-preset',
-    ['@babel/preset-env', {targets: {node: 'current'}}],
-    '@babel/preset-typescript',
-  ],
+  presets: ['module:metro-react-native-babel-preset'],
   // Setup for watermelondb
   plugins: [['@babel/plugin-proposal-decorators', {legacy: true}]],
   // react-native-paper setup to only load module that we use

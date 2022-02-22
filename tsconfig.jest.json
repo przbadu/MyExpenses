@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig",
-  "experimentalDecorators": true,
-  "compilerOptions": {
-    "jsx": "react",
-    "module": "commonjs"
-  }
-}
