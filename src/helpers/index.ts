@@ -9,3 +9,4 @@ export * from './dateHelper';
 export * from './responsiveLayout';
 export * from './colorHelper';
 export * from './categoryWalletIcons';
+export * from './localStorageHelper'

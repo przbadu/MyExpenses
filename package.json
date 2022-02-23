@@ -16,6 +16,7 @@
     "@react-native-community/netinfo": "^8.0.0",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.5.0",
     "@robinbobin/react-native-google-drive-api-wrapper": "^1.2.1",
     "csvtojson": "^2.0.10",
     "currency.js": "^2.0.4",
