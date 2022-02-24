@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ViewStyle} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {hexToRGBA} from '../../helpers';
@@ -8,9 +8,10 @@ type Props = {
   icon: string;
   label: string;
   active: boolean;
+  containerStyle?: ViewStyle;
 };
 
-const SwitchButtonContent = ({icon, label, active}: Props) => {
+const SwitchButtonContent = ({icon, label, active, containerStyle}: Props) => {
   const {colors, dark} = useTheme();
 
   const darkActiveBG = active ? colors.lightBlue : colors.background;
@@ -21,8 +22,9 @@ const SwitchButtonContent = ({icon, label, active}: Props) => {
   return (
     <View
       style={{
-        ...styles.container,
         backgroundColor: dark ? darkActiveBG : lightActiveBG,
+        ...styles.container,
+        ...containerStyle,
       }}>
       {icon && (
         <Icon

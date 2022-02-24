@@ -1,33 +1,5 @@
-// tempfix
-export enum TransactionTypeEnum {
-  expense,
-  income,
-}
+import Category from './category';
+import Transaction, {TransactionTypeEnum} from './transaction';
+import Wallet from './wallet';
 
-// tempfix:
-export type Category = {
-  name: string;
-  count: number;
-  totalExpense: number;
-  totalIncome: number;
-  balanceAmount: number;
-  icon: string;
-  color: string;
-};
-
-export type Wallet = {
-  name: string;
-  count: number;
-  totalExpense: number;
-  totalIncome: number;
-  balanceAmount: number;
-  icon: string;
-  color: string;
-};
-
-export type Transaction = {
-  notes: string;
-  transactionAt: Date;
-  amount: number;
-  transactionType: TransactionTypeEnum;
-};
+export {Category, Transaction, TransactionTypeEnum, Wallet};

@@ -1,3 +1,4 @@
+import AppButton from './AppButton';
 import AppChip from './AppChip';
 import AppColorPicker from './AppColorPicker';
 import AppDatePicker from './AppDatePicker';
@@ -21,6 +22,7 @@ import TransactionRow from './TransactionRow';
 import TabBarIcon from './TabBarIcon';
 
 export {
+  AppButton,
   AppChip,
   AppColorPicker,
   AppDatePicker,

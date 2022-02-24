@@ -1,3 +1,5 @@
+import {TransactionTypeEnum} from '../../data/models';
+
 export type RootStackParamList = {
   Home: undefined;
   Dashboard: undefined;
@@ -5,7 +7,7 @@ export type RootStackParamList = {
   CalendarTransactions: undefined;
   CategoryTransactions: {categoryId: string; categoryName: string};
   ListTransactions: undefined;
-  AddTransaction: {type?: 'income' | 'expense'};
+  AddTransaction: {type: TransactionTypeEnum};
   EditTransaction: {transactionId: string};
   ShowTransaction: {transactionId: string};
   // categories

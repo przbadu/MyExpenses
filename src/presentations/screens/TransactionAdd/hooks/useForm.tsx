@@ -1,15 +1,14 @@
-import {NavigationProp} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/core';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, {useEffect} from 'react';
+
 import {DefaultTimeFormat} from '../../../../helpers';
-import {saveTransaction, updateTransaction} from '../../../../data/helpers';
 import {TransactionTypeEnum} from '../../../../data/models';
 import {RootStackParamList} from '../../../navigation/types';
 
 const now = new Date();
 
-interface FormProps {
+export type FormProps = {
   amount: number;
   notes: string;
   transactionAt: Date;
@@ -18,7 +17,7 @@ interface FormProps {
   isPaid: boolean;
   walletId?: string;
   categoryId?: string;
-}
+};
 
 interface ErrorProps {
   notes: string;
@@ -61,11 +60,25 @@ export const validate = (values: FormProps) => {
   return errors;
 };
 
-export const useForm = (transactionId?: string) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+type Props = {
+  navigation: NavigationProp<RootStackParamList>;
+  route: RouteProp<RootStackParamList, 'AddTransaction'>;
+};
+
+export const useForm = ({navigation, route}: Props) => {
+  const transactionType = route?.params.type;
   const [form, setForm] = React.useState<FormProps>(initialFormState);
   const [errors, setErrors] = React.useState<ErrorProps | any>({});
   const [submitting, setSubmitting] = React.useState(false);
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      transactionType: transactionType || TransactionTypeEnum.expense,
+    });
+    console.log(form);
+    console.log(transactionType);
+  }, [transactionType]);
 
   const handleFormChange = (formData: typeof form) => {
     setForm(formData);
@@ -77,14 +90,12 @@ export const useForm = (transactionId?: string) => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      if (transactionId) await updateTransaction(transactionId, {...form});
-      else await saveTransaction({...form});
+      // await saveTransaction({...form});
 
       handleFormChange({...initialFormState});
       setSubmitting(false);
 
-      if (transactionId) navigation.goBack();
-      else navigation.navigate('ListTransactions');
+      navigation.navigate('ListTransactions');
     }
     setSubmitting(false);
   };

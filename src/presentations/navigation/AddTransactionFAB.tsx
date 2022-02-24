@@ -5,6 +5,7 @@ import {
 } from '@react-navigation/native';
 import React from 'react';
 import {Portal, FAB, useTheme, Colors} from 'react-native-paper';
+import {TransactionTypeEnum} from '../../data/models';
 import {RootStackParamList} from './types';
 
 const AddTransactionFAB = () => {
@@ -26,13 +27,15 @@ const AddTransactionFAB = () => {
             icon: 'plus',
             label: 'Add Income',
             style: {backgroundColor: colors.success},
-            onPress: () => navigate('AddTransaction', {type: 'income'}),
+            onPress: () =>
+              navigate('AddTransaction', {type: TransactionTypeEnum.income}),
           },
           {
             icon: 'minus',
             label: 'Add Expense',
             style: {backgroundColor: colors.error},
-            onPress: () => navigate('AddTransaction', {type: 'expense'}),
+            onPress: () =>
+              navigate('AddTransaction', {type: TransactionTypeEnum.expense}),
           },
         ]}
         onStateChange={({open}) => setOpen(open)}

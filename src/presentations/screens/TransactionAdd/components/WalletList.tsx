@@ -7,14 +7,14 @@ import AppColorPicker from '../../../components/AppColorPicker';
 import {observeWallets} from '../../../../data/helpers';
 import {Wallet} from '../../../../data/models';
 import {numberToCurrency, responsiveHeight} from '../../../../helpers';
-import {CurrencyContext} from '../../../contexts';
+import {useCurrency} from '../../../hooks/useCurrency';
 
 interface WalletListProps {
   onSelect: (item: Wallet) => void;
   wallets: Wallet[];
 }
 const WalletList = ({onSelect, wallets}: WalletListProps) => {
-  const {currency} = useContext(CurrencyContext);
+  const {currency} = useCurrency();
 
   const renderItem = ({item}: {item: Wallet}) => (
     <TouchableWithoutFeedback onPress={() => onSelect(item)}>
