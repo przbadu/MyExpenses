@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
-import React, {useContext} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import {Headline, Text, Surface, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {hexToRGBA, numberToCurrency} from '../../helpers';
-import {CurrencyContext} from '../contexts';
+import {useCurrency} from '../hooks/useCurrency';
 
 type Props = {
   balance: number;
@@ -23,7 +23,7 @@ const SummaryHeader = ({
   filterable,
 }: Props) => {
   const {colors, fonts, dark} = useTheme();
-  const {currency} = useContext(CurrencyContext);
+  const {currency} = useCurrency();
 
   function renderCard(income: boolean, amount: number) {
     const fg = income ? colors.success : colors.notification;

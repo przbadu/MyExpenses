@@ -8,7 +8,7 @@ import {
 import {useTheme, Text, Surface} from 'react-native-paper';
 import {Category} from '../../data/models';
 import {numberToCurrency, responsiveWidth} from '../../helpers';
-import {CurrencyContext} from '../contexts';
+import {useCurrency} from '../hooks/useCurrency';
 import AppColorPicker from './AppColorPicker';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 } & TouchableOpacityProps;
 
 const CategoryRow = ({category, onPress}: Props) => {
-  const {currency} = React.useContext(CurrencyContext);
+  const {currency} = useCurrency();
   const {colors, fonts} = useTheme();
 
   return (

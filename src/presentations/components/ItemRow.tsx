@@ -11,8 +11,8 @@ import AppColorPicker from './AppColorPicker';
 import {numberToCurrency} from '../../helpers';
 import ConfirmDialog from './ConfirmDialog';
 
-import {CurrencyContext} from '../contexts';
 import {Category, Wallet} from '../../data/models';
+import {useCurrency} from '../hooks/useCurrency';
 
 type Props = {
   item: Category | Wallet;
@@ -23,7 +23,7 @@ type Props = {
 
 const ItemRow = ({item, onEdit, onDelete, isWallet = false}: Props) => {
   const {colors} = useTheme();
-  const {currency} = React.useContext(CurrencyContext);
+  const {currency} = useCurrency();
   const [confirm, setConfirm] = React.useState(false);
   const balance = item.balanceAmount;
 

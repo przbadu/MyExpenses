@@ -1,10 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Text, TextStyle} from 'react-native';
 import {useTheme} from 'react-native-paper';
 
 import {numberToCurrency} from '../../helpers';
 import {TransactionTypeEnum} from '../../data/models';
-import {CurrencyContext} from '../contexts';
+import {useCurrency} from '../hooks/useCurrency';
 
 type Props = {
   amount: number;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const TransactionAmountText = ({amount, type, style}: Props) => {
-  const {currency} = useContext(CurrencyContext);
+  const {currency} = useCurrency();
   const {colors} = useTheme();
 
   return (
