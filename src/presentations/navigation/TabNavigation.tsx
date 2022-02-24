@@ -5,9 +5,8 @@ import {FAB, Portal, useTheme} from 'react-native-paper';
 
 import {TabBarIcon} from '../components';
 import {
-  ListTransactionScreen,
-  AddTransactionScreen,
-  ListStatsScreen,
+  TransactionListScreen,
+  StatsListScreen,
   SettingsScreen,
 } from '../screens';
 import AddTransactionFAB from './AddTransactionFAB';
@@ -26,7 +25,7 @@ export const TabNavigation = () => {
         }}>
         <Tab.Screen
           name="Home"
-          component={ListStatsScreen}
+          component={StatsListScreen}
           options={{
             tabBarIcon: ({focused}) => (
               <TabBarIcon
@@ -39,7 +38,7 @@ export const TabNavigation = () => {
         />
         <Tab.Screen
           name="ListTransactions"
-          component={ListTransactionScreen}
+          component={TransactionListScreen}
           options={{
             tabBarIcon: ({focused}) => (
               <TabBarIcon

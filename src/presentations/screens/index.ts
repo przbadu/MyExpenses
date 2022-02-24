@@ -1,13 +1,13 @@
 import SettingsScreen from './Settings/SettingsScreen';
-import ListStatsScreen from './Stats/ListStatsScreen';
-import ListTransactionScreen from './Transactions/ListTransactionScreen';
-import AddTransactionScreen from './Transactions/AddTransactionScreen';
+import StatsListScreen from './Stats/StatsListScreen';
 import SplashScreen from './Splash/SplashScreen';
+import TransactionListScreen from './TransactionList/TransactionListScreen';
+import TransactionAddScreen from './TransactionAdd/TransactionAddScreen';
 
 export {
   SettingsScreen,
-  ListStatsScreen,
-  AddTransactionScreen,
-  ListTransactionScreen,
+  StatsListScreen,
+  TransactionAddScreen,
+  TransactionListScreen,
   SplashScreen,
 };

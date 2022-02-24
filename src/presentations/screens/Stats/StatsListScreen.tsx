@@ -1,7 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-const ListStatsScreen = () => {
+const StatsListScreen = () => {
   return (
     <View>
       <Text>StatsScreen</Text>
@@ -9,4 +9,4 @@ const ListStatsScreen = () => {
   );
 };
 
-export default ListStatsScreen;
+export default StatsListScreen;

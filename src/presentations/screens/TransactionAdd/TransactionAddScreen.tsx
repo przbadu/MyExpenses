@@ -1,7 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-const AddTransactionScreen = () => {
+const TransactionAddScreen = () => {
   return (
     <View>
       <Text>AddTransactionScreen</Text>
@@ -9,4 +9,4 @@ const AddTransactionScreen = () => {
   );
 };
 
-export default AddTransactionScreen;
+export default TransactionAddScreen;

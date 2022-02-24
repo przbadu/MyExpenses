@@ -18,7 +18,6 @@ const AddTransactionFAB = () => {
       <FAB.Group
         visible={isFocused}
         color={Colors.white}
-        small
         open={open}
         icon={open ? 'close' : 'plus'}
         style={{position: 'absolute', bottom: 80}}
