@@ -1,15 +1,15 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Appearance } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Appearance} from 'react-native';
+import {Provider as PaperProvider} from 'react-native-paper';
 
-import { darkTheme, lightTheme } from '../../helpers';
+import {darkTheme, lightTheme} from '../../helpers';
 import AppStatusBar from './AppStatusBar';
-import { TabNavigation } from './TabNavigation';
+import {TabNavigation} from './TabNavigation';
 
-import { RootStackParamList } from './types';
-import { TransactionListScreen, TransactionAddScreen } from '../screens';
+import {RootStackParamList} from './types';
+import {TransactionListScreen, TransactionAddScreen} from '../screens';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -23,7 +23,7 @@ export default () => {
 
         <Stack.Navigator
           initialRouteName="Dashboard"
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{headerShown: false}}>
           <Stack.Screen name="Dashboard" component={TabNavigation} />
           <Stack.Screen
             name="AddTransaction"

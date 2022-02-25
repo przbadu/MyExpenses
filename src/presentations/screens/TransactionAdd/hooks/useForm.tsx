@@ -76,8 +76,6 @@ export const useForm = ({navigation, route}: Props) => {
       ...form,
       transactionType: transactionType || TransactionTypeEnum.expense,
     });
-    console.log(form);
-    console.log(transactionType);
   }, [transactionType]);
 
   const handleFormChange = (formData: typeof form) => {

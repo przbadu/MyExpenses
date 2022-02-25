@@ -28,7 +28,6 @@ const App = () => {
     SplashScreen.hide();
   }
 
-  console.log(loading);
   if (loading) return <AppSplashScreen />;
 
   return (

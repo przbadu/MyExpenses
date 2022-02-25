@@ -1,7 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {FAB, Portal, useTheme} from 'react-native-paper';
 
 import {TabBarIcon} from '../components';
 import {
