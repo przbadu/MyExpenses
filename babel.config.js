@@ -6,6 +6,7 @@ module.exports = {
   // Setup for watermelondb
   plugins: [
     ['@babel/plugin-proposal-decorators', {legacy: true}],
+    ['@babel/plugin-transform-flow-strip-types'],
     ['@babel/plugin-proposal-class-properties', {loose: true}],
   ],
   // react-native-paper setup to only load module that we use
