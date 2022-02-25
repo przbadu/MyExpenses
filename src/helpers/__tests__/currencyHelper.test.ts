@@ -1,14 +1,14 @@
 import {numberToCurrency, numberToHumanize} from '..';
 
 describe('#numberToCurrency', () => {
-  it('should return currency formatted amount', () => {
+  it('should return currency formatted amount', async () => {
     expect(numberToCurrency(10000, '$')).toBe('$ 10,000.00');
     expect(numberToCurrency(10000, 'NPR')).toBe('NPR 10,000.00');
   });
 });
 
 describe('#numberToHumanize', () => {
-  it('should return number in human readable format', () => {
+  it('should return number in human readable format', async () => {
     // hundreds
     expect(numberToHumanize(100)).toBe('100.0');
     expect(numberToHumanize(500)).toBe('500.0');

@@ -1,6 +1,6 @@
 import {COLORS, lightTheme, darkTheme} from '..';
 
-test('COLORS to return default colors', () => {
+test('COLORS to return default colors', async () => {
   expect(COLORS).toEqual({
     blue: '#28c2ff',
     green: '#5cb85c',
@@ -11,7 +11,7 @@ test('COLORS to return default colors', () => {
   });
 });
 
-test('#lightTheme should return light theme color codes', () => {
+test('#lightTheme should return light theme color codes', async () => {
   expect(lightTheme).toEqual({
     animation: {
       scale: 1,
@@ -57,7 +57,7 @@ test('#lightTheme should return light theme color codes', () => {
   });
 });
 
-test('#darkTheme should return light theme color codes', () => {
+test('#darkTheme should return light theme color codes', async () => {
   expect(darkTheme).toEqual({
     animation: {
       scale: 1,

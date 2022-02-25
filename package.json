@@ -78,7 +78,7 @@
       "node"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!(@react-native|react-native|@react-navigation|react-native-iphone-x-helper)/)"
+      "/node_modules/(?!(@react-native|react-native|@react-navigation|react-native-iphone-x-helper|react-native-splash-screen|react-native-screens|react-native-reanimated|react-native-modal-datetime-picker|@react-native-community/datetimepicker)/)"
     ]
   }
 }

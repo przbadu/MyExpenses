@@ -1,6 +1,6 @@
 import {numToMonthName, numToWeekName} from '..';
 
-test('numToMonthName', () => {
+test('numToMonthName', async () => {
   expect(numToMonthName(1)).toBe('Jan');
   expect(numToMonthName(2)).toBe('Feb');
   expect(numToMonthName(3)).toBe('Mar');
@@ -15,7 +15,7 @@ test('numToMonthName', () => {
   expect(numToMonthName(12)).toBe('Dec');
 });
 
-test('numToWeekName', () => {
+test('numToWeekName', async () => {
   expect(numToWeekName(0)).toBe('Sun');
   expect(numToWeekName(1)).toBe('Mon');
   expect(numToWeekName(2)).toBe('Tue');
