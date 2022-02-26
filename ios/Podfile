@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '11.0'
 
-target 'MyExpense' do
+target 'MyExpenses' do
   config = use_native_modules!
 
   use_react_native!(
@@ -12,16 +12,7 @@ target 'MyExpense' do
     :hermes_enabled => false
   )
 
-
-  # If you're using autolinking, this line might not be needed
-
-  # NOTE: Do not remove, needed to keep WatermelonDB compiling:
-  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
-
-  # NOTE: This is required as of v0.23
-  pod 'simdjson', path: '../node_modules/@nozbe/simdjson'
-
-  target 'MyExpenseTests' do
+  target 'MyExpensesTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -34,5 +25,6 @@ target 'MyExpense' do
 
   post_install do |installer|
     react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end

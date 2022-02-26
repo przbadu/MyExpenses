@@ -60,3 +60,5 @@ buck-out/
 
 # Jest
 .jest/
+coverage/
+android/java_pid114042.hprof
